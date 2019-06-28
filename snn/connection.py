@@ -12,11 +12,10 @@ class Connection:
     scheme: connection scheme (e.g. random)
     rule: method for updating the weight matrix
     '''
-    def __init__(self, pre, post, scheme, rule):
+    def __init__(self, pre, post, adj, rule):
         self.pre = pre
         self.post = post
-        self.scheme = Schemes.get(scheme)
-        self.adj = scheme(len(pre), len(post))
+        self.adj = adj
 
     def set_adj(self, w):
         self.adj = w
