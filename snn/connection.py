@@ -15,11 +15,11 @@ class Connection:
         self.pre = pre
         self.post = post
         self.adj = adj
-
-    def set_adj(self, w):
-        self.adj = w
+        self.rule = rule
 
     def update(self):
+        self.rule.update(pre.activations)
+        self.adj = self.adj + self.rule.delta_w(self.adj, self.post.activations)
         feed = np.matmul(np.array(pre.activations), adj)
         post.update(feed)
         pass
