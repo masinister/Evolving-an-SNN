@@ -26,5 +26,3 @@ class Connection:
         self.adj = self.adj + self.synapse.delta_w(self.adj, self.post.activations, self.params["eta"], self.params["mu"])
         feed = np.matmul(np.array(pre.activations), adj)
         post.update(feed)
-        pass
-        # TODO Rule update adj
