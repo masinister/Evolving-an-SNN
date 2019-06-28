@@ -10,5 +10,5 @@ class Synapse:
     def update(self,pre_activ):
         self.pre_trace = decay*self.pre_trace + self.pre_activ
 
-    def delta_w(self, adj, post_activ, eta, mu):
+    def delta_w(self, adj, post_activ, eta, mu, avg):
         return rules.get(self.rule)(self.pre_trace, adj, post_activ, eta, mu)
