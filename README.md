@@ -1,2 +1,2 @@
 # Evolving-an-SNN
-qwerqwer
+Using a parallelized evolution algorithm to train structural features of a spiking neural network
