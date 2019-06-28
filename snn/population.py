@@ -8,7 +8,10 @@ class Population:
 
 
     def update(feed):
-
+        '''
+        Pass in presynaptic feed to each postsynaptic neuron in the population
+        and update the neuron. Record which neurons in the population fired.
+        '''
         for i in self.num_neurons:
             spike = self.neurons[i].update(feed[i])
             self.activations[i] = spike
