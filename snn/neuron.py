@@ -11,12 +11,13 @@ class ICMNeuron:
         self.voltage = volt_init
         self.activation = int(volt_init > thresh_init)
 
-    def update(self, feed=0):
+    def update(self, feed):
 
         self.voltage = self.volt_decay*self.voltage + feed
         self.activation = int(self.voltage > self.threshold)
         self.threshold = self.thresh_decay*self.threshold \
                        + self.thresh_bias*self.activation
+        return self.activation
 
     def default_params(self):
         pass
