@@ -8,7 +8,7 @@ class Connection:
     '''
     pre: presynaptic population
     post: postsynaptic population
-    scheme: connection scheme (e.g. random)
+    adj: weighted adjacency matrix (adj[i][j] is the weight of the connection from pre[i] to post[j])
     rule: method for updating the weight matrix
     '''
     def __init__(self, pre, post, adj, rule):
@@ -19,9 +19,8 @@ class Connection:
     def set_adj(self, w):
         self.adj = w
 
-    def propogate(self):
-        pass
-
     def update(self):
+        feed = np.matmul(np.array(pre.activations), adj)
+        post.update(feed)
         pass
         # TODO Rule update adj
