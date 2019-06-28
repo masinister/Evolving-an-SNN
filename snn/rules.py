@@ -1,6 +1,5 @@
 import numpy as np
 
-
 def STDP(m,n):
     return np.random.random_sample((m,n))
 

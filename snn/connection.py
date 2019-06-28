@@ -1,4 +1,6 @@
 from population import Population
+from synapse import Synapse
+import numpy as np
 '''
 Connection encapsulates the interaction
 between two populations of neurons.
