@@ -13,12 +13,12 @@ class Connection:
     adj: weighted adjacency matrix (adj[i][j] is the weight of the connection from pre[i] to post[j])
     rule: method for updating the weight matrix
     '''
-    def __init__(self, pre, post, adj, synapse, params):
+    def __init__(self, pre, post, adj, rule, params):
         self.pre = pre
         self.post = post
         self.adj = adj
-        self.synapse = synapse
         self.params = params
+        self.synapse = Synapse(self.pre.activations, rule)
 
     '''
     update synapse and adjacency matrix then transmit weighted sums of spikes along the connection
