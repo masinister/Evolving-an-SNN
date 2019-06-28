@@ -1,5 +1,8 @@
-from schemes import Schemes
+import schemes
+from connection import Connection
+from population import Population
 
-Input = Population(100,shape='2D Grid')
-con = Connection(Input,Input, Schemes.get("random")(Input.num_neurons, Input.num_neurons), 'Local24')
+Input = Population(100)
+rand = schemes.get("random")
+con = Connection(Input,Input, rand(Input.num_neurons, Input.num_neurons), 'Local24')
 print(con.adj)

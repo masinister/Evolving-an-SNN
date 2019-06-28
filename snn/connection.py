@@ -1,5 +1,4 @@
 from population import Population
-from schemes import Schemes
 '''
 Connection encapsulates the interaction
 between two populations of neurons.
@@ -24,4 +23,5 @@ class Connection:
         pass
 
     def update(self):
+        pass
         # TODO Rule update adj

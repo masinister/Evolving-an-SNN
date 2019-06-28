@@ -1,6 +1,8 @@
+from neuron import ICMNeuron
+
 class Population:
 
-    def __init__(self, num_neurons=0, neuron_type-"ICMNeuron"):
+    def __init__(self, num_neurons=0, neuron_type=ICMNeuron):
 
         self.num_neurons = num_neurons
         self.neurons = [neuron_type() for _ in range(num_neurons)]
