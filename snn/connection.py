@@ -20,5 +20,7 @@ class Connection:
         self.adj = w
 
     def update(self):
+        feed = np.matmul(np.array(pre.activations), adj)
+        post.update(feed)
         pass
         # TODO Rule update adj
