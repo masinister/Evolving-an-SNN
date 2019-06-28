@@ -1,4 +1,4 @@
-class Neuron:
+class ICMNeuron:
 
     def __init__(self, volt_decay=.7, thresh_decay=.4,
                  thresh_bias=100, volt_init=1, thresh_init=100):
