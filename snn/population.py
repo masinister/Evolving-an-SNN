@@ -1,8 +1,8 @@
-from neuron import ICMNeuron
+import neuron
 
 class Population:
 
-    def __init__(self, num_neurons=0, neuron_type=ICMNeuron):
+    def __init__(self, num_neurons=0, neuron_type=neuron.ICMNeuron):
 
         self.num_neurons = num_neurons
         self.neurons = [neuron_type() for _ in range(num_neurons)]
@@ -20,3 +20,17 @@ class Population:
         for i in range(self.num_neurons):
             spike = self.neurons[i].update()
             self.activations[i] = spike
+
+class Image_Input(Population):
+
+    def __init__(self, image):
+        self.num_neurons = len(image)*len(image[0])
+        self.neurons = []
+        for column in image:
+            for pixel in column:
+                self.neurons.append(neuron.Poisson(rate = pixel / 255))
+        self.activations = [0]*self.num_neurons
+
+    def change_image(self, image):
+        for n in self.neurons:
+            n.rate = pixel / 255
