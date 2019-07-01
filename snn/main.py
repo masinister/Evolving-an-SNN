@@ -10,13 +10,16 @@ from PIL import Image
 
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 Input = population.Image_Input(x_train[0])
+params = {"eta": 1.5, "mu": 0.5, "decay": 0.5, "avg": 1}
+
 # Input = population.Population(100, neuron_type=neuron.TestNeuron)
 L1 = population.Population(784, neuron_type=neuron.ICMNeuron)
+
 rand = schemes.get("random")
-allBut1 = schemes.get("allBut1")
-params = {"eta": 0.5, "mu": 2, "decay": 0.2, "avg": 1}
+grid = schemes.get("grid")
+
 C1 = Connection(Input, L1, rand(Input.num_neurons, L1.num_neurons), "STDP", params)
-C2 = Connection(L1, L1, allBut1(L1.num_neurons), "STDP", params)
+C2 = Connection(L1, L1, grid(28,28), "STDP", params)
 
 p = []
 data = np.zeros((28,28), dtype=np.uint8)
@@ -29,14 +32,16 @@ for i in range(300):
     C2.update()
     Input.update()
     L1.update()
-    # p.append(C2.post.neurons[0].threshold)
-    if np.count_nonzero(C2.post.activations) > 0:
+    if np.count_nonzero(L1.activations) > 0:
         for j in range(len(data)):
             for k in range(len(data[0])):
-                data[j][k] = 255*L1.activations[28*j + k]
-            # print(C2.post.activations[0])
-        img = Image.fromarray(data)
-        img.save("img/img %d.png" %(i,))
+                data[j][k] = 255 * L1.activations[28*j + k]
+                img = Image.fromarray(data)
+                img.save("img/img %d.png" %(i,))
+
+
+# p.append(C2.post.neurons[0].threshold)
+
 
 # plt.plot(p)
 # plt.show()

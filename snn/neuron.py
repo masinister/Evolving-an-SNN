@@ -2,8 +2,8 @@ from numpy import random
 
 class ICMNeuron:
 
-    def __init__(self, volt_decay=.4, thresh_decay=.7,
-                 thresh_bias=1000, volt_init=1, thresh_init=100):
+    def __init__(self, volt_decay=.6, thresh_decay=.8,
+                 thresh_bias=250, volt_init=1, thresh_init=100):
 
         self.volt_decay = volt_decay        # decay rate of internal voltage
         self.thresh_decay = thresh_decay    # decay rate of threshold
