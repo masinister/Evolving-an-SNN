@@ -18,7 +18,7 @@ def grid(m,n):
             g[m*i + j][m*i + j+1] = g[m*i + j+1][m*i + j] = 1
     for i in range(m-1):
         for j in range(n):
-            g[n*(i+1) + j][n*i + j] = g[n*i + j][n*(i+1) + j] = 1
+            g[m*(i+1) + j][m*i + j] = g[m*i + j][m*(i+1) + j] = 1
     return g
 
 
