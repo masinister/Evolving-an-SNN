@@ -26,4 +26,4 @@ con = Connection(Input, Output, rand(Input.num_neurons, Output.num_neurons), "ST
 # plt.plot(v)
 # plt.show()
 
-print(schemes.get("grid")(3,3))
+print(schemes.get("grid")(6,3))
