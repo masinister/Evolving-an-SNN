@@ -26,5 +26,6 @@ class Connection:
     def update(self):
         self.synapse.update(self.pre.activations)
         self.adj = self.adj + self.synapse.delta_w(self.adj, self.post.activations, self.params["eta"], self.params["mu"], self.params["avg"])
+        self.adj = self.adj / np.max(self.adj)
         feed = np.matmul(np.array(self.pre.activations), self.adj)
         self.post.input(feed)

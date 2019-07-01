@@ -43,5 +43,5 @@ class TestNeuron:
     def __init__(self, v = 0.5):
         self.voltage = v
 
-    def update(self, feed):
+    def update(self):
         return 1

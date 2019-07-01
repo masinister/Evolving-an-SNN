@@ -8,7 +8,7 @@ class Population:
         self.neurons = [neuron_type() for _ in range(num_neurons)]
         self.activations = [0]*num_neurons
 
-    def presynap_input(self, feed):
+    def input(self, feed):
         for i in range(self.num_neurons):
             self.neurons[i].input(feed[i])
 
