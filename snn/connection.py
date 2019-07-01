@@ -24,7 +24,7 @@ class Connection:
     update synapse and adjacency matrix then transmit weighted sums of spikes along the connection
     '''
     def update(self):
-        self.synapse.update(pre.activations)
-        self.adj = self.adj + self.synapse.delta_w(self.adj, self.post.activations, self.params["eta"], self.params["mu"])
-        feed = np.matmul(np.array(pre.activations), adj)
-        post.update(feed)
+        self.synapse.update(self.pre.activations)
+        self.adj = self.adj + self.synapse.delta_w(self.adj, self.post.activations, self.params["eta"], self.params["mu"], self.params["avg"])
+        feed = np.matmul(np.array(self.pre.activations), self.adj)
+        self.post.update(feed)
