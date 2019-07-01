@@ -7,6 +7,8 @@ class Network:
         self.populations = pop
         self.connections = conn
 
-    def run(steps):
-        for c in connections:
+    def run(self, steps):
+        for c in self.connections:
             c.update()
+        for p in self.populations:
+            p.update()

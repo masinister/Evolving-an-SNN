@@ -8,7 +8,7 @@ def all2all(m,n):
 
 def allBut1(m):
     # it is assumed that this you are connecting the same layer to itself
-    x = np.ones((m,m)) - np.eye(m)
+    x = (np.ones((m,m)) - np.eye(m))*np.random.random_sample((m,m))
     return x
 
 def grid(m,n):
