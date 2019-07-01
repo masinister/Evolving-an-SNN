@@ -1,6 +1,6 @@
 class ICMNeuron:
 
-    def __init__(self, volt_decay=.7, thresh_decay=.4,
+    def __init__(self, volt_decay=.99, thresh_decay=.4,
                  thresh_bias=100, volt_init=1, thresh_init=100):
 
         self.volt_decay = volt_decay        # decay rate of internal voltage
@@ -37,5 +37,9 @@ class ICMNeuron:
                        + self.thresh_bias*self.activation
         return self.activation
 
-    def default_params(self):
-        pass
+class TestNeuron:
+    def __init__(self, v = 0.5):
+        self.voltage = v
+
+    def update(self, feed):
+        return 1
