@@ -1,3 +1,5 @@
+from numpy import random
+
 class ICMNeuron:
 
     def __init__(self, volt_decay=.99, thresh_decay=.4,
@@ -38,6 +40,21 @@ class ICMNeuron:
         self.threshold = self.thresh_decay*self.threshold \
                        + self.thresh_bias*self.activation
         return self.activation
+
+
+
+
+class PoissonNeuron:
+    def __init__(self, rate):
+        self.rate = rate
+
+    def update(self):
+        r = random.rand()
+        if r <= self.rate:
+            return 1
+        else:
+            return 0
+
 
 class TestNeuron:
     def __init__(self, v = 0.5):
