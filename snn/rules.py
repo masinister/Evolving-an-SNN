@@ -15,8 +15,8 @@ def STDP(trace, adj, post_activ, eta, mu, avg):
     unweighted = np.array(adj>0, dtype='int')
     w = 1 - adj
     w *= unweighted # entries that were 0 (i.e. no connection) need to remain 0
-    w = w**mu
-    w = np.matmul(np.diag(post_activ), w) # only update if there is a postsynaptic spike
+    w = np.power(w, mu)
+    w = np.matmul(w, np.diag(post_activ)) # only update if there is a postsynaptic spike
     x = trace - avg
     delta_w = eta * np.matmul(np.diag(x), w)
     return delta_w

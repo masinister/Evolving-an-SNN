@@ -11,7 +11,7 @@ def allBut1(m):
     x = np.ones((m,m)) - np.eye(m)
     return x
 
-schemes = {"random": random, "all2all": all2all,"allBut1": allBut1, "grid": grid}
+schemes = {"random": random, "all2all": all2all,"allBut1": allBut1}
 
 def get(name):
         return schemes[name]
