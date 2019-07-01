@@ -27,4 +27,4 @@ class Connection:
         self.synapse.update(self.pre.activations)
         self.adj = self.adj + self.synapse.delta_w(self.adj, self.post.activations, self.params["eta"], self.params["mu"], self.params["avg"])
         feed = np.matmul(np.array(self.pre.activations), self.adj)
-        self.post.update(feed)
+        self.post.input(feed)

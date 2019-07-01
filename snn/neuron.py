@@ -12,8 +12,10 @@ class ICMNeuron:
         self.voltage = volt_init
         self.activation = int(volt_init > thresh_init)
 
+    def input(self,feed):
+        self.voltage += feed
 
-    def update(self, feed):
+    def update(self):
         '''
         Update the internals of the neuron to the next time step, given an input
         feed from presynaptic neurons, according to the following rules.
@@ -31,7 +33,7 @@ class ICMNeuron:
         presynap_feed: input from data or other neurons
                  bias: how much threshold increases when neuron fires
         '''
-        self.voltage = self.volt_decay*self.voltage + feed
+        self.voltage = self.volt_decay*self.voltage
         self.activation = int(self.voltage > self.threshold)
         self.threshold = self.thresh_decay*self.threshold \
                        + self.thresh_bias*self.activation
