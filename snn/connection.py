@@ -18,7 +18,7 @@ class Connection:
         self.post = post
         self.adj = adj
         self.params = params
-        self.synapse = Synapse(self.pre.activations, rule)
+        self.synapse = Synapse(self.params["decay"], self.pre.activations, rule)
 
     '''
     update synapse and adjacency matrix then transmit weighted sums of spikes along the connection
