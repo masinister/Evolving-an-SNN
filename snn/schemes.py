@@ -10,17 +10,6 @@ def allBut1(m):
     x = np.ones((m,m)) - np.eye(m)
     return x
 
-def grid(m,n):
-    g = np.zeros((m*n,m*n))
-    for i in range(m):
-        for j in range(n-1):
-            g[m*i + j][m*i + j+1] = g[m*i + j+1][m*i + j] = 1
-    for i in range(m-1):
-        for j in range(n):
-            g[m*(i+1) + j][m*i + j] = g[m*i + j][m*(i+1) + j] = 1
-    return g
-
-
 schemes = {"random": random, "all2all": all2all,"allBut1": allBut1, "grid": grid}
 
 def get(name):
