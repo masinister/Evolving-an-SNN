@@ -7,6 +7,7 @@ def all2all(m,n):
     return np.ones((m,n))
 
 def allBut1(m):
+    # it is assumed that this you are connecting the same layer to itself
     x = np.ones((m,m)) - np.eye(m)
     return x
 
