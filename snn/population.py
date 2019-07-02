@@ -32,5 +32,8 @@ class Image_Input(Population):
         self.activations = [0]*self.num_neurons
 
     def change_image(self, image):
-        for n in self.neurons:
-            n.rate = pixel / 255.0
+        i = 0
+        for column in image:
+            for pixel in column:
+                self.neurons[i].rate = pixel / 255.0
+                i+=1
