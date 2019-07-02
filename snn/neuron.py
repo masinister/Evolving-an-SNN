@@ -15,11 +15,10 @@ class ICMNeuron:
         self.dt = 0
         self.voltage = 0
         self.activation = 0
-
         self.feed = 0
 
     def input(self,feed):
-        self.feed = feed
+        self.feed += feed
 
     def update(self):
         '''
@@ -44,6 +43,7 @@ class ICMNeuron:
         self.dt = self.thresh_decay*self.dt \
                 + self.thresh_bias*self.activation
         self.threshold = self.v_thresh + self.dt
+        self.feed = 0
         return self.activation
 
 
