@@ -10,7 +10,7 @@ from PIL import Image
 
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 Input = population.Image_Input(x_train[0])
-params = {"eta": 1.5, "mu": 0.5, "decay": 0.5, "avg": 1}
+params = {"eta": 0.5, "mu": 0.5, "decay": 0.5, "avg": 1}
 
 # Input = population.Population(100, neuron_type=neuron.TestNeuron)
 L1 = population.Population(784, neuron_type=neuron.ICMNeuron)
@@ -32,7 +32,7 @@ def train(n):
     img = Image.fromarray(x_train[n])
     img.save("img/%d.png" %(n,))
     Input.change_image(x_train[n])
-    for i in range(250):
+    for i in range(100):
         C1.update()
         C2.update()
         Input.update()
@@ -40,11 +40,10 @@ def train(n):
         if np.count_nonzero(L1.activations) > 0:
             for j in range(len(data)):
                 for k in range(len(data[0])):
-                    data[j][k] = 255 * L1.activations[28*j + k]
-
-            data = data - np.amin(data)
-            img = Image.fromarray(data)
-            img.save("img/img %d_%d.png" %(n,i,))
+                    data[j][k] += L1.activations[28*j + k]
+    data = data / np.amax(data) * 255
+    img = Image.fromarray(data.astype(int))
+    img.save("img/img %d_%d.png" %(n,i,))
         # p.append([x.threshold for x in L1.neurons][::10])
         # v.append([x.voltage for x in L1.neurons][::10])
 
