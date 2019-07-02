@@ -2,20 +2,24 @@ from numpy import random
 
 class ICMNeuron:
 
-    def __init__(self, volt_decay=.5, thresh_decay=.8,
-                 thresh_bias=1000, volt_init=1, thresh_init=100):
+    def __init__(self, volt_decay=.1, thresh_decay=.9,
+                 thresh_bias=60, thresh_init=25):
 
         self.volt_decay = volt_decay        # decay rate of internal voltage
         self.thresh_decay = thresh_decay    # decay rate of threshold
         self.thresh_bias = thresh_bias      # how much threshold increase when
                                             # the neuron spikes
 
-        self.threshold = thresh_init
-        self.voltage = volt_init
-        self.activation = int(volt_init > thresh_init)
+        self.threshold = 100
+        self.v_thresh = thresh_init
+        self.dt = 0
+        self.voltage = 0
+        self.activation = 0
+
+        self.feed = 0
 
     def input(self,feed):
-        self.voltage += feed
+        self.feed = feed
 
     def update(self):
         '''
@@ -35,24 +39,27 @@ class ICMNeuron:
         presynap_feed: input from data or other neurons
                  bias: how much threshold increases when neuron fires
         '''
-        self.voltage = self.volt_decay*self.voltage
+        self.voltage = self.volt_decay*self.voltage + self.feed
         self.activation = int(self.voltage > self.threshold)
-        self.threshold = self.thresh_decay*self.threshold \
-                       + self.thresh_bias*self.activation
+        self.dt = self.thresh_decay*self.dt \
+                + self.thresh_bias*self.activation
+        self.threshold = self.v_thresh + self.dt
         return self.activation
-
 
 
 
 class PoissonNeuron:
     def __init__(self, rate):
         self.rate = rate
+        self.activation = 0
 
     def update(self):
         r = random.rand()
         if r <= self.rate:
+            self.activation = 1
             return 1
         else:
+            self.activation = 0
             return 0
 
 
