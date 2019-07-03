@@ -50,7 +50,7 @@ class Optimizer():
             threads = []
 
             #Start threads
-            for sub_population in self._populations
+            for sub_population in self._populations:
                 t = threading.Thread(target = self.evaluate_all, args = (sub_population,))
                 threads.append(t)
                 t.start()
