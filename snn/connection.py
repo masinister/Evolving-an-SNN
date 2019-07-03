@@ -6,12 +6,13 @@ Connection encapsulates the interaction
 between two populations of neurons.
 '''
 class Connection:
-
     '''
     pre: presynaptic population
     post: postsynaptic population
     adj: weighted adjacency matrix (adj[i][j] is the weight of the connection from pre[i] to post[j])
-    rule: method for updating the weight matrix
+         (i.e. rows are presynap neurons and columns are postsynap neurons)
+    rule: method for updating the weight matrix (e.g. STDP learning rule)
+    params: hyperparameters for synapse and learning rule
     '''
     def __init__(self, pre, post, adj, rule, params):
         self.pre = pre
@@ -24,6 +25,8 @@ class Connection:
     update synapse and adjacency matrix then transmit weighted sums of spikes along the connection
     '''
     def update(self):
+        self.synapse.update(self.pre.activations)   # update the presynaptic traces
+        self.adj = self.adj + self.synapse.delta_w(self.adj, self.post.activations, self.params["eta"], self.params["mu"], self.params["avg"])
         self.synapse.update(self.pre.activations)
         self.adj = self.adj + self.synapse.delta_w(self.adj, self.post.activations)
         self.adj = self.adj / np.max(self.adj)
