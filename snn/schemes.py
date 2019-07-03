@@ -1,7 +1,9 @@
 import numpy as np
 
 def random(m,n):
-    return np.random.random_sample((m,n))
+    s = np.random.random_sample((m,n)).flat
+    z = [np.random.choice([0, x]) for x in s]
+    return np.array(z).reshape((m,n))
 
 def all2all(m,n):
     return np.ones((m,n))
