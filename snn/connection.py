@@ -29,3 +29,7 @@ class Connection:
         self.adj = self.adj / np.max(self.adj)
         feed = np.matmul(np.array(self.pre.activations), self.adj)
         self.post.input(feed)
+
+    def set_params(self, params):
+        self.params = params
+        self.synapse.decay = params["decay"]
