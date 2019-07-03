@@ -7,10 +7,10 @@ class Population:
     neuron_type : class of the neurons
     activations : list of which neurons fired at current time step
     '''
-    def __init__(self, num_neurons=0, neuron_type=neuron.ICMNeuron):
+    def __init__(self, n_params, num_neurons=0, neuron_type=neuron.ICMNeuron):
 
         self.num_neurons = num_neurons
-        self.neurons = [neuron_type() for _ in range(num_neurons)]
+        self.neurons = [neuron_type(n_params) for _ in range(num_neurons)]
         self.activations = [0]*num_neurons
 
     def input(self, feed):

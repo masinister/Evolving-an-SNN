@@ -10,11 +10,13 @@ import numpy as np
 
 params = {"eta": 1.5, "mu": 2.0, "decay": 0.5, "avg": 1}
 
+n_params = {"v_init": 0, "v_decay": .5, "t_init": 5, "min_thresh": 1, "t_bias": 80, "t_decay": .9}
+
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 
 Input = population.Image_Input(x_train[0])
-L1 = population.Population(784, neuron_type=neuron.ICMNeuron)
-L2 = population.Population(784, neuron_type=neuron.ICMNeuron)
+L1 = population.Population(n_params,784, neuron_type=neuron.ICMNeuron)
+L2 = population.Population(n_params,784, neuron_type=neuron.ICMNeuron)
 
 rand = schemes.get("random")
 allBut1 = schemes.get("allBut1")

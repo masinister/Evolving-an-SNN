@@ -12,16 +12,16 @@ class ICMNeuron:
     activation : binary 0 or 1 for whether or not neuron fired
     feed : input voltage coming from data/other neurons
     '''
-    def __init__(self, v_decay=.5, t_decay=.9, t_bias=80, t_init=5):
+    def __init__(self, params):
 
-        self.voltage = 0
-        self.v_decay = v_decay
+        self.voltage = params["v_init"]
+        self.v_decay = params["v_decay"]
 
-        self.threshold = 100
-        self.min_thresh = t_init
-        self.t_bias = t_bias
+        self.threshold = params["t_init"]
+        self.min_thresh = params["min_thresh"]
+        self.t_bias = params["t_bias"]
         self.dt = 0
-        self.t_decay = t_decay
+        self.t_decay = params["t_decay"]
 
         self.activation = 0
         self.feed = 0
