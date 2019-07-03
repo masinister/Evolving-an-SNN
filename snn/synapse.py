@@ -1,6 +1,16 @@
 import rules
 import numpy as np
 
+'''
+Synapse specifies what type of connection is between two neurons.
+i.e. what type of learning rule
+
+pre_trace : a record of presynaptic spikes which decays over time
+decay : decay rate of pre_trace
+rule : what rule is used to update synaptic weight
+
+pre_activ : activations of presynaptic population
+'''
 class Synapse:
 
     def __init__(self, decay, pre_activ, rule):
