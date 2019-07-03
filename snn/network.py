@@ -1,5 +1,6 @@
 from connection import Connection
 from population import Population
+from tqdm import tqdm
 
 class Network:
 
@@ -8,7 +9,7 @@ class Network:
         self.connections = conn
 
     def run(self, steps):
-        for s in range(steps):
+        for s in tqdm(range(steps), ncols = 28*3):
             for c in self.connections:
                 c.update()
             for p in self.populations:
