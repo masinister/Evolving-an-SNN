@@ -37,3 +37,7 @@ class Image_Input(Population):
             for pixel in column:
                 self.neurons[i].rate = pixel / 255.0
                 i+=1
+
+    def set_blank(self):
+        for n in self.neurons:
+            n.rate = 0
