@@ -21,9 +21,6 @@ def STDP(trace, adj, post_activ, eta, mu, avg):
     delta_w = eta * np.matmul(np.diag(x), w)
     return delta_w
 
-def random(m,n):
-    return np.random.random_sample((m,n))
-
 rules = {"STDP": STDP,}
 
 def get(name):
