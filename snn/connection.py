@@ -19,18 +19,23 @@ class Connection:
         self.post = post
         self.adj = adj
         self.params = params
-        self.synapse = Synapse(self.params["decay"], self.pre.activations, rule)
+        self.synapse = Synapse(self.params, self.pre.activations, rule)
 
     '''
     update synapse and adjacency matrix then transmit weighted sums of spikes along the connection
     '''
     def update(self):
+<<<<<<< HEAD
         self.synapse.update(self.pre.activations)   # update the presynaptic traces
         self.adj = self.adj + self.synapse.delta_w(self.adj, self.post.activations, self.params["eta"], self.params["mu"], self.params["avg"])
+=======
+        self.synapse.update(self.pre.activations)
+        self.adj = self.adj + self.synapse.delta_w(self.adj, self.post.activations)
+>>>>>>> dfc3741b5bd7f6236b3c1c18cd78105c63c3044c
         self.adj = self.adj / np.max(self.adj)
         feed = np.matmul(np.array(self.pre.activations), self.adj)
         self.post.input(feed)
 
     def set_params(self, params):
         self.params = params
-        self.synapse.decay = params["decay"]
+        self.synapse.params = params

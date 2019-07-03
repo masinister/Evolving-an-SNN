@@ -5,7 +5,7 @@ from synapse import Synapse
 import neuron
 from network import Network
 import train
-from keras.datasets import mnist
+from tensorflow.keras.datasets import mnist
 import numpy as np
 
 params = {"eta": 1.5, "mu": 2.0, "decay": 0.5, "avg": 1}
