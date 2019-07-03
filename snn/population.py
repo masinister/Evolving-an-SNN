@@ -31,7 +31,7 @@ class Image_Input(Population):
                 self.neurons.append(neuron.PoissonNeuron(rate = pixel / 255.0 ))
         self.activations = [0]*self.num_neurons
 
-    def change_image(self, image):
+    def set_input(self, image):
         i = 0
         for column in image:
             for pixel in column:
