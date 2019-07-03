@@ -6,10 +6,11 @@ def random(m,n):
     return np.array(z).reshape((m,n))
 
 def all2all(m,n):
-    return np.ones((m,n))
+    return np.random.random_sample((m,n))
 
 def allBut1(m):
-    # it is assumed that this you are connecting the same layer to itself
+    # it is assumed that you are connecting the same layer to itself
+    # remove connection along the diagonal to disallow self connected neurons
     x = (np.ones((m,m)) - np.eye(m))*np.random.random_sample((m,m))
     return x
 
