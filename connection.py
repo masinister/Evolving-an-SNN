@@ -25,10 +25,20 @@ class Connection:
     update synapse and adjacency matrix then transmit weighted sums of spikes along the connection
     '''
     def update(self):
-        self.synapse.update(self.pre.activations)
-        self.adj = self.adj + self.synapse.delta_w(self.adj, self.post.activations)
-        self.adj = self.adj / np.max(self.adj)
-        feed = np.matmul(np.array(self.pre.activations), self.adj)
+        # Static connections to not change weights
+        if not self.params["Static"]:
+            self.synapse.update(self.pre.activations)
+            self.adj = self.adj + self.synapse.delta_w(self.adj, self.post.activations)
+            self.adj = self.adj / np.max(self.adj)
+        '''
+        There is a weird bug happening with numpy where feed is being type-casted
+        as a numpy.matrixlib.defmatrix.matrix with shape (1,784) i.e. a 2D array
+        instead of (784,) i.e. a 1D array. This causes indexing problems, when feed
+        is passed to a Population. This data type cannot be reshaped, so as a work
+        around it is turned into a numpy.array and reshaped to (784,)
+        '''
+        feed = np.array(np.dot(self.pre.activations, self.adj))
+        feed = np.reshape(feed,(784,))
         self.post.input(feed)
 
     def set_params(self, params):

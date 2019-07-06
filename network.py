@@ -13,7 +13,7 @@ class Network:
 
 
     def run(self, steps):
-        for s in tqdm(range(steps), ncols = 28*3):
+        for s in range(steps):
             for c in self.connections:
                 c.update()
             for p in self.populations:

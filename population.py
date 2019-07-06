@@ -1,4 +1,6 @@
 import neuron
+import matplotlib.pyplot as plt
+import numpy as np
 
 class Population:
     '''
@@ -11,7 +13,7 @@ class Population:
 
         self.num_neurons = num_neurons
         self.neurons = [neuron_type(n_params) for _ in range(num_neurons)]
-        self.activations = [0]*num_neurons
+        self.activations = np.zeros(num_neurons)
 
     def input(self, feed):
         # pass input feed of to each neuron
@@ -25,6 +27,7 @@ class Population:
         for i in range(self.num_neurons):
             spike = self.neurons[i].update()
             self.activations[i] = spike
+            
 
 
 class Image_Input(Population):
@@ -38,8 +41,8 @@ class Image_Input(Population):
         for column in image:
             for pixel in column:
                 # set average firing rate of the neurons
-                self.neurons.append(neuron.PoissonNeuron(rate = pixel / 255.0 ))
-        self.activations = [0]*self.num_neurons
+                self.neurons.append(neuron.PoissonNeuron(rate = pixel / 255.0))
+        self.activations = np.zeros(self.num_neurons)
 
     def set_input(self, image):
         # change to another image
@@ -52,3 +55,36 @@ class Image_Input(Population):
     def set_blank(self):
         for n in self.neurons:
             n.rate = 0
+
+
+
+
+class Const_Input(Population):
+    '''
+    Population of input neurons. Each neuron feeds in a constant input proportional
+    to the intensity of the cooresponding pixel
+    '''
+    def __init__(self, image):
+        self.num_neurons = len(image)*len(image[0])
+        self.activations = np.zeros(self.num_neurons)
+        i = 0
+        for column in image:
+            for pixel in column:
+                self.activations[i] = pixel/255
+                i += 1
+
+    def update(self):
+        # Const neuron / population does not change
+        pass
+
+    def set_input(self, image):
+        # change to another image
+        i = 0
+        for column in image:
+            for pixel in column:
+                self.activations[i] = pixel/255
+                i+=1
+
+    def set_blank(self):
+        for i in range(self.num_neurons):
+            self.activations[i] = 0
