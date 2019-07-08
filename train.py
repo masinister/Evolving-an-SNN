@@ -30,13 +30,13 @@ def label_neurons(network, test_data, test_labels, num_labels, show_steps, rest_
     '''
     # For each image shown, record the number of times that the neurons fire
     i = 0
-    for x in label_data:
+    for x in test_data:
         network.populations[0].set_input(x)
         rates = network.record(show_steps)
         rates = np.reshape(rates,(np.size(rates),))
         j=0
         for r in firing_rates:
-            r[:,labels[i]] += rates[j]
+            r[:,test_labels[i]] += rates[j]
             j += 1
         network.populations[0].set_blank()
         network.run(rest_steps)
