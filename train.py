@@ -30,6 +30,8 @@ def label_neurons(network, test_data, test_labels, num_labels, show_steps, rest_
     for the appropriate populations
     '''
     # For each image shown, record the number of times that the neurons fire
+    # and count how many times the network saw each digit
+    label_count = [0]*num_labels
     i = 0
     for x in tqdm(test_data):
         network.populations[0].set_input(x)
@@ -40,12 +42,19 @@ def label_neurons(network, test_data, test_labels, num_labels, show_steps, rest_
             j += 1
         network.populations[0].set_blank()
         network.run(rest_steps)
+        label_count[test_labels[i]] += 1
         i += 1
 
-    '''
-    The firing_rates for each label need to be divided by the number of times
-    that type of object was shown to the network
-    '''
+    # divide each category by the number of times it saw each category
+    i = 0
+    for r in firing_rates:
+        j = 0
+        for count in label_count:
+            if count != 0:
+                firing_rates[i][:,j] = firing_rates[i][:,j] / count
+            j += 1
+        i += 1
+
     network.neuron_labels = firing_rates
     # print(firing_rates[0][0:10])
     # print(firing_rates[1][0:10])
