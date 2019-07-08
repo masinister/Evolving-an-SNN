@@ -21,4 +21,8 @@ class Network:
 
     def set_params(self, params):
         for c in self.connections:
-            c.set_params(params)        
+            c.set_params(params)
+
+    # Return a distribution of probabilities that each label corresponds to the given example
+    def predict(self, example):
+        pass

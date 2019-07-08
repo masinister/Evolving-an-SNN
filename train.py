@@ -2,6 +2,7 @@ import numpy as np
 
 def train(network, train_data, learn_steps, rest_steps):
     i=0
+    network.params["training"] = True
     for x in train_data:
         network.populations[0].set_input(x)
         network.run(learn_steps)
@@ -9,7 +10,8 @@ def train(network, train_data, learn_steps, rest_steps):
         network.run(rest_steps)
         i+=1
 
-def associate_neurons(network):
+def label_neurons(network, test_data, test_labels, num_labels, steps):
+    network.params["training"] = False
     '''
     firing_rates is a list of 2D arrays (of possibly varying shape) such that
     firing_rates[i,j] is an array containing the 10 average firing rates
@@ -21,5 +23,9 @@ def associate_neurons(network):
     '''
     firing_rates = []
     for pop in network.populations[1:]:
-        firing_rates.append( np.zeros((pop.num_neurons, 10)) )
+        firing_rates.append( np.zeros((pop.num_neurons, num_labels)) )
+    #count spikes
+    network.neuron_labels = firing_rates
 
+def evaluate(network, test_data, test_labels, num_labels, steps):
+    network.accuracy = 0.0
