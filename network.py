@@ -10,7 +10,7 @@ class Network:
         # List of populations/connections
         self.populations = pop
         self.connections = conn
-        self.neuron_labels = np.zeros(pop[-1].num_neurons)
+        self.neuron_labels = []
 
     def run(self, steps):
         for s in range(steps):
@@ -22,10 +22,7 @@ class Network:
     def record(self, steps):
         rates = []
         for pop in self.populations[1:]:
-            rates.append( np.zeros(pop.num_neurons) )
-        # Assert STDP is turned off
-        for c in self.connections:
-            assert( c.params["training"] )
+            rates.append(np.zeros(pop.num_neurons))
 
         # present the image, and every time a neuron fires increment rates
         for s in range(steps):
@@ -56,6 +53,12 @@ class Network:
         for c in self.connections:
             c.set_params(params)
 
-    # Return a distribution of probabilities that each label corresponds to the given example
-    def predict(self, example):
-        pass
+    # Return a distribution of probabilities that each label corresponds to the example (set elsewhere)
+    def predict(self, steps):
+        dist = []
+        rates = self.record(steps)
+        for i in len(rates):
+            for j in len(rates[i]):
+                dist += rates[i][j] * self.neuron_labels[i][j]
+        dist /= max(dist)
+        return dist
