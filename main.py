@@ -18,9 +18,9 @@ def genetic_test():
 def snn_test():
     print("Initializing Network")
 
-    params = {"eta": 1.5, "mu": 2.0, "decay": 0.5, "avg": 1, "training": True}
+    params = {"eta": 1.5, "mu": 2.0, "decay": 0.5, "avg": 0, "training": True}
 
-    n_params = {"v_init": 0, "v_decay": .5, "t_init": 5, "min_thresh": 1, "t_bias": 80, "t_decay": .9}
+    n_params = {"v_init": 0, "v_decay": .5, "t_init": 5, "min_thresh": 1, "t_bias": 80, "t_decay": .7}
 
     (x_train, y_train), (x_test, y_test) = mnist.load_data()
 
@@ -41,13 +41,13 @@ def snn_test():
     network.set_params(params)
 
     print("Training")
-    train.train(network, x_train[0:10], 100, 28)
+    train.train(network, x_train[0:10], 256, 64)
 
     print("Labelling")
-    train.label_neurons(network, x_test[0:30], y_test[0:30], 10, 100, 16)
+    train.label_neurons(network, x_test[0:32], y_test[0:32], 10, 256, 64)
 
     print("Testing")
-    train.evaluate(network, x_test[0:10], y_test[0:10], 100)
+    train.evaluate(network, x_test[0:16], y_test[0:16], 256, 64)
 
 
 if __name__ == '__main__':

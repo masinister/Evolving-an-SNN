@@ -50,6 +50,11 @@ def label_neurons(network, test_data, test_labels, num_labels, show_steps, rest_
     # print(firing_rates[0][0:10])
     # print(firing_rates[1][0:10])
 
-def evaluate(network, test_data, test_labels, steps):
-    network.populations[0].set_input(test_data[0])
-    print(network.predict(steps))
+def evaluate(network, test_data, test_labels, steps, rest_steps):
+    network.disable_learning()
+    for i in range(len(test_data)):
+        network.populations[0].set_input(test_data[i])
+        res = network.predict(steps)
+        print(np.argmax(res), res, test_labels[i])
+        network.populations[0].set_blank()
+        network.run(rest_steps)
