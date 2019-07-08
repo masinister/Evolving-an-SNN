@@ -1,8 +1,9 @@
 import numpy as np
+from tqdm import tqdm
 
 def train(network, train_data, learn_steps, rest_steps):
     network.enable_learning()
-    for x in train_data:
+    for x in tqdm(train_data):
         network.populations[0].set_input(x)
         network.run(learn_steps)
         network.populations[0].set_blank()
@@ -30,10 +31,9 @@ def label_neurons(network, test_data, test_labels, num_labels, show_steps, rest_
     '''
     # For each image shown, record the number of times that the neurons fire
     i = 0
-    for x in test_data:
+    for x in tqdm(test_data):
         network.populations[0].set_input(x)
         rates = network.record(show_steps)
-        rates = np.reshape(rates,(np.size(rates),))
         j=0
         for r in firing_rates:
             r[:,test_labels[i]] += rates[j]
@@ -46,7 +46,10 @@ def label_neurons(network, test_data, test_labels, num_labels, show_steps, rest_
     The firing_rates for each label need to be divided by the number of times
     that type of object was shown to the network
     '''
-    print(firing_rates[:][0:num_labels])
+    network.neuron_labels = firing_rates
+    # print(firing_rates[0][0:10])
+    # print(firing_rates[1][0:10])
 
-def evaluate(network, test_data, test_labels, num_labels, steps):
-    network.accuracy = 0.0
+def evaluate(network, test_data, test_labels, steps):
+    network.populations[0].set_input(test_data[0])
+    print(network.predict(steps))

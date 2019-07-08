@@ -16,6 +16,8 @@ def genetic_test():
     optimizer.run(generations, population)
 
 def snn_test():
+    print("Initializing Network")
+
     params = {"eta": 1.5, "mu": 2.0, "decay": 0.5, "avg": 1, "training": True}
 
     n_params = {"v_init": 0, "v_decay": .5, "t_init": 5, "min_thresh": 1, "t_bias": 80, "t_decay": .9}
@@ -23,21 +25,29 @@ def snn_test():
     (x_train, y_train), (x_test, y_test) = mnist.load_data()
 
     Input = population.Image_Input(x_train[0])
-    L1 = population.Population(n_params,784, neuron_type=neuron.ICMNeuron)
-    L2 = population.Population(n_params,784, neuron_type=neuron.ICMNeuron)
+    L1 = population.Population(n_params,100, neuron_type=neuron.ICMNeuron)
+    L2 = population.Population(n_params,100, neuron_type=neuron.ICMNeuron)
 
     rand = schemes.get("random")
     allBut1 = schemes.get("allBut1")
     grid = schemes.get("grid")
 
-    C1 = Connection(Input, L1, rand(784,784), "STDP", params)
-    C2 = Connection(L1, L1, grid(28,28), "STDP", params)
-    C3 = Connection(L1, L2, rand(784,784), "STDP", params)
-    C4 = Connection(L2, L2, grid(28,28), "STDP", params)
+    C1 = Connection(Input, L1, rand(784,100), "STDP", params)
+    C2 = Connection(L1, L1, grid(10,10), "STDP", params)
+    C3 = Connection(L1, L2, rand(100,100), "STDP", params)
+    C4 = Connection(L2, L2, grid(10,10), "STDP", params)
 
     network = Network([Input, L1, L2], [C1, C2, C3, C4])
     network.set_params(params)
+
+    print("Training")
     train.train(network, x_train[0:10], 100, 28)
+
+    print("Labelling")
+    train.label_neurons(network, x_test[0:30], y_test[0:30], 10, 100, 16)
+
+    print("Testing")
+    train.evaluate(network, x_test[0:10], y_test[0:10], 100)
 
 
 if __name__ == '__main__':

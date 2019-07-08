@@ -37,8 +37,7 @@ class Network:
 
         # Normalize each population's firing rate
         for i in range(len(rates)):
-            rates[i] = rates[i]/np.max(rates[i])
-
+            rates[i] = rates[i]/(np.max(rates[i]) + 0.0001)
         return rates
 
     def enable_learning(self):
@@ -55,10 +54,10 @@ class Network:
 
     # Return a distribution of probabilities that each label corresponds to the example (set elsewhere)
     def predict(self, steps):
-        dist = []
         rates = self.record(steps)
-        for i in len(rates):
-            for j in len(rates[i]):
+        dist = 0 * rates[0][0]
+        for i in range(len(rates)):
+            for j in range(len(rates[i])):
                 dist += rates[i][j] * self.neuron_labels[i][j]
-        dist /= max(dist)
+        dist /= (max(dist) + 0.0001)
         return dist
