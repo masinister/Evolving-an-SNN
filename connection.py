@@ -29,7 +29,8 @@ class Connection:
         if self.params["training"]:
             self.synapse.update(self.pre.activations)
             self.adj = self.adj + self.synapse.delta_w(self.adj, self.post.activations)
-            self.adj = self.adj / np.max(self.adj)
+            for row in self.adj:
+                row /= (np.max(row) + 0.001)
         '''
         There is a weird bug happening with numpy where feed is being type-casted
         as a numpy.matrixlib.defmatrix.matrix with shape (1,784) i.e. a 2D array

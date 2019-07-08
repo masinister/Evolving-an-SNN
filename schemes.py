@@ -39,10 +39,10 @@ def grid(m,n):
     g = np.zeros((m*n,m*n))
     for i in range(m):
         for j in range(n-1):
-            g[m*i + j][m*i + j+1] = g[m*i + j+1][m*i + j] = 1
+            g[m*i + j][m*i + j+1] = g[m*i + j+1][m*i + j] = np.random.rand()
     for i in range(m-1):
         for j in range(n):
-            g[n*(i+1) + j][n*i + j] = g[n*i + j][n*(i+1) + j] = 1
+            g[n*(i+1) + j][n*i + j] = g[n*i + j][n*(i+1) + j] = np.random.rand()
     return g
 
 

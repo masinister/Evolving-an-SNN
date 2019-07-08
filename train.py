@@ -4,6 +4,7 @@ from tqdm import tqdm
 def train(network, train_data, learn_steps, rest_steps):
     network.enable_learning()
     for x in tqdm(train_data):
+        # print(np.around(network.connections[2].adj, decimals=2))
         network.populations[0].set_input(x)
         network.run(learn_steps)
         network.populations[0].set_blank()
@@ -64,9 +65,13 @@ def label_neurons(network, test_data, test_labels, num_labels, show_steps, rest_
 
 def evaluate(network, test_data, test_labels, steps, rest_steps):
     network.disable_learning()
+    correct = 0
     for i in range(len(test_data)):
         network.populations[0].set_input(test_data[i])
         res = network.predict(steps)
         print(np.argmax(res), ["%.2f" % r for r in res], test_labels[i])
+        if np.argmax(res) == test_labels[i]:
+            correct += 1
         network.populations[0].set_blank()
         network.run(rest_steps)
+    print("Got %.3f correct" % (correct/len(test_labels)))

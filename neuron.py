@@ -7,7 +7,7 @@ class ICMNeuron:
     threshold : spiking threshold (spike when voltage >= threshold)
     min_thresh : minimum threshold value
     t_bias : how much threshold increase when the neuron spikes
-    dt : portion of threshold that decays    
+    dt : portion of threshold that decays
     t_decay : decay rate of threshold
     activation : binary 0 or 1 for whether or not neuron fired
     feed : input voltage coming from data/other neurons
@@ -49,7 +49,7 @@ class ICMNeuron:
         '''
         self.voltage = self.v_decay*self.voltage + self.feed
         self.activation = int(self.voltage > self.threshold)
-        self.dt = self.t_decay*self.dt + self.t_bias*self.activation
+        self.dt = (self.activation + (1-self.activation) * self.t_decay) * self.dt + self.t_bias*self.activation
         self.threshold = self.min_thresh + self.dt
         self.feed = 0
         return self.activation

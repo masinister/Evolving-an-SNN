@@ -2,6 +2,7 @@ from connection import Connection
 from population import Population
 from tqdm import tqdm
 import numpy as np
+import matplotlib.pyplot as plt
 
 class Network:
     # Assumed that first population in pop list is the input population
@@ -13,11 +14,18 @@ class Network:
         self.neuron_labels = []
 
     def run(self, steps):
+        t = []
+        v = []
         for s in range(steps):
             for c in self.connections:
                 c.update()
             for p in self.populations:
                 p.update()
+            t.append([x.threshold for x in self.populations[1].neurons])
+            v.append([x.voltage for x in self.populations[1].neurons])
+        plt.plot(t)
+        plt.plot(v)
+        plt.show()
 
     def record(self, steps):
         rates = []
@@ -37,7 +45,7 @@ class Network:
 
         # Normalize each population's firing rate
         for i in range(len(rates)):
-            rates[i] = rates[i]/(np.max(rates[i]) + 0.0001)
+            rates[i] = rates[i]/(np.sum(rates[i]) + 0.0001)
         return rates
 
     def enable_learning(self):
@@ -59,5 +67,5 @@ class Network:
         for i in range(len(rates)):
             for j in range(len(rates[i])):
                 dist += rates[i][j] * self.neuron_labels[i][j]
-        dist = dist / (sum(dist) + 0.001)
+        dist = dist / (np.sum(dist) + 0.001)
         return dist
