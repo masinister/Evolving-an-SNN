@@ -38,7 +38,7 @@ class Connection:
         around it is turned into a numpy.array and reshaped to (784,)
         '''
         feed = np.array(np.dot(self.pre.activations, self.adj))
-        feed = np.reshape(feed,(784,))
+        feed = np.reshape(feed,(np.size(feed),))
         self.post.input(feed)
 
     def set_params(self, params):
