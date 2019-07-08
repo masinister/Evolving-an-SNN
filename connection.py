@@ -26,7 +26,7 @@ class Connection:
     '''
     def update(self):
         # Static connections to not change weights
-        if not self.params["Static"]:
+        if self.params["training"]:
             self.synapse.update(self.pre.activations)
             self.adj = self.adj + self.synapse.delta_w(self.adj, self.post.activations)
             self.adj = self.adj / np.max(self.adj)

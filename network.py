@@ -10,7 +10,7 @@ class Network:
         # List of populations/connections
         self.populations = pop
         self.connections = conn
-
+        self.neuron_labels = np.zeros(pop[-1].num_neurons)
 
     def run(self, steps):
         for s in range(steps):
@@ -21,4 +21,4 @@ class Network:
 
     def set_params(self, params):
         for c in self.connections:
-            c.set_params(params)
+            c.set_params(params)        

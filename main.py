@@ -16,7 +16,7 @@ def genetic_test():
     optimizer.run(generations, population)
 
 def snn_test():
-    params = {"eta": 1.5, "mu": 2.0, "decay": 0.5, "avg": 1}
+    params = {"eta": 1.5, "mu": 2.0, "decay": 0.5, "avg": 1, "training": True}
 
     n_params = {"v_init": 0, "v_decay": .5, "t_init": 5, "min_thresh": 1, "t_bias": 80, "t_decay": .9}
 
