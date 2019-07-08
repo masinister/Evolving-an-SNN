@@ -18,7 +18,7 @@ def label_neurons(network, test_data, test_labels, num_labels, show_steps, rest_
     So if firing_rates[1,3,8] is high, that means the 3rd neuron in the
     1st population tends to fire a lot when the network is presented with an 8
     '''
-    network.params["training"] = False
+    network.disable_learning()
     firing_rates = []
     for pop in network.populations[1:]:
         firing_rates.append( np.zeros((pop.num_neurons, num_labels)) )
@@ -28,8 +28,6 @@ def label_neurons(network, test_data, test_labels, num_labels, show_steps, rest_
     cycles of training and labeling then "Static" needs to be set to False again
     for the appropriate populations
     '''
-    network.disable_learning()
-
     # For each image shown, record the number of times that the neurons fire
     i = 0
     for x in label_data:
