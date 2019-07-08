@@ -59,5 +59,5 @@ class Network:
         for i in range(len(rates)):
             for j in range(len(rates[i])):
                 dist += rates[i][j] * self.neuron_labels[i][j]
-        dist /= (max(dist) + 0.0001)
+        dist = dist / (sum(dist) + 0.001)
         return dist

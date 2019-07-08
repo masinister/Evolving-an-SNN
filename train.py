@@ -55,6 +55,9 @@ def label_neurons(network, test_data, test_labels, num_labels, show_steps, rest_
             j += 1
         i += 1
 
+    for pop in firing_rates:
+        pop = pop / (sum(pop) + 0.001)
+
     network.neuron_labels = firing_rates
     # print(firing_rates[0][0:10])
     # print(firing_rates[1][0:10])
@@ -64,6 +67,6 @@ def evaluate(network, test_data, test_labels, steps, rest_steps):
     for i in range(len(test_data)):
         network.populations[0].set_input(test_data[i])
         res = network.predict(steps)
-        print(np.argmax(res), res, test_labels[i])
+        print(np.argmax(res), ["%.2f" % r for r in res], test_labels[i])
         network.populations[0].set_blank()
         network.run(rest_steps)
