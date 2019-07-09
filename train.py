@@ -25,11 +25,6 @@ def label_neurons(network, test_data, test_labels, num_labels, show_steps, rest_
     for pop in network.populations[1:]:
         firing_rates.append( np.zeros((pop.num_neurons, num_labels)) )
 
-    '''
-    This turns off STDP. STDP is not turned back on here, so if you go through
-    cycles of training and labeling then "Static" needs to be set to False again
-    for the appropriate populations
-    '''
     # For each image shown, record the number of times that the neurons fire
     # and count how many times the network saw each digit
     label_count = [0]*num_labels
