@@ -66,12 +66,19 @@ def label_neurons(network, test_data, test_labels, num_labels, show_steps, rest_
 def evaluate(network, test_data, test_labels, steps, rest_steps):
     network.disable_learning()
     correct = 0
-    for i in range(len(test_data)):
+    view_count = np.zeros(10)
+    correct_count = np.zeros(10)
+    for i in tqdm(range(len(test_data))):
         network.populations[0].set_input(test_data[i])
         res = network.predict(steps)
-        print(np.argmax(res), ["%.2f" % r for r in res], test_labels[i])
+        # print(np.argmax(res), ["%.4f" % r for r in res], test_labels[i])
         if np.argmax(res) == test_labels[i]:
             correct += 1
+            correct_count[test_labels[i]] += 1
+        view_count[test_labels[i]] += 1
         network.populations[0].set_blank()
         network.run(rest_steps)
-    print("Got %.3f correct" % (correct/len(test_labels)))
+    for i in range(10):
+        if view_count[i] != 0:
+            correct_count[i] = correct_count[i]/view_count[i]
+    print("Got %.3f correct" % (correct/len(test_labels)), correct_count)

@@ -21,11 +21,11 @@ class Network:
                 c.update()
             for p in self.populations:
                 p.update()
-            t.append([x.threshold for x in self.populations[1].neurons])
-            v.append([x.voltage for x in self.populations[1].neurons])
-        plt.plot(t)
-        plt.plot(v)
-        plt.show()
+        #     t.append([x.threshold for x in self.populations[1].neurons])
+        #     v.append([x.voltage for x in self.populations[1].neurons])
+        # plt.plot(t)
+        # plt.plot(v)
+        # plt.show()
 
     def record(self, steps):
         rates = []
