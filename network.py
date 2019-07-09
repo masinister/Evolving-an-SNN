@@ -21,7 +21,7 @@ class Network:
                 c.update()
             for p in self.populations:
                 p.update()
-        #     t.append([x.threshold for x in self.populations[1].neurons])
+            # t.append([x.synapse.pre_trace[0] for x in [self.connections[3]]])
         #     v.append([x.voltage for x in self.populations[1].neurons])
         # plt.plot(t)
         # plt.plot(v)
@@ -45,6 +45,7 @@ class Network:
 
         # Normalize each population's firing rate
         for i in range(len(rates)):
+            rates[i] = [int(x == max(rates[i])) for x in rates[i]]
             rates[i] = rates[i]/(np.sum(rates[i]) + 0.0001)
         return rates
 
