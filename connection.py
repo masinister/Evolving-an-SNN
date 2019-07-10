@@ -27,9 +27,8 @@ class Connection:
     '''
     def update(self):
         # Static connections to not change weights
-        if self.params["training"]:
-            self.synapse.update(self.pre.activations)
-            self.adj = self.adj + self.synapse.delta_w(self.adj, self.post.activations)
+        self.synapse.update(self.pre.activations)
+        self.adj = self.adj + self.synapse.delta_w(self.adj, self.post.activations)
 
         '''
         There is a weird bug happening with numpy where feed is being type-casted
@@ -48,4 +47,4 @@ class Connection:
 
     def normalize(self):
         for row in self.adj:
-            row /= (np.sum(row) + 0.001)
+            row /= (np.sum(row) + 0.0001)
