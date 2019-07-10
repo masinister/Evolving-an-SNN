@@ -51,7 +51,7 @@ class Network:
 
     def enable_learning(self):
         for c in self.connections:
-            c.synapse.rule = "static"
+            c.synapse.rule = "STDP"
 
     def disable_learning(self):
         for c in self.connections:
