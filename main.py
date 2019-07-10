@@ -31,6 +31,9 @@ def snn_test():
     rand = schemes.get("random")
     allBut1 = schemes.get("allBut1")
     grid = schemes.get("grid")
+    all2all = schemes.get("all2all")
+    one2one = schemes.get("one2one")
+    local = schemes.get("local")
 
     C1 = Connection(Input, L1, rand(784,64), "STDP", params)
     C2 = Connection(L1, L1, grid(8,8), "STDP", params)

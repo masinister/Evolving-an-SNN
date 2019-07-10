@@ -48,7 +48,11 @@ class ICMNeuron:
          bias: how much threshold increases when neuron fires
         '''
         self.voltage = self.v_decay*self.voltage + self.feed
-        self.activation = int(self.voltage > self.threshold)
+        if self.voltage > self.threshold:
+            self.activation = 1
+            self.voltage = 0
+        else:
+            self.activation = 0
         self.dt = (self.activation + (1-self.activation) * self.t_decay) * self.dt + self.t_bias*self.activation
         self.threshold = self.min_thresh + self.dt
         self.feed = 0
