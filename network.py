@@ -20,8 +20,8 @@ class Network:
             for c in self.connections:
                 c.update()
             for p in self.populations:
-                p.update()
-            # t.append([x.synapse.pre_trace[0] for x in [self.connections[3]]])
+        #         p.update()
+        #     t.append([x.threshold for x in self.populations[1].neurons])
         #     v.append([x.voltage for x in self.populations[1].neurons])
         # plt.plot(t)
         # plt.plot(v)
