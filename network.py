@@ -64,7 +64,7 @@ class Network:
     # Return a distribution of probabilities that each label corresponds to the example (set elsewhere)
     def predict(self, steps):
         rates = self.record(steps)
-        dist = 0 * rates[0][0]
+        dist = np.zeros(10)
         for i in range(len(rates)):
             for j in range(len(rates[i])):
                 dist += rates[i][j] * self.neuron_labels[i][j]
