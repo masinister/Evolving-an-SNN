@@ -11,13 +11,13 @@ pre_trace : record of presynaptic spikes
 avg : target average presynaptic trace
 weight : current value of synaptic weight
 mu : parameter to scale the dependence delta_w on the current weight
-    
+
 '''
 def STDP(trace, adj, post_activ, eta, mu, avg):
 
     '''
     unweighted : binary adjacency matrix to keep track of what connections exist
-    w : matrix representing the weight dependent part of delta_w 
+    w : matrix representing the weight dependent part of delta_w
     '''
     unweighted = np.array(adj>0, dtype='int')
     w = 1 - adj     # subtraction changes 0 entries to 1 (creating new connections),
@@ -30,11 +30,11 @@ def STDP(trace, adj, post_activ, eta, mu, avg):
     return delta_w
 
 
-def Static(trace, adj, post_activ, eta, mu, avg):
+def static(trace, adj, post_activ, eta, mu, avg):
     return 0
 
 
-rules = {"STDP": STDP,"Static": Static}
+rules = {"STDP": STDP,"static": static}
 
 def get(name):
     return rules[name]

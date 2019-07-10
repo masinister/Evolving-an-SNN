@@ -46,16 +46,16 @@ class Network:
         # Normalize each population's firing rate
         for i in range(len(rates)):
             rates[i] = [int(x == max(rates[i])) for x in rates[i]]
-            rates[i] = rates[i]/(np.sum(rates[i]) + 0.0001)
+            rates[i] = rates[i]/(np.sum(rates[i]))
         return rates
 
     def enable_learning(self):
         for c in self.connections:
-            c.params["training"] = True
+            c.synapse.rule = "static"
 
     def disable_learning(self):
         for c in self.connections:
-            c.params["training"] = False
+            c.synapse.rule = "static"
 
     def set_params(self, params):
         for c in self.connections:
@@ -68,5 +68,5 @@ class Network:
         for i in range(len(rates)):
             for j in range(len(rates[i])):
                 dist += rates[i][j] * self.neuron_labels[i][j]
-        dist = dist / (np.sum(dist) + 0.001)
+        dist = dist / (np.sum(dist))
         return dist
