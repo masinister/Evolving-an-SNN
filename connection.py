@@ -40,7 +40,6 @@ class Connection:
         feed = np.array(np.dot(self.pre.activations, self.adj))
         feed = np.reshape(feed,(np.size(feed),))
         self.post.input(feed)
-        print(np.min(self.adj))
 
     def set_params(self, params):
         self.params = params

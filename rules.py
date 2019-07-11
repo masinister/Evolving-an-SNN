@@ -19,9 +19,7 @@ def STDP(pre_tr, post_tr, adj, pre_activ, post_activ, params):
     unweighted : binary adjacency matrix to keep track of what connections exist
     w : matrix representing the weight dependent part of delta_w
     '''
-    unweighted = np.array(adj>0, dtype='int')
-    w = 1 - adj     # subtraction changes 0 entries to 1 (creating new connections),
-    w *= unweighted # elementwise multiplication is done with unweighted to fix this
+    w = adj*(1 - adj)     # subtraction changes 0 entries to 1 (creating new connections),
     w = np.power(w, params["mu"])
     # only update if there is a postsynaptic spike (0 out columns where there is no post-synap spike)
     w = np.matmul(w, np.diag(post_activ))
@@ -42,9 +40,7 @@ def PPrule(pre_tr, post_tr, adj, pre_activ, post_activ, params):
     Note there is no overlap between dw1 and dw2, so a nonzero entry for one rule
     is zero for the other.
     '''
-    unweighted = np.array(adj>0, dtype='int')
     dw = adj*(1-adj)
-    dw *= unweighted # 0 out nonexistent connections
     #  Entries are True iff post fired and pre did not fire
     notPre = np.logical_not(pre_activ)
     # dw(i,j) are nonzero iff pre or (pre and post) == pre is True

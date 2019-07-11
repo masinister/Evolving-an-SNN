@@ -26,7 +26,7 @@ class Synapse:
         self.post_trace = self.params["decay_post"]*self.post_trace + post_activ
 
     def delta_w(self, adj, pre_activ, post_activ):
-        return rules.get(self.rule)(self.pre_trace, self.post_trace, adj, pre_activ, post_activ, self.params["eta"], self.params["mu"])
+        return rules.get(self.rule)(self.pre_trace, self.post_trace, adj, pre_activ, post_activ, self.params)
 
     def set_params(self, params):
         self.params = params
