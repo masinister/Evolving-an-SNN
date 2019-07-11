@@ -47,6 +47,7 @@ class Network:
         for i in range(len(rates)):
             rates[i] = [int(x == max(rates[i])) for x in rates[i]]
             rates[i] /= (np.sum(rates[i]) + 0.0001)
+            #
         return rates
 
     def enable_learning(self):
