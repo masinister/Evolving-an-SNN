@@ -27,7 +27,7 @@ def label_neurons(network, test_data, test_labels, num_labels, show_steps, rest_
 
     # For each image shown, record the number of times that the neurons fire
     # and count how many times the network saw each digit
-    label_count = [0]*num_labels
+    label_count = np.zeros((num_labels,))
     i = 0
     for x in tqdm(test_data):
         network.populations[0].set_input(x)
@@ -47,12 +47,12 @@ def label_neurons(network, test_data, test_labels, num_labels, show_steps, rest_
         j = 0
         for count in label_count:
             if count != 0:
-                firing_rates[i][:,j] = firing_rates[i][:,j] / count
+                firing_rates[i][:,j] /= count
             j += 1
         i += 1
 
     for pop in firing_rates:
-        pop = pop / (sum(pop) + 0.001)
+        pop /= (sum(pop) + 0.001)
 
     network.neuron_labels = firing_rates
     # print(firing_rates[0][0:10])
@@ -75,5 +75,5 @@ def evaluate(network, test_data, test_labels, steps, rest_steps):
         network.run(rest_steps)
     for i in range(10):
         if view_count[i] != 0:
-            correct_count[i] = correct_count[i]/view_count[i]
+            correct_count[i] /= view_count[i]
     print("Got %.3f correct" % (correct/len(test_labels)), correct_count)

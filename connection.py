@@ -46,4 +46,4 @@ class Connection:
         self.synapse.set_params(params)
 
     def normalize(self):
-        self.adj /= np.sum(self.adj, axis=0)
+        self.adj /= np.max(np.transpose(self.adj), axis = 0)[:, None] + 0.0001
