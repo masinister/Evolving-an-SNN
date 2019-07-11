@@ -1,14 +1,37 @@
 import numpy as np
 from tqdm import tqdm
+import matplotlib.pyplot as plt
 
 def train(network, train_data, learn_steps, rest_steps):
     network.enable_learning()
+
+    weight = np.transpose([[] for _ in range(100)])
+    thresh = np.transpose([[] for _ in range(49)])
+    volt = np.transpose([[] for _ in range(49)])
+    act = np.transpose([[] for _ in range(49)])
+
     for x in tqdm(train_data):
-        # print(np.around(network.connections[2].adj, decimals=2))
         network.populations[0].set_input(x)
-        network.run(learn_steps)
+        [w, t, v, a] = network.run(learn_steps)
+        weight = np.concatenate((weight,w))
+        thresh = np.concatenate((thresh,t))
+        volt = np.concatenate((volt,v))
+        act = np.concatenate((act,a))
         network.populations[0].set_blank()
         network.run(rest_steps)
+
+    fig, axs = plt.subplots(4,sharex=True,gridspec_kw={'hspace': .5})
+    fig.suptitle("Info about 1st Layer (rest times omitted from plot)")
+    axs[0].plot(weight)
+    axs[0].set_title("100 Synap Weights From Input to L1")
+    axs[1].plot(thresh)
+    axs[1].set_title("L1 Thresholds")
+    axs[2].plot(volt)
+    axs[2].set_title("L1 Voltages")
+    axs[3].plot(act)
+    axs[3].set_title("L1 Activations")
+
+
 
 def label_neurons(network, test_data, test_labels, num_labels, show_steps, rest_steps):
     '''
@@ -55,8 +78,10 @@ def label_neurons(network, test_data, test_labels, num_labels, show_steps, rest_
         pop /= (sum(pop) + 0.001)
 
     network.neuron_labels = firing_rates
-    # print(firing_rates[0][0:10])
-    # print(firing_rates[1][0:10])
+
+
+
+
 
 def evaluate(network, test_data, test_labels, steps, rest_steps):
     network.disable_learning()
@@ -66,7 +91,6 @@ def evaluate(network, test_data, test_labels, steps, rest_steps):
     for i in tqdm(range(len(test_data))):
         network.populations[0].set_input(test_data[i])
         res = network.predict(steps)
-        # print(np.argmax(res), ["%.4f" % r for r in res], test_labels[i])
         if np.argmax(res) == test_labels[i]:
             correct += 1
             correct_count[test_labels[i]] += 1
@@ -76,4 +100,6 @@ def evaluate(network, test_data, test_labels, steps, rest_steps):
     for i in range(10):
         if view_count[i] != 0:
             correct_count[i] /= view_count[i]
-    print("Got %.3f correct" % (correct/len(test_labels)), correct_count)
+    print("Got %.3f correct" % (correct/len(test_labels)))
+    print("Accuracy per digit: 0   1   2   3   4   5   6   7   8   9\n", list(correct_count))
+    plt.show()

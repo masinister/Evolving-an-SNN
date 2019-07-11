@@ -18,19 +18,17 @@ class Network:
         t = []
         v = []
         w = []
-        w1 = []
         a = []
         for s in range(steps):
             for c in self.connections:
                 c.update()
             for p in self.populations:
                 p.update()
-            # w.append([x for x in self.connections[0].adj.flat[5600:8001]])
-            # w1.append([x for x in self.connections[1].adj.flat])
-            # v.append([x.voltage for x in self.populations[1].neurons])
-            # t.append([x.threshold for x in self.populations[1].neurons])
-            # a.append([x.activation for x in self.populations[1].neurons])
-        return
+            w.append([x for x in self.connections[0].adj.flat[17150:17250]])
+            v.append([x.voltage for x in self.populations[1].neurons])
+            t.append([x.threshold for x in self.populations[1].neurons])
+            a.append([x.activation for x in self.populations[1].neurons])
+        return w, t, v, a
 
     def record(self, steps):
         rates = []
