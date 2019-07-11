@@ -18,16 +18,19 @@ def genetic_test():
 def snn_test():
     print("Initializing Network")
 
-    params = {"eta": 0.5, "mu": 1.0, "decay": 0.5, "avg": 0.2}
+    '''
+    Learning paramters for STDP rule
+    '''
+    params = {"eta": .2, "mu": 1, "decay_pre": 0.9, "decay_post": 0.9, "avg": 0}
+    '''
+    Parameters for neuron activity
+    '''
+    n_params = {"v_init": 0, "v_decay": .6, "t_init": 5, "min_thresh": 1, "t_bias": 80, "t_decay": .9}
 
-    n_params = {"v_init": 0, "v_decay": .5, "t_init": 5, "min_thresh": 1, "t_bias": 80, "t_decay": .7}
 
-    (x_train, y_train), (x_test, y_test) = mnist.load_data()
-
-    Input = population.Image_Input(x_train[0])
-    L1 = population.Population(n_params,9, neuron_type=neuron.ICMNeuron)
-    L2 = population.Population(n_params, 9, neuron_type=neuron.ICMNeuron)
-
+    '''
+    different connection schemes
+    '''
     rand = schemes.get("random")
     allBut1 = schemes.get("allBut1")
     grid = schemes.get("grid")
@@ -35,22 +38,44 @@ def snn_test():
     one2one = schemes.get("one2one")
     local = schemes.get("local")
 
-    C1 = Connection(Input, L1, rand(784,9), "STDP", params)
-    C2 = Connection(L1, L1, grid(3,3), "STDP", params)
-    C3 = Connection(L1, L2, rand(9,9), "STDP", params)
-    C4 = Connection(L2, L2, grid(3,3), "STDP", params)
 
-    network = Network([Input, L1, L2], [C1, C2, C3, C4])
+    (x_train, y_train), (x_test, y_test) = mnist.load_data()
+    '''
+    Initialize populations
+    (neuron_params, num_neurons, neuron model)
+    '''
+    Input = population.Image_Input(x_train[0])
+    L1 = population.Population(n_params,49, neuron_type=neuron.ICMNeuron)
+    L2 = population.Population(n_params, 49, neuron_type=neuron.ICMNeuron)
+
+    '''
+    Initialize connections between populations
+    (Presynap, Postsynap, connection_scheme, learning_rule, learning_params)
+    '''
+    C1 = Connection(Input, L1, rand(784,49), "STDP", params)
+    C2 = Connection(L1, L2, all2all(49,49), "STDP", params)
+
+
+    '''
+    (list of populations, list of connections, learning_rule)
+    first population in list is assumed to be the input layer
+    '''
+    network = Network([Input, L1, L2], [C1, C2], "STDP")
     network.set_params(params)
 
+
+    '''
+    train/label/validate
+    10: number of labels
+    50: number of time steps an image is presented for
+    40: number of time steps the network rests for inbetween images
+    '''
     print("Training")
-    train.train(network, x_train[0:10], 256, 64)
-
+    train.train(network, x_train[0:20], 50, 40)
     print("Labelling")
-    train.label_neurons(network, x_test[0:32], y_test[0:32], 10, 256, 64)
-
+    train.label_neurons(network, x_train[0:200], y_train[0:200], 10, 50, 40)
     print("Testing")
-    train.evaluate(network, x_test[0:16], y_test[0:16], 256, 64)
+    train.evaluate(network, x_train[50000:50200], y_train[50000:50200], 50, 40)
 
 
 if __name__ == '__main__':
