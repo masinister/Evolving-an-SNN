@@ -30,11 +30,41 @@ def STDP(trace, adj, post_activ, eta, mu, avg):
     return delta_w
 
 
-def static(trace, adj, post_activ, eta, mu, avg):
+def PPrule(pre_tr, post_tr, adj, pre_activ, post_activ, eta, mu):
+    '''
+    dw = -eta * post_tr * w * (1 - w)    if pre or (pre and post) spike
+    dw = mu * pre_tr * w * (1 - w)       if post and (not pre) spike
+
+    In the comments below, pre (post) refers to whether a pre (post) synaptic neuron
+    fired.
+    dw1 : weight changes according to the first rule
+    dw2 : weight changes according to the second rule
+    Note there is no overlap between dw1 and dw2, so a nonzero entry for one rule
+    is zero for the other.
+    '''
+    unweighted = np.array(adj>0, dtype='int')
+    dw = adj*(1-adj)
+    dw *= unweighted # 0 out nonexistent connections
+    #  Entries are True iff post fired and pre did not fire
+    notPre = np.logical_not(pre_activ)
+    # dw(i,j) are nonzero iff pre or (pre and post) == pre is True
+    # this affects weights along the row of the adj matrix so we multiply on the right
+    # by pre_activ
+    dw1 = np.dot( np.diag(pre_activ), dw )
+    dw1 = -eta*np.dot( np.diag(pre_tr), dw )
+    # Entries are nonzero iff post and (not pre) is True
+    # diag( notPre ) * dw * diag( post_activ )
+    dw2 = np.dot( notPre, np.dot(dw, np.diag(post_activ)) )
+    dw2 = mu*np.dot( dw, np.diag(post_tr) )
+
+    return dw1 + dw2
+
+
+def static(pre_tr, post_tr, adj, pre_activ, post_activ, eta, mu):
     return 0
 
 
-rules = {"STDP": STDP,"static": static}
+rules = {"STDP": STDP,"static": static, "PPrule": PPrule}
 
 def get(name):
     return rules[name]

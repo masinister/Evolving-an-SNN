@@ -14,8 +14,10 @@ class Network:
         self.neuron_labels = []
 
     def run(self, steps):
-        t = []
-        v = []
+        nn = self.populations[1].num_neurons
+        t = np.zeros((nn,steps))
+        v = np.zeros((nn,steps))
+        a = np.zeros((nn,steps))
         for s in range(steps):
             for c in self.connections:
                 c.update()
@@ -52,7 +54,7 @@ class Network:
 
     def enable_learning(self):
         for c in self.connections:
-            c.synapse.rule = "STDP"
+            c.synapse.rule = "PPrule"
 
     def disable_learning(self):
         for c in self.connections:
