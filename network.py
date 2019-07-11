@@ -20,7 +20,7 @@ class Network:
             for c in self.connections:
                 c.update()
             for p in self.populations:
-        #         p.update()
+                p.update()
         #     t.append([x.threshold for x in self.populations[1].neurons])
         #     v.append([x.voltage for x in self.populations[1].neurons])
         # plt.plot(t)
@@ -46,7 +46,8 @@ class Network:
         # Normalize each population's firing rate
         for i in range(len(rates)):
             rates[i] = [int(x == max(rates[i])) for x in rates[i]]
-            rates[i] = rates[i]/(np.sum(rates[i]))
+            rates[i] /= (np.sum(rates[i]) + 0.0001)
+            #
         return rates
 
     def enable_learning(self):
@@ -68,5 +69,5 @@ class Network:
         for i in range(len(rates)):
             for j in range(len(rates[i])):
                 dist += rates[i][j] * self.neuron_labels[i][j]
-        dist = dist / (np.sum(dist))
+        dist /= (np.sum(dist))
         return dist
