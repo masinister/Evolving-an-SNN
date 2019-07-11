@@ -28,7 +28,7 @@ def STDP(pre_tr, post_tr, adj, pre_activ, post_activ, params):
     return delta_w
 
 
-def PPrule(pre_tr, post_tr, adj, pre_activ, post_activ, params):
+def PreAndPost(pre_tr, post_tr, adj, pre_activ, post_activ, params):
     '''
     dw = -eta * post_tr * w * (1 - w)    if pre or (pre and post) spike
     dw = mu * pre_tr * w * (1 - w)       if post and (not pre) spike
@@ -60,7 +60,7 @@ def static(pre_tr, post_tr, adj, pre_activ, post_activ, params):
     return 0
 
 
-rules = {"STDP": STDP,"static": static, "PPrule": PPrule}
+rules = {"STDP": STDP,"static": static, "PreAndPost": PreAndPost}
 
 def get(name):
     return rules[name]
