@@ -7,27 +7,30 @@ import matplotlib.pyplot as plt
 class Network:
     # Assumed that first population in pop list is the input population
     # and the last population in pop list is the output population
-    def __init__(self, pop, conn):
+    def __init__(self, pop, conn, rule):
         # List of populations/connections
         self.populations = pop
         self.connections = conn
         self.neuron_labels = []
+        self.rule = rule
 
     def run(self, steps):
-        nn = self.populations[1].num_neurons
-        t = np.zeros((nn,steps))
-        v = np.zeros((nn,steps))
-        a = np.zeros((nn,steps))
+        t = []
+        v = []
+        w = []
+        w1 = []
+        a = []
         for s in range(steps):
             for c in self.connections:
                 c.update()
             for p in self.populations:
                 p.update()
-        #     t.append([x.threshold for x in self.populations[1].neurons])
-        #     v.append([x.voltage for x in self.populations[1].neurons])
-        # plt.plot(t)
-        # plt.plot(v)
-        # plt.show()
+            # w.append([x for x in self.connections[0].adj.flat[5600:8001]])
+            # w1.append([x for x in self.connections[1].adj.flat])
+            # v.append([x.voltage for x in self.populations[1].neurons])
+            # t.append([x.threshold for x in self.populations[1].neurons])
+            # a.append([x.activation for x in self.populations[1].neurons])
+        return
 
     def record(self, steps):
         rates = []
@@ -54,7 +57,7 @@ class Network:
 
     def enable_learning(self):
         for c in self.connections:
-            c.synapse.rule = "PPrule"
+            c.synapse.rule = self.rule
 
     def disable_learning(self):
         for c in self.connections:
