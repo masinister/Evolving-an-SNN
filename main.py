@@ -21,11 +21,11 @@ def snn_test():
     '''
     Learning paramters for STDP rule
     '''
-    params = {"eta": .2, "mu": 2, "decay_pre": 0.5, "decay_post": 0.5, "avg": 0.7}
+    # params = {"eta": .2, "mu": 2, "decay_pre": 0.5, "decay_post": 0.5, "avg": 0.7}
     '''
     Learning paramters for PreAndPost rule
     '''
-    # params = {"eta": .02, "mu": 0.02, "decay_pre": 0.1, "decay_post": 0.1, "avg": 0.7}
+    params = {"eta": .1, "mu": 0.9, "decay_pre": 0.5, "decay_post": 0.5, "avg": 0.7}
     '''
     Parameters for neuron activity
     '''
@@ -50,25 +50,21 @@ def snn_test():
     '''
     Input = population.Image_Input(x_train[0])
     L1 = population.Population(n_params,49, neuron_type=neuron.ICMNeuron)
-    L2 = population.Population(n_params, 49, neuron_type=neuron.ICMNeuron)
-    L3 = population.Population(n_params, 49, neuron_type=neuron.ICMNeuron)
+    L2 = population.Population(n_params,49, neuron_type=neuron.ICMNeuron)
 
     '''
     Initialize connections between populations
     (Presynap, Postsynap, connection_scheme, learning_rule, learning_params)
     '''
     C1 = Connection(Input, L1, rand(784,49), "STDP", params)
-    C2 = Connection(Input, L3, rand(784,49), "STDP", params)
-    C3 = Connection(L1, L3, all2all(49,49), "STDP", params)
-    C4 = Connection(L3, L2, all2all(49,49), "STDP", params)
-    C5 = Connection(L2, L1, all2all(49,49), "STDP", params)
+    C2 = Connection(Input, L2, rand(784,49), "STDP", params)
 
 
     '''
     (list of populations, list of connections, learning_rule)
     first population in list is assumed to be the input layer
     '''
-    network = Network([Input, L1, L2, L3], [C1, C2, C3, C4, C5], "STDP")
+    network = Network([Input, L1, L2], [C1, C2,], "PreAndPost")
     network.set_params(params)
 
 
