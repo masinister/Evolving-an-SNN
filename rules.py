@@ -1,5 +1,4 @@
 import numpy as np
-import scipy
 
 '''
 STDP: Time and Weight Dependent Rule
@@ -22,9 +21,9 @@ def STDP(pre_tr, post_tr, adj, pre_activ, post_activ, params):
     w = adj*(1 - adj)
     w = np.power(w, params["mu"])
     # only update if there is a postsynaptic spike (0 out columns where there is no post-synap spike)
-    w = scipy.linalg.blas.sgemm( 1, w, np.diag(post_activ))
+    w = np.dot( w, np.diag(post_activ))
     x = pre_tr - params["avg"]
-    delta_w = params["eta"] * scipy.linalg.blas.sgemm( 1, np.diag(x), w)
+    delta_w = params["eta"] * np.dot( np.diag(x), w)
     return delta_w
 
 
@@ -46,12 +45,12 @@ def PreAndPost(pre_tr, post_tr, adj, pre_activ, post_activ, params):
     # dw(i,j) are nonzero iff pre or (pre and post) == pre is True
     # this affects weights along the row of the adj matrix so we multiply on the right
     # by pre_activ
-    dw1 = scipy.linalg.blas.sgemm( 1, np.diag(pre_activ), dw )
-    dw1 = -params["eta"]*scipy.linalg.blas.sgemm( 1, dw1, np.diag(post_tr) )
+    dw1 = np.dot( np.diag(pre_activ), dw )
+    dw1 = -params["eta"]*np.dot( dw1, np.diag(post_tr) )
     # Entries are nonzero iff post and (not pre) is True
     # diag( notPre ) * dw * diag( post_activ )
-    dw2 = scipy.linalg.blas.sgemm( 1, np.diag(notPre), scipy.linalg.blas.sgemm( 1,dw, np.diag(post_activ)) )
-    dw2 = params["mu"]*scipy.linalg.blas.sgemm( 1, np.diag(pre_tr), dw2 )
+    dw2 = np.dot( np.diag(notPre), np.dot(dw, np.diag(post_activ)) )
+    dw2 = params["mu"]*np.dot( np.diag(pre_tr), dw2 )
 
     return dw1 + dw2
 
