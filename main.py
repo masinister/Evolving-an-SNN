@@ -21,11 +21,11 @@ def snn_test():
     '''
     Learning paramters for STDP rule
     '''
-    # params = {"eta": .2, "mu": 2, "decay_pre": 0.5, "decay_post": 0.5, "avg": 0.7}
+    params = {"eta": .2, "mu": 2, "decay_pre": 0.5, "decay_post": 0.5, "avg": 0.7}
     '''
     Learning paramters for PreAndPost rule
     '''
-    params = {"eta": .1, "mu": 0.9, "decay_pre": 0.5, "decay_post": 0.5, "avg": 0.7}
+    # params = {"eta": .1, "mu": 0.9, "decay_pre": 0.5, "decay_post": 0.5, "avg": 0.7}
     '''
     Parameters for neuron activity
     '''
@@ -57,14 +57,14 @@ def snn_test():
     (Presynap, Postsynap, connection_scheme, learning_rule, learning_params)
     '''
     C1 = Connection(Input, L1, rand(784,49), "STDP", params)
-    C2 = Connection(Input, L2, rand(784,49), "STDP", params)
+    C2 = Connection(L1, L2, rand(49,49), "STDP", params)
 
 
     '''
     (list of populations, list of connections, learning_rule)
     first population in list is assumed to be the input layer
     '''
-    network = Network([Input, L1, L2], [C1, C2,], "PreAndPost")
+    network = Network([Input, L1, L2], [C1, C2,])
     network.set_params(params)
 
 
