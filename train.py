@@ -30,7 +30,6 @@ def train(network, train_data, learn_steps, rest_steps):
     axs[2].set_title("L1 Voltages")
     axs[3].plot(act)
     axs[3].set_title("L1 Activations")
-    plt.show()
 
 
 
@@ -102,4 +101,5 @@ def evaluate(network, test_data, test_labels, steps, rest_steps):
         if view_count[i] != 0:
             correct_count[i] /= view_count[i]
     print("Got %.3f correct" % (correct/len(test_labels)))
-    print("Accuracy per digit: 0   1   2   3   4   5   6   7   8   9\n", list(correct_count))
+    print("Accuracy per digit:\n", list(correct_count))
+    plt.show()
