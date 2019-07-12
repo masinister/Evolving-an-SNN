@@ -19,7 +19,7 @@ def STDP(pre_tr, post_tr, adj, pre_activ, post_activ, params):
     unweighted : binary adjacency matrix to keep track of what connections exist
     w : matrix representing the weight dependent part of delta_w
     '''
-    w = adj*(1 - adj)     # subtraction changes 0 entries to 1 (creating new connections),
+    w = adj*(1 - adj)
     w = np.power(w, params["mu"])
     # only update if there is a postsynaptic spike (0 out columns where there is no post-synap spike)
     w = np.matmul(w, np.diag(post_activ))
@@ -47,11 +47,11 @@ def PreAndPost(pre_tr, post_tr, adj, pre_activ, post_activ, params):
     # this affects weights along the row of the adj matrix so we multiply on the right
     # by pre_activ
     dw1 = np.dot( np.diag(pre_activ), dw )
-    dw1 = -params["eta"]*np.dot( np.diag(pre_tr), dw1 )
+    dw1 = -params["eta"]*np.dot( dw1, np.diag(post_tr) )
     # Entries are nonzero iff post and (not pre) is True
     # diag( notPre ) * dw * diag( post_activ )
-    dw2 = np.dot( notPre, np.dot(dw, np.diag(post_activ)) )
-    dw2 = params["mu"]*np.dot( dw2, np.diag(post_tr) )
+    dw2 = np.dot( np.diag(notPre), np.dot(dw, np.diag(post_activ)) )
+    dw2 = params["mu"]*np.dot( np.diag(pre_tr), dw2 )
 
     return dw1 + dw2
 
