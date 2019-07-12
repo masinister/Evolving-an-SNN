@@ -48,18 +48,25 @@ def grid(m,n):
 
 
 
-def local(m,n):
+def local(m,n,radius):
     '''
     This scheme emebeds the neurons into a 2D rectangular lattice in which every
     neuron is connected to any neurons within a certain distance from itself.
     '''
     d = {}
     count = 0
+    '''
+    generate dictionary of nodes with (x,y) coordinates on an (m,n) grid
+    '''
     for i in range(m):
         for j in range(n):
             d[count] = np.array([j,i])
             count+=1
 
+    '''
+    create graph where each node is connected to each node that is within
+    some distance to it on the grid
+    '''
     G = nx.Graph()
     G.add_nodes_from(d.keys())
     for n, pos in d.items():
@@ -68,7 +75,7 @@ def local(m,n):
     for i in range(len(d)):
         for j in range(i+1,len(d)):
             dist = np.linalg.norm(d[i]-d[j])
-            if dist <= np.sqrt(8)+.001:
+            if dist <= radius:
                 G.add_edge(i,j,weight=1/dist)
 
     return nx.to_numpy_matrix(G)
