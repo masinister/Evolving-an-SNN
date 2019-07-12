@@ -27,7 +27,7 @@ class Population:
         for i in range(self.num_neurons):
             spike = self.neurons[i].update()
             self.activations[i] = spike
-            
+
 
 
 class Image_Input(Population):
@@ -38,19 +38,12 @@ class Image_Input(Population):
     def __init__(self, image):
         self.num_neurons = len(image)*len(image[0])
         self.neurons = []
-        for column in image:
-            for pixel in column:
-                # set average firing rate of the neurons
-                self.neurons.append(neuron.PoissonNeuron(rate = pixel / 255.0))
+        self.neurons = list(map(neuron.PoissonNeuron, (image / 255.0).flat))
         self.activations = np.zeros(self.num_neurons)
 
     def set_input(self, image):
         # change to another image
-        i = 0
-        for column in image:
-            for pixel in column:
-                self.neurons[i].rate = pixel / 255.0
-                i+=1
+        self.neurons = list(map(neuron.PoissonNeuron, (image / 255.0).flat))
 
     def set_blank(self):
         for n in self.neurons:
