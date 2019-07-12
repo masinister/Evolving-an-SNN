@@ -83,4 +83,5 @@ def snn_test():
 
 
 if __name__ == '__main__':
-    snn_test()
+    import cProfile
+    cProfile.run('snn_test()')

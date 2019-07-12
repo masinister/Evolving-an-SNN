@@ -25,9 +25,7 @@ class Population:
         Update each neuron and record which neurons in the population fired
         '''
         for i in range(self.num_neurons):
-            spike = self.neurons[i].update()
-            self.activations[i] = spike
-
+            self.activations[i] = self.neurons[i].update()
 
 
 class Image_Input(Population):

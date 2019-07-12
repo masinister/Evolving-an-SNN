@@ -1,4 +1,4 @@
-from numpy import random
+import random
 
 class ICMNeuron:
     '''
@@ -51,9 +51,10 @@ class ICMNeuron:
         if self.voltage > self.threshold:
             self.activation = 1
             self.voltage = 0
+            self.dt += self.t_bias
         else:
             self.activation = 0
-        self.dt = (self.activation + (1-self.activation) * self.t_decay) * self.dt + self.t_bias*self.activation
+            self.dt *= self.t_decay
         self.threshold = self.min_thresh + self.dt
         self.feed = 0
         return self.activation
@@ -67,7 +68,7 @@ class PoissonNeuron:
 
     def update(self):
         # at each time step fire with probability equal to the avg firing rate
-        r = random.rand()
+        r = random.random()
         if r <= self.rate:
             self.activation = 1
             return 1
