@@ -7,12 +7,11 @@ import matplotlib.pyplot as plt
 class Network:
     # Assumed that first population in pop list is the input population
     # and the last population in pop list is the output population
-    def __init__(self, pop, conn, rule):
+    def __init__(self, pop, conn):
         # List of populations/connections
         self.populations = pop
         self.connections = conn
         self.neuron_labels = []
-        self.rule = rule
 
     def run(self, steps):
         t = []
@@ -54,7 +53,7 @@ class Network:
 
     def enable_learning(self):
         for c in self.connections:
-            c.synapse.rule = self.rule
+            c.synapse.rule = c.rule
 
     def disable_learning(self):
         for c in self.connections:

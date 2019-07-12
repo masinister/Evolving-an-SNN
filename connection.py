@@ -19,6 +19,7 @@ class Connection:
         self.post = post
         self.adj = adj
         self.params = params
+        self.rule = rule
         self.synapse = Synapse(self.params, self.pre.activations, self.post.activations, rule)
         # self.normalize()
 
