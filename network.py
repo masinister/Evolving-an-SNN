@@ -27,7 +27,7 @@ class Network:
             w.append([x for x in self.connections[0].adj.flat[17150:17250]])
             v.append([x.voltage for x in self.populations[1].neurons])
             t.append([x.threshold for x in self.populations[1].neurons])
-            a.append([x.activation for x in self.populations[1].neurons])
+            a.extend([self.connections[1].synapse.pre_trace])
         return w, t, v, a
 
     def record(self, steps):
@@ -50,7 +50,6 @@ class Network:
         for i in range(len(rates)):
             rates[i] = [int(x == max(rates[i])) for x in rates[i]]
             rates[i] /= (np.sum(rates[i]) + 0.0001)
-            #
         return rates
 
     def enable_learning(self):

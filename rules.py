@@ -47,11 +47,11 @@ def PreAndPost(pre_tr, post_tr, adj, pre_activ, post_activ, params):
     # this affects weights along the row of the adj matrix so we multiply on the right
     # by pre_activ
     dw1 = np.dot( np.diag(pre_activ), dw )
-    dw1 = -params["eta"]*np.dot( np.diag(pre_tr), dw )
+    dw1 = -params["eta"]*np.dot( np.diag(pre_tr), dw1 )
     # Entries are nonzero iff post and (not pre) is True
     # diag( notPre ) * dw * diag( post_activ )
     dw2 = np.dot( notPre, np.dot(dw, np.diag(post_activ)) )
-    dw2 = params["mu"]*np.dot( dw, np.diag(post_tr) )
+    dw2 = params["mu"]*np.dot( dw2, np.diag(post_tr) )
 
     return dw1 + dw2
 

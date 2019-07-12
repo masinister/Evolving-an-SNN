@@ -5,18 +5,18 @@ import matplotlib.pyplot as plt
 def train(network, train_data, learn_steps, rest_steps):
     network.enable_learning()
 
-    weight = np.transpose([[] for _ in range(100)])
-    thresh = np.transpose([[] for _ in range(49)])
-    volt = np.transpose([[] for _ in range(49)])
-    act = np.transpose([[] for _ in range(49)])
+    weight = []
+    thresh = []
+    volt = []
+    act = []
 
     for x in tqdm(train_data):
         network.populations[0].set_input(x)
         [w, t, v, a] = network.run(learn_steps)
-        weight = np.concatenate((weight,w))
-        thresh = np.concatenate((thresh,t))
-        volt = np.concatenate((volt,v))
-        act = np.concatenate((act,a))
+        weight.extend(w)
+        thresh.extend(t)
+        volt.extend(v)
+        act.extend(a)
         network.populations[0].set_blank()
         network.run(rest_steps)
 
@@ -30,6 +30,7 @@ def train(network, train_data, learn_steps, rest_steps):
     axs[2].set_title("L1 Voltages")
     axs[3].plot(act)
     axs[3].set_title("L1 Activations")
+    plt.show()
 
 
 
@@ -102,4 +103,3 @@ def evaluate(network, test_data, test_labels, steps, rest_steps):
             correct_count[i] /= view_count[i]
     print("Got %.3f correct" % (correct/len(test_labels)))
     print("Accuracy per digit: 0   1   2   3   4   5   6   7   8   9\n", list(correct_count))
-    plt.show()
