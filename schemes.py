@@ -75,8 +75,8 @@ def local(m,n,radius):
     for i in range(len(d)):
         for j in range(i+1,len(d)):
             dist = np.linalg.norm(d[i]-d[j])
-            if dist <= radius:
-                G.add_edge(i,j,weight=1/dist)
+            if dist <= radius and dist != 0:
+                G.add_edge(i,j,weight=np.random.random())
 
     return nx.to_numpy_matrix(G)
 
