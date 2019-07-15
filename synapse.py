@@ -22,8 +22,12 @@ class Synapse:
         self.rule = rule
 
     def update(self, pre_activ, post_activ):
-        self.pre_trace = self.params["decay_pre"]*self.pre_trace + pre_activ
-        self.post_trace = self.params["decay_post"]*self.post_trace + post_activ
+        # Decay traces that did not fire
+        self.pre_trace = self.params["decay_pre"]*self.pre_trace*np.logical_not(pre_activ)
+        self.post_trace = self.params["decay_post"]*self.post_trace*np.logical_not(post_activ)
+        # traces that did fire are set to 1
+        self.pre_trace += pre_activ
+        self.post_trace += post_activ
 
     def delta_w(self, adj, pre_activ, post_activ):
         return rules.get(self.rule)(self.pre_trace, self.post_trace, adj, pre_activ, post_activ, self.params)
