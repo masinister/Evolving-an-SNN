@@ -31,10 +31,7 @@ class Network:
         return w, t, v, a
 
     def record(self, steps):
-        rates = []
-        for pop in self.populations[1:]:
-            rates.append(np.zeros(pop.num_neurons))
-
+        rates = [np.zeros(pop.num_neurons) for pop in self.populations[1:]]
         # present the image, and every time a neuron fires increment rates
         for s in range(steps):
             for c in self.connections:
@@ -71,5 +68,5 @@ class Network:
         for i in range(len(rates)):
             for j in range(len(rates[i])):
                 dist += rates[i][j] * self.neuron_labels[i][j]
-        dist /= (np.sum(dist))
+        dist /= (np.sum(dist) + 0.0001)
         return dist

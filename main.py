@@ -25,11 +25,11 @@ def snn_test():
     '''
     Learning paramters for PreAndPost rule
     '''
-    params = {"eta": 0.0001, "mu": 0.01, "decay_pre": 0.2, "decay_post": 0.2, "avg": 0.9}
+    params = {"eta": 0.0001, "mu": 0.01, "decay_pre": 0.95, "decay_post": 0.95, "avg": 0.9}
     '''
     Parameters for neuron activity
     '''
-    n_params = {"v_init": 0, "v_decay": .6, "t_init": 5, "min_thresh": 1, "t_bias": 80, "t_decay": .9}
+    n_params = {"v_init": 0, "v_decay": .4, "t_init": 50, "min_thresh": 0.01, "t_bias": 0.05, "t_decay": .9999}
 
 
     '''
@@ -75,7 +75,7 @@ def snn_test():
     '''
     for i in range(100):
         print("Training", i)
-        train.train(network, x_train[50*i:50*(i+1)], 100, 40)
+        train.train(network, x_train[50 * i: 50 * (i+1)], 100, 40)
         print("Labelling")
         train.label_neurons(network, x_train[50*i:50*(i+1)], y_train[50*i:50*(i+1)], 10, 100, 40)
         print("Testing")
