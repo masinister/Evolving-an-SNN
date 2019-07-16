@@ -14,14 +14,15 @@ class Connection:
     rule: method for updating the weight matrix (e.g. STDP learning rule)
     params: hyperparameters for synapse and learning rule
     '''
-    def __init__(self, pre, post, adj, rule, params):
+    def __init__(self, pre, post, adj, params, **kwargs):
         self.pre = pre
         self.post = post
         self.adj = adj
         self.params = params
-        self.rule = rule
-        self.synapse = Synapse(self.params, self.pre.activations, self.post.activations, rule)
-        # self.normalize()
+        self.rule = kwargs.get("rule")
+        self.wmin = kwargs.get("wmin")
+        self.wmax = kwargs.get("wmax")
+        self.synapse = Synapse(self.params, self.pre.activations, self.post.activations, self.rule)
 
     '''
     update synapse and adjacency matrix then transmit weighted sums of spikes along the connection
@@ -48,4 +49,4 @@ class Connection:
 
     def normalize(self):
         # self.adj *= 0.99
-        self.adj = np.clip(self.adj,0,1)
+        self.adj = np.clip(self.adj,self.wmin,self.wmax)

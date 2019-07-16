@@ -29,7 +29,7 @@ def snn_test():
     '''
     Parameters for neuron activity
     '''
-    n_params = {"v_init": 0, "v_decay": .4, "t_init": 50, "min_thresh": 0.01, "t_bias": 0.05, "t_decay": .9999}
+    n_params = {"v_init": 0, "v_decay": .4, "t_init": 50, "min_thresh": 0.01, "t_bias": 0.05, "t_decay": .99999}
 
 
     '''
@@ -55,8 +55,8 @@ def snn_test():
     Initialize connections between populations
     (Presynap, Postsynap, connection_scheme, learning_rule, learning_params)
     '''
-    C1 = Connection(Input, L1, rand(784,100), "PreAndPost", params)
-    C2 = Connection(L1, L1, rand(100,100), "PreAndPost", params)
+    C1 = Connection(Input, L1, rand(784,100), params, rule = "PreAndPost", wmin = 0, wmax = 1)
+    C2 = Connection(L1, L1, rand(100,100)-1, params, rule = "PreAndPost", wmin = -1, wmax = 0)
 
 
     '''
@@ -77,9 +77,9 @@ def snn_test():
         print("Training", i)
         train.train(network, x_train[50 * i: 50 * (i+1)], 100, 40)
         print("Labelling")
-        train.label_neurons(network, x_train[50*i:50*(i+1)], y_train[50*i:50*(i+1)], 10, 100, 40)
+        train.label_neurons(network, x_train[0:100], y_train[0:100], 10, 100, 40)
         print("Testing")
-        train.evaluate(network, x_train[5000:5050], y_train[5000:5050], 100, 40)
+        train.evaluate(network, x_train[5000:5100], y_train[5000:5100], 100, 40)
 
 
 if __name__ == '__main__':
