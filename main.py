@@ -21,11 +21,11 @@ def snn_test():
     '''
     Learning paramters for STDP rule
     '''
-    params = {"eta": .2, "mu": 2, "decay_pre": 0.5, "decay_post": 0.5, "avg": 0.7}
+    # params = {"eta": .1, "mu": 2, "decay_pre": 0.5, "decay_post": 0.5, "avg": 0.9}
     '''
     Learning paramters for PreAndPost rule
     '''
-    # params = {"eta": .1, "mu": 0.9, "decay_pre": 0.5, "decay_post": 0.5, "avg": 0.7}
+    params = {"eta": 0.0001, "mu": 0.01, "decay_pre": 0.2, "decay_post": 0.2, "avg": 0.9}
     '''
     Parameters for neuron activity
     '''
@@ -49,22 +49,21 @@ def snn_test():
     (neuron_params, num_neurons, neuron model)
     '''
     Input = population.Image_Input(x_train[0])
-    L1 = population.Population(n_params,49, neuron_type=neuron.ICMNeuron)
-    L2 = population.Population(n_params,49, neuron_type=neuron.ICMNeuron)
+    L1 = population.Population(n_params,100, neuron_type=neuron.ICMNeuron)
 
     '''
     Initialize connections between populations
     (Presynap, Postsynap, connection_scheme, learning_rule, learning_params)
     '''
-    C1 = Connection(Input, L1, rand(784,49), "STDP", params)
-    C2 = Connection(L1, L2, rand(49,49), "STDP", params)
+    C1 = Connection(Input, L1, rand(784,100), "PreAndPost", params)
+    C2 = Connection(L1, L1, rand(100,100), "PreAndPost", params)
 
 
     '''
     (list of populations, list of connections, learning_rule)
     first population in list is assumed to be the input layer
     '''
-    network = Network([Input, L1, L2], [C1, C2,])
+    network = Network([Input, L1,], [C1, C2,])
     network.set_params(params)
 
 
@@ -74,14 +73,16 @@ def snn_test():
     50: number of time steps an image is presented for
     40: number of time steps the network rests for inbetween images
     '''
-    print("Training")
-    train.train(network, x_train[0:50], 50, 40)
-    print("Labelling")
-    train.label_neurons(network, x_train[0:200], y_train[0:200], 10, 50, 40)
-    print("Testing")
-    train.evaluate(network, x_train[50000:50200], y_train[50000:50200], 50, 40)
+    for i in range(100):
+        print("Training", i)
+        train.train(network, x_train[50*i:50*(i+1)], 100, 40)
+        print("Labelling")
+        train.label_neurons(network, x_train[50*i:50*(i+1)], y_train[50*i:50*(i+1)], 10, 100, 40)
+        print("Testing")
+        train.evaluate(network, x_train[5000:5050], y_train[5000:5050], 100, 40)
 
 
 if __name__ == '__main__':
-    import cProfile
-    cProfile.run('snn_test()')
+    # import cProfile
+    # cProfile.run('snn_test()')
+    snn_test()

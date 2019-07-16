@@ -30,7 +30,7 @@ class Connection:
         # Static connections to not change weights
         self.synapse.update(self.pre.activations, self.post.activations)
         self.adj = self.adj + self.synapse.delta_w(self.adj, self.pre.activations, self.post.activations)
-        # self.normalize()
+        self.normalize()
         '''
         There is a weird bug happening with numpy where feed is being type-casted
         as a numpy.matrixlib.defmatrix.matrix with shape (1,784) i.e. a 2D array
@@ -47,4 +47,5 @@ class Connection:
         self.synapse.set_params(params)
 
     def normalize(self):
-        self.adj /= np.max(np.transpose(self.adj), axis = 0)[:, None] + 0.0001
+        # self.adj *= 0.99
+        self.adj = np.clip(self.adj,0,1)

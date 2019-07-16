@@ -23,10 +23,11 @@ class Network:
                 c.update()
             for p in self.populations:
                 p.update()
-            w.append([x for x in self.connections[0].adj.flat[17150:17250]])
+            w.append([x for x in self.connections[1].adj.flat[0:100]])
             v.append([x.voltage for x in self.populations[1].neurons])
             t.append([x.threshold for x in self.populations[1].neurons])
-            a.extend([self.connections[1].synapse.pre_trace])
+            a.append([x.activation for x in self.populations[1].neurons])
+            # a.extend([self.connections[1].synapse.pre_trace])
         return w, t, v, a
 
     def record(self, steps):
@@ -47,7 +48,7 @@ class Network:
 
         # Normalize each population's firing rate
         for i in range(len(rates)):
-            rates[i] = [int(x == max(rates[i])) for x in rates[i]]
+            rates[i] = (rates[i] == max(rates[i])).astype(float)
             rates[i] /= (np.sum(rates[i]) + 0.0001)
         return rates
 
