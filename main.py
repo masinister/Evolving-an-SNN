@@ -29,7 +29,7 @@ def snn_test():
     '''
     Parameters for neuron activity
     '''
-    n_params = {"v_init": 0, "v_decay": .4, "t_init": 50, "min_thresh": 0.01, "t_bias": 0.05, "t_decay": .99999}
+    n_params = {"v_init": -65, "v_decay": .99, "t_init": 50, "min_thresh": -52, "t_bias": 0.05, "t_decay": .99999}
 
 
     '''
@@ -46,17 +46,16 @@ def snn_test():
     (x_train, y_train), (x_test, y_test) = mnist.load_data()
     '''
     Initialize populations
-    (neuron_params, num_neurons, neuron model)
     '''
     Input = population.Image_Input(x_train[0])
     L1 = population.Population(n_params,100, neuron_type=neuron.ICMNeuron)
 
     '''
     Initialize connections between populations
-    (Presynap, Postsynap, connection_scheme, learning_rule, learning_params)
     '''
-    C1 = Connection(Input, L1, rand(784,100), params, rule = "PreAndPost", wmin = 0, wmax = 1)
-    C2 = Connection(L1, L1, rand(100,100)-1, params, rule = "PreAndPost", wmin = -1, wmax = 0)
+    inh = -17.5
+    C1 = Connection(Input, L1, all2all(784,100), params, rule = "PreAndPost", wmin = 0, wmax = 1)
+    C2 = Connection(L1, L1, allBut1(100,inh), params, rule = "static", wmin = inh, wmax = 0)
 
 
     '''
@@ -73,14 +72,16 @@ def snn_test():
     50: number of time steps an image is presented for
     40: number of time steps the network rests for inbetween images
     '''
+
     for i in range(100):
         print("Training", i)
         train.train(network, x_train[50 * i: 50 * (i+1)], 100, 40)
         print("Labelling")
-        train.label_neurons(network, x_train[0:100], y_train[0:100], 10, 100, 40)
+        train.label_neurons(network, x_train[50 * i: 50 * (i+1)], y_train[50 * i: 50 * (i+1)], 10, 100, 40)
         print("Testing")
-        train.evaluate(network, x_train[5000:5100], y_train[5000:5100], 100, 40)
-
+        train.evaluate(network, x_train[50000:50100], y_train[50000:50100], 100, 40)
+    print("Testing")
+    train.evaluate(network, x_train[50000:51000], y_train[50000:51000], 100, 40)
 
 if __name__ == '__main__':
     # import cProfile

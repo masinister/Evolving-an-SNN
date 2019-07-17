@@ -20,12 +20,12 @@ def all2all(m,n):
     '''
     return np.random.random_sample((m,n))
 
-def allBut1(m):
+def allBut1(m,inh):
     '''
     This scheme is meant to connect a layer to itself, with random weights.
     Connect every neuron to every other neuron except to itself.
     '''
-    x = (np.ones((m,m)) - np.eye(m))*np.random.random_sample((m,m))
+    x = (np.ones((m,m)) - np.eye(m))*inh
     return x
 
 def one2one(m):
@@ -76,7 +76,7 @@ def local(m,n,radius):
         for j in range(i+1,len(d)):
             dist = np.linalg.norm(d[i]-d[j])
             if dist <= radius and dist != 0:
-                G.add_edge(i,j,weight=np.random.random())
+                G.add_edge(i,j,weight=-1/dist)
 
     return nx.to_numpy_matrix(G)
 
