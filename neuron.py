@@ -23,6 +23,8 @@ class ICMNeuron:
         self.dt = self.threshold - self.min_thresh
         self.t_decay = params["t_decay"]
         self.refrac = 0
+        self.v_reset = params["v_reset"]
+        self.v_rest = params["v_rest"]
 
         self.activation = 0
         self.feed = 0
