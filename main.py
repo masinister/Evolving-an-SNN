@@ -24,7 +24,7 @@ def snn_test():
     '''
     Parameters for neuron activity
     '''
-    n_params = {"v_init": -65, "v_decay": .99, "t_init": 50, "min_thresh": -52, "t_bias": 0.05, "t_decay": .99999}
+    n_params = {"v_init": -65, "v_decay": .99, "t_init": 50, "min_thresh": -52, "t_bias": 0.05, "t_decay": .99999, "v_reset", -65, "v_rest" = -65}
 
 
     '''

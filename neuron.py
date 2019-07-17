@@ -50,7 +50,8 @@ class ICMNeuron:
          feed: input from data or other neurons
          bias: how much threshold increases when neuron fires
         '''
-        self.voltage = self.rest + self.v_decay * (self.voltage - self.rest) + (self.refrac == 0) * self.feed
+        self.voltage = self.rest + self.v_decay * (self.voltage - self.rest)
+        self.voltage += (self.refrac == 0) * self.feed
         self.refrac -= (self.refrac > 0)
         if self.voltage > self.threshold and self.refrac == 0:
             self.activation = 1
