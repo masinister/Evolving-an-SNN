@@ -17,19 +17,14 @@ def genetic_test():
 
 def snn_test():
     print("Initializing Network")
-
-    '''
-    Learning paramters for STDP rule
-    '''
-    # params = {"eta": .1, "mu": 2, "decay_pre": 0.5, "decay_post": 0.5, "avg": 0.9}
     '''
     Learning paramters for PreAndPost rule
     '''
-    params = {"eta": 0.0001, "mu": 0.01, "decay_pre": 0.95, "decay_post": 0.95, "avg": 0.9}
+    params = {"eta": 0.0001, "mu": 0.01, "decay_pre": 0.95, "decay_post": 0.95}
     '''
     Parameters for neuron activity
     '''
-    n_params = {"v_init": 0, "v_decay": .4, "t_init": 50, "min_thresh": 0.01, "t_bias": 0.05, "t_decay": .99999}
+    n_params = {"v_init": 0, "v_decay": .99, "t_init": 60, "min_thresh": 0.01, "t_bias": 0.05, "t_decay": .99999}
 
 
     '''
@@ -56,14 +51,14 @@ def snn_test():
     (Presynap, Postsynap, connection_scheme, learning_rule, learning_params)
     '''
     C1 = Connection(Input, L1, rand(784,100), params, rule = "PreAndPost", wmin = 0, wmax = 1)
-    C2 = Connection(L1, L1, rand(100,100)-1, params, rule = "PreAndPost", wmin = -1, wmax = 0)
+    C2 = Connection(L1, L1, rand(100,100)-1, params, rule = "static", wmin = -1, wmax = 0)
 
 
     '''
     (list of populations, list of connections, learning_rule)
     first population in list is assumed to be the input layer
     '''
-    network = Network([Input, L1,], [C1, C2,])
+    network = Network([Input, L1, ], [C1, C2,])
     network.set_params(params)
 
 

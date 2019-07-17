@@ -19,7 +19,7 @@ def train(network, train_data, learn_steps, rest_steps):
         act.extend(a)
         network.populations[0].set_blank()
         network.run(rest_steps)
-    
+
     fig, axs = plt.subplots(4,sharex=True,gridspec_kw={'hspace': .5})
     fig.suptitle("Info about 1st Layer (rest times omitted from plot)")
     axs[0].plot(weight)
@@ -30,6 +30,7 @@ def train(network, train_data, learn_steps, rest_steps):
     axs[2].set_title("L1 Voltages")
     axs[3].plot(act)
     axs[3].set_title("L1 Activations")
+    plt.show()
 
 
 
@@ -102,4 +103,3 @@ def evaluate(network, test_data, test_labels, steps, rest_steps):
             correct_count[i] /= view_count[i]
     print("Got %.3f correct" % (correct/len(test_labels)))
     print("Accuracy per digit:\n", list(correct_count))
-    plt.show()

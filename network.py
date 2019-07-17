@@ -26,8 +26,8 @@ class Network:
             w.append([x for x in self.connections[1].adj.flat[0:100]])
             v.append([x.voltage for x in self.populations[1].neurons])
             t.append([x.threshold for x in self.populations[1].neurons])
-            a.append([x.activation for x in self.populations[1].neurons])
-            # a.extend([self.connections[1].synapse.pre_trace])
+            # a.append([x.activation for x in self.populations[1].neurons])
+            a.extend([self.connections[1].synapse.pre_trace])
         return w, t, v, a
 
     def record(self, steps):
