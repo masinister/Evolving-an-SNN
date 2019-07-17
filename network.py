@@ -20,10 +20,13 @@ class Network:
         w = []
         a = []
         for s in range(steps):
-            for c in self.connections:
-                c.update()
             for p in self.populations:
                 p.update()
+            for c in self.connections:
+                c.input()
+            for c in self.connections:
+                c.update()
+
             w.append([x for x in self.connections[0].adj.flat[10000:10100]])
             v.append([x.voltage for x in self.populations[1].neurons])
             t.append([x.threshold for x in self.populations[1].neurons])
