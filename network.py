@@ -3,6 +3,7 @@ from population import Population
 from tqdm import tqdm
 import numpy as np
 import matplotlib.pyplot as plt
+from PIL import Image
 
 class Network:
     # Assumed that first population in pop list is the input population
@@ -28,6 +29,9 @@ class Network:
             t.append([x.threshold for x in self.populations[1].neurons])
             # a.append([x.activation for x in self.populations[1].neurons])
             a.extend([self.connections[1].synapse.pre_trace])
+            sw = self.get_square_weights(self.connections[0].adj, 10, 28)
+            img = Image.fromarray((sw * 255).astype(np.uint8))
+            img.save("img/img %d.png" %(s,))
         return w, t, v, a
 
     def record(self, steps):
@@ -70,3 +74,15 @@ class Network:
                 dist += rates[i][j] * self.neuron_labels[i][j]
         dist /= (np.sum(dist) + 0.0001)
         return dist
+
+    def get_square_weights(self, weights, n_sqrt, side):
+        side = (side, side)
+        square_weights = np.zeros((side[0] * n_sqrt, side[1] * n_sqrt))
+        for i in range(n_sqrt):
+            for j in range(n_sqrt):
+                n = i * n_sqrt + j
+                x = i * side[0]
+                y = (j % n_sqrt) * side[1]
+                filter_ = weights[:, n].reshape((*side))
+                square_weights[x : x + side[0], y : y + side[1]] = filter_
+        return square_weights

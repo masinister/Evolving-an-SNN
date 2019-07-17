@@ -49,7 +49,7 @@ def snn_test():
     Initialize connections between populations
     '''
     inh = -17.5
-    C1 = Connection(Input, L1, all2all(784,100), params, rule = "PreAndPost", wmin = 0, wmax = 1)
+    C1 = Connection(Input, L1, 0.3 * all2all(784,100), params, rule = "PreAndPost", wmin = 0, wmax = 1)
     C2 = Connection(L1, L1, allBut1(100,inh), params, rule = "static", wmin = inh, wmax = 0)
 
 
@@ -72,7 +72,7 @@ def snn_test():
         print("Training", i)
         train.train(network, x_train[50 * i: 50 * (i+1)], 100, 40)
         print("Labelling")
-        train.label_neurons(network, x_train[50 * i: 50 * (i+1)], y_train[50 * i: 50 * (i+1)], 10, 100, 40)
+        train.label_neurons(network, x_train[0: 100], y_train[0: 100], 10, 100, 40)
         print("Testing")
         train.evaluate(network, x_train[50000:50100], y_train[50000:50100], 100, 40)
     print("Testing")
