@@ -29,9 +29,9 @@ class Network:
             t.append([x.threshold for x in self.populations[1].neurons])
             # a.append([x.activation for x in self.populations[1].neurons])
             a.extend([self.connections[1].synapse.pre_trace])
-            sw = self.get_square_weights(self.connections[0].adj, 10, 28)
-            img = Image.fromarray((sw * 255).astype(np.uint8))
-            img.save("img/img %d.png" %(s,))
+        sw = self.get_square_weights(self.connections[0].adj, 10, 28)
+        img = Image.fromarray((sw * 255).astype(np.uint8))
+        img.save("img/img.png")
         return w, t, v, a
 
     def record(self, steps):

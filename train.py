@@ -13,6 +13,7 @@ def train(network, train_data, learn_steps, rest_steps):
     for x in tqdm(train_data):
         network.populations[0].set_input(x)
         [w, t, v, a] = network.run(learn_steps)
+        network.connections[1].normalize()
         weight.extend(w)
         thresh.extend(t)
         volt.extend(v)

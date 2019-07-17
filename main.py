@@ -24,7 +24,7 @@ def snn_test():
     '''
     Parameters for neuron activity
     '''
-    n_params = {"v_init": -65, "v_decay": .99, "t_init": 50, "min_thresh": -52, "t_bias": 0.05, "t_decay": .99999, "v_reset": -65, "v_rest": -65}
+    n_params = {"v_init": -65, "v_decay": .99, "t_init": 50, "min_thresh": -52, "t_bias": 0.05, "t_decay": .9999999, "v_reset": -65, "v_rest": -65}
 
 
     '''
@@ -71,10 +71,10 @@ def snn_test():
     for i in range(100):
         print("Training", i)
         train.train(network, x_train[50 * i: 50 * (i+1)], 100, 40)
-        print("Labelling")
-        train.label_neurons(network, x_train[0: 100], y_train[0: 100], 10, 100, 40)
-        print("Testing")
-        train.evaluate(network, x_train[50000:50100], y_train[50000:50100], 100, 40)
+        # print("Labelling")
+        # train.label_neurons(network, x_train[0: 100], y_train[0: 100], 10, 100, 40)
+        # print("Testing")
+        # train.evaluate(network, x_train[50000:50100], y_train[50000:50100], 100, 40)
     print("Testing")
     train.evaluate(network, x_train[50000:51000], y_train[50000:51000], 100, 40)
 
