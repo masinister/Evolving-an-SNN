@@ -23,7 +23,7 @@ class Network:
                 c.update()
             for p in self.populations:
                 p.update()
-            w.append([x for x in self.connections[1].adj.flat[0:100]])
+            w.append([x for x in self.connections[0].adj.flat[10000:10100]])
             v.append([x.voltage for x in self.populations[1].neurons])
             t.append([x.threshold for x in self.populations[1].neurons])
             # a.append([x.activation for x in self.populations[1].neurons])
