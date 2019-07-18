@@ -18,8 +18,7 @@ def train(network, train_data, learn_steps, rest_steps):
         thresh.extend(t)
         volt.extend(v)
         act.extend(a)
-        network.populations[0].set_blank()
-        network.run(rest_steps)
+        network.rest()
 
     # fig, axs = plt.subplots(4,sharex=True,gridspec_kw={'hspace': .5})
     # fig.suptitle("Info about 1st Layer (rest times omitted from plot)")
