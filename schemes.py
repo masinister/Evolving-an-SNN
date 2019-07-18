@@ -20,12 +20,12 @@ def all2all(m,n):
     '''
     return np.random.random_sample((m,n))
 
-def allBut1(m,inh):
+def allBut1(m):
     '''
     This scheme is meant to connect a layer to itself, with random weights.
     Connect every neuron to every other neuron except to itself.
     '''
-    x = (np.ones((m,m)) - np.eye(m))*inh
+    x = (np.ones((m,m)) - np.eye(m))
     return x
 
 def one2one(m):

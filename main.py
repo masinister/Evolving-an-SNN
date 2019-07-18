@@ -20,7 +20,7 @@ def snn_test():
     '''
     Learning paramters for PreAndPost rule
     '''
-    params = {"eta": 0.0001, "mu": 0.01, "decay_pre": 0.95, "decay_post": 0.95}
+    params = {"eta": 0.0001, "mu": 0.001, "decay_pre": 0.95, "decay_post": 0.95}
     '''
     Parameters for neuron activity
     '''
@@ -50,7 +50,7 @@ def snn_test():
     '''
     inh = -17.5
     C1 = Connection(Input, L1, 0.3 * all2all(784,100), params, rule = "PreAndPost", wmin = 0, wmax = 1)
-    C2 = Connection(L1, L1, allBut1(100,inh), params, rule = "static", wmin = inh, wmax = 0)
+    C2 = Connection(L1, L1, allBut1(100) * inh, params, rule = "static", wmin = inh, wmax = 0)
 
 
     '''
