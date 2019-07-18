@@ -13,7 +13,7 @@ def train(network, train_data, learn_steps, rest_steps):
     for x in tqdm(train_data):
         network.populations[0].set_input(x)
         [w, t, v, a] = network.run(learn_steps)
-        network.connections[1].normalize()
+        network.connections[0].normalize()
         weight.extend(w)
         thresh.extend(t)
         volt.extend(v)
@@ -21,17 +21,17 @@ def train(network, train_data, learn_steps, rest_steps):
         network.populations[0].set_blank()
         network.run(rest_steps)
 
-    fig, axs = plt.subplots(4,sharex=True,gridspec_kw={'hspace': .5})
-    fig.suptitle("Info about 1st Layer (rest times omitted from plot)")
-    axs[0].plot(weight)
-    axs[0].set_title("100 Synap Weights From Input to L1")
-    axs[1].plot(thresh)
-    axs[1].set_title("L1 Thresholds")
-    axs[2].plot(volt)
-    axs[2].set_title("L1 Voltages")
-    axs[3].plot(act)
-    axs[3].set_title("L1 Activations")
-    plt.show()
+    # fig, axs = plt.subplots(4,sharex=True,gridspec_kw={'hspace': .5})
+    # fig.suptitle("Info about 1st Layer (rest times omitted from plot)")
+    # axs[0].plot(weight)
+    # axs[0].set_title("100 Synap Weights From Input to L1")
+    # axs[1].plot(thresh)
+    # axs[1].set_title("L1 Thresholds")
+    # axs[2].plot(volt)
+    # axs[2].set_title("L1 Voltages")
+    # axs[3].plot(act)
+    # axs[3].set_title("L1 Activations")
+    # plt.show()
 
 
 

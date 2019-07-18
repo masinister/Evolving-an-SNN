@@ -35,7 +35,6 @@ class Connection:
     def update(self):
         self.synapse.update(self.pre.activations, self.post.activations)
         self.adj += self.synapse.delta_w(self.adj, self.pre.activations, self.post.activations)
-        # self.normalize()
 
     def set_params(self, params):
         self.params = params
@@ -44,5 +43,6 @@ class Connection:
     def normalize(self):
         # self.adj *= 0.99
         self.adj = np.clip(self.adj,self.wmin,self.wmax)
-        self.adj /= (np.sum(self.adj) + 0.001)
+        self.adj /= np.sum(self.adj, axis = 0) + 0.0001
         self.adj *= 78.4
+        print(self.adj)

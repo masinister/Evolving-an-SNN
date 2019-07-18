@@ -70,7 +70,7 @@ def snn_test():
 
     for i in range(100):
         print("Training", i)
-        train.train(network, x_train[50 * i: 50 * (i+1)], 100, 40)
+        train.train(network, x_train[50 * i: 50 * (i+1)], 300, 300)
         # print("Labelling")
         # train.label_neurons(network, x_train[0: 100], y_train[0: 100], 10, 100, 40)
         # print("Testing")
