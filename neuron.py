@@ -16,7 +16,6 @@ class ICMNeuron:
 
         self.voltage = params["v_init"]
         self.v_decay = params["v_decay"]
-        self.rest = self.voltage
         self.threshold = params["t_init"]
         self.min_thresh = params["min_thresh"]
         self.t_bias = params["t_bias"]
@@ -50,11 +49,11 @@ class ICMNeuron:
          feed: input from data or other neurons
          bias: how much threshold increases when neuron fires
         '''
-        self.voltage = self.rest + self.v_decay * (self.voltage - self.rest)
+        self.voltage = self.rest + self.v_decay * (self.voltage - self.v_rest)
         self.voltage += (self.refrac == 0) * self.feed
         if self.voltage > self.threshold and self.refrac == 0:
             self.activation = 1
-            self.voltage = self.rest
+            self.voltage = self.v_reset
             self.dt += self.t_bias
             self.refrac = 5
         else:
