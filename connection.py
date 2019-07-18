@@ -45,4 +45,3 @@ class Connection:
         self.adj = np.clip(self.adj,self.wmin,self.wmax)
         self.adj /= np.sum(self.adj, axis = 0) + 0.0001
         self.adj *= 78.4
-        print(self.adj)

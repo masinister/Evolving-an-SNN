@@ -36,12 +36,12 @@ class Image_Input(Population):
     def __init__(self, image):
         self.num_neurons = len(image)*len(image[0])
         self.neurons = []
-        self.neurons = list(map(neuron.PoissonNeuron, (image / 1255.0).flat))
+        self.neurons = list(map(neuron.PoissonNeuron, (image / 255.0 /4).flat))
         self.activations = np.zeros(self.num_neurons)
 
     def set_input(self, image):
         # change to another image
-        self.neurons = list(map(neuron.PoissonNeuron, (image / 1255.0).flat))
+        self.neurons = list(map(neuron.PoissonNeuron, (image / 255.0 /4).flat))
 
     def set_blank(self):
         for n in self.neurons:

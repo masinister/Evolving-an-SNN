@@ -52,7 +52,6 @@ class ICMNeuron:
         '''
         self.voltage = self.rest + self.v_decay * (self.voltage - self.rest)
         self.voltage += (self.refrac == 0) * self.feed
-        self.refrac -= (self.refrac > 0)
         if self.voltage > self.threshold and self.refrac == 0:
             self.activation = 1
             self.voltage = self.rest
@@ -63,6 +62,7 @@ class ICMNeuron:
             self.dt *= self.t_decay
         self.threshold = self.min_thresh + self.dt
         self.feed = 0
+        self.refrac -= (self.refrac > 0)
         return self.activation
 
 
