@@ -21,6 +21,7 @@ class Population:
         self.refrac_count = np.zeros(self.num_neurons)
         self.v_reset = kwargs.get("v_reset")
         self.v_rest = kwargs.get("v_rest")
+        self.one_spike = kwargs.get("one_spike")
         self.dt = self.threshold - self.min_thresh
         self.activation = np.zeros(self.num_neurons)
         self.feed = np.zeros(self.num_neurons)
@@ -35,14 +36,24 @@ class Population:
         self.voltage[r] += self.feed[r]
         self.activation.fill(0)
         s = self.voltage >= self.threshold
-        self.voltage[s*r] = self.v_reset
-        self.activation[s*r] = 1
-        self.dt[s*r] += self.t_bias
-        self.refrac_count[s*r] = self.refrac
-        self.dt[~s] *= self.t_decay
-        self.refrac_count[~r] -= 1
+        if self.one_spike:
+            if s.any():
+                a = np.random.choice(np.nonzero(s)[0])
+                s.fill(0)
+                s[a] = 1
+        if (s*r).any():
+            self.voltage[s*r] = self.v_reset
+            self.activation[s*r] = 1
+            self.dt[s*r] += self.t_bias * s.astype(np.float).sum()
+            self.refrac_count[s*r] = self.refrac
+        if (~s).any():
+            self.dt[~s] *= self.t_decay
+        if (~r).any():
+            self.refrac_count[~r] -= 1
         self.threshold = self.min_thresh + self.dt
         self.feed.fill(0)
+
+
 
 class Image_Input(Population):
     '''
@@ -57,7 +68,7 @@ class Image_Input(Population):
 
     def set_input(self, image):
         # change to another image
-        self.rate = (image / (256.0 * 4.0)).flat
+        self.rate = (image / (255.0 * 4.0)).flat
 
     def set_blank(self):
         self.rate.fill(0)

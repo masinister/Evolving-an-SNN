@@ -46,7 +46,8 @@ def snn_test():
         min_thresh = -52,
         t_bias = 0.05,
         t_decay = .9999999,
-        refrac = 5
+        refrac = 5,
+        one_spike = True
     )
 
     '''
@@ -71,7 +72,7 @@ def snn_test():
     40: number of time steps the network rests for inbetween images
     '''
 
-    for i in range(100):
+    for i in range(1000):
         print("Training", i)
         train.train(network, x_train[50 * i: 50 * (i+1)], 300, 300)
         # print("Labelling")
