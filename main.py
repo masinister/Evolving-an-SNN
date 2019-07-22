@@ -40,12 +40,12 @@ def snn_test():
         num_neurons = 100,
         v_init = -65,
         v_decay = .99,
+        v_reset = -65,
+        v_rest = -65,
         t_init = -50,
         min_thresh = -52,
         t_bias = 0.05,
         t_decay = .99999999,
-        v_reset = -65,
-        v_rest = -65,
         refrac = 5
     )
 

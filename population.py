@@ -42,7 +42,7 @@ class Population:
             self.dt *= self.t_decay
             self.refrac -= 1
         self.threshold = self.min_thresh + self.dt
-        self.feed = 0
+        self.feed *= 0
         return self.activation
 
 
@@ -54,18 +54,17 @@ class Image_Input(Population):
     def __init__(self, image):
         self.num_neurons = len(image)*len(image[0])
         self.activation = np.zeros(self.num_neurons)
-        self.rate = 0
+        self.rate = np.zeros(self.num_neurons)
         self.set_input(image)
 
     def set_input(self, image):
         # change to another image
-        self.rate = (image / 255 / 4).flat
+        self.rate = (image / (256.0 * 4.0)).flat
 
     def set_blank(self):
         self.rate *= 0
 
     def update(self):
         self.activation *= 0
-        # self.activation[random.random() < self.rate] = 1
         for i in range(len(self.activation)):
             self.activation[i] = int(random.random() < self.rate[i])
