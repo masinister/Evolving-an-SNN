@@ -61,8 +61,8 @@ class Network:
         for p in self.populations[1:]:
             p.voltage *= 0
             p.voltage += p.v_rest
-            p.dt.fill(0)
-            p.refrac = 0
+            p.dt *= .99995
+            p.refrac_count.fill(0)
 
     def enable_learning(self):
         for c in self.connections:
