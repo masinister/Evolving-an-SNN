@@ -19,7 +19,7 @@ def snn_test():
     '''
     Learning paramters for PreAndPost rule
     '''
-    params = {"eta": 0.0001, "mu": 0.01, "decay_pre": 0.95, "decay_post": 0.95}
+    params = {"eta": 0.0005, "mu": 0.05, "decay_pre": 0.95, "decay_post": 0.95}
     '''
     different connection schemes
     '''
@@ -42,7 +42,7 @@ def snn_test():
         v_decay = .99,
         v_reset = -65,
         v_rest = -65,
-        t_init = -52,
+        t_init = -50,
         min_thresh = -52,
         t_bias = 0.05,
         t_decay = .9999999,
@@ -74,11 +74,11 @@ def snn_test():
 
     for i in range(1000):
         print("Training", i)
-        train.train(network, x_train[50 * i: 50 * (i+1)], 100, 0)
-        # print("Labelling")
-        # train.label_neurons(network, x_train[0: 100], y_train[0: 100], 10, 100, 40)
-        # print("Testing")
-        # train.evaluate(network, x_train[50000:50100], y_train[50000:50100], 100, 40)
+        train.train(network, x_train[10 * i: 10 * (i+1)], 250, 0)
+        print("Labelling")
+        train.label_neurons(network, x_train[0: 100], y_train[0: 100], 10, 100, 0)
+        print("Testing")
+        train.evaluate(network, x_train[50000:50100], y_train[50000:50100], 100, 0)
     print("Testing")
     train.evaluate(network, x_train[50000:51000], y_train[50000:51000], 100, 40)
 

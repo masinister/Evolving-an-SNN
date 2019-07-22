@@ -25,7 +25,7 @@ class Population:
         self.dt = self.threshold - self.min_thresh
         self.activation = np.zeros(self.num_neurons)
         self.feed = np.zeros(self.num_neurons)
-
+        self.learning = True
 
     def input(self, feed):
         self.feed += feed
@@ -44,9 +44,10 @@ class Population:
         if (s*r).any():
             self.voltage[s*r] = self.v_reset
             self.activation[s*r] = 1
-            self.dt[s*r] += self.t_bias * s.astype(np.float).sum()
+            if self.learning:
+                self.dt[s*r] += self.t_bias * s.astype(np.float).sum(0) + 0.5
             self.refrac_count[s*r] = self.refrac
-        if (~s).any():
+        if (~s).any() and self.learning:
             self.dt[~s] *= self.t_decay
         if (~r).any():
             self.refrac_count[~r] -= 1
@@ -68,7 +69,7 @@ class Image_Input(Population):
 
     def set_input(self, image):
         # change to another image
-        self.rate = (image / (255.0 * 4.0)).flat
+        self.rate = np.array(list((image / (255.0 * 4.0)).flat))
 
     def set_blank(self):
         self.rate.fill(0)

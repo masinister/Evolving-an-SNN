@@ -45,7 +45,7 @@ class Network:
             for p in self.populations:
                 p.update()
                 if i > 0:
-                    rates[i-1] += p.activations
+                    rates[i-1] += p.activation
                 i += 1
 
         # Normalize each population's firing rate
@@ -67,10 +67,14 @@ class Network:
     def enable_learning(self):
         for c in self.connections:
             c.synapse.rule = c.rule
+        for p in self.populations:
+            c.learning = True
 
     def disable_learning(self):
         for c in self.connections:
             c.synapse.rule = "static"
+        for p in self.populations:
+            c.learning = False
 
     def set_params(self, params):
         for c in self.connections:
