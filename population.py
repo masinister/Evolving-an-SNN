@@ -66,4 +66,6 @@ class Image_Input(Population):
 
     def update(self):
         self.activation *= 0
-        self.activation[random.random() < self.rate] = 1
+        # self.activation[random.random() < self.rate] = 1
+        for i in range(len(self.activation)):
+            self.activation[i] = int(random.random() < self.rate[i])
