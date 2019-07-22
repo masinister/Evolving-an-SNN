@@ -18,6 +18,7 @@ class Population:
         self.t_bias = kwargs.get("t_bias")
         self.t_decay = kwargs.get("t_decay")
         self.refrac = kwargs.get("refrac")
+        self.refrac_count = np.zeros(self.num_neurons)
         self.v_reset = kwargs.get("v_reset")
         self.v_rest = kwargs.get("v_rest")
         self.dt = self.threshold - self.min_thresh
@@ -30,17 +31,16 @@ class Population:
 
     def update(self):
         self.voltage = self.v_rest + self.v_decay * (self.voltage - self.v_rest)
-        self.voltage += (self.refrac == 0) * self.feed
+        r = self.refrac_count == 0
+        self.voltage[r] += self.feed[r]
         self.activation.fill(0)
-        if self.refrac == 0:
-            mask = self.voltage >= self.threshold
-            self.voltage[mask] = self.v_reset
-            self.activation[mask] = 1
-            self.dt[mask] += self.t_bias
-            self.refrac = 5
-        else:
-            self.dt *= self.t_decay
-            self.refrac -= 1
+        s = self.voltage >= self.threshold
+        self.voltage[s*r] = self.v_reset
+        self.activation[s*r] = 1
+        self.dt[s*r] += self.t_bias
+        self.refrac_count[s*r] = self.refrac
+        self.dt[~s] *= self.t_decay
+        self.refrac_count[~r] -= 1
         self.threshold = self.min_thresh + self.dt
         self.feed.fill(0)
 
@@ -63,6 +63,6 @@ class Image_Input(Population):
         self.rate.fill(0)
 
     def update(self):
-        self.activation *= 0
+        self.activation.fill(0)
         for i in range(len(self.activation)):
             self.activation[i] = int(random.random() < self.rate[i])

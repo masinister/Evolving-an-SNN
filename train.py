@@ -11,14 +11,17 @@ def train(network, train_data, learn_steps, rest_steps):
     act = []
 
     for x in tqdm(train_data):
+        network.enable_learning()
         network.populations[0].set_input(x)
         [w, t, v, a] = network.run(learn_steps)
         network.connections[0].normalize()
+        network.disable_learning()
+        network.run(rest_steps)
+        # network.rest()
         weight.extend(w)
         thresh.extend(t)
         volt.extend(v)
         act.extend(a)
-        network.rest()
 
         fig, axs = plt.subplots(4,sharex=True,gridspec_kw={'hspace': .5})
         fig.suptitle("Info about 1st Layer (rest times omitted from plot)")
