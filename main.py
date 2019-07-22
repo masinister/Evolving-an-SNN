@@ -3,7 +3,6 @@ import schemes
 from connection import Connection
 import population
 from synapse import Synapse
-import neuron
 from network import Network
 import train
 from tensorflow.keras.datasets import mnist
@@ -20,13 +19,7 @@ def snn_test():
     '''
     Learning paramters for PreAndPost rule
     '''
-    params = {"eta": 0.0001, "mu": 0.001, "decay_pre": 0.95, "decay_post": 0.95}
-    '''
-    Parameters for neuron activity
-    '''
-    n_params = {"v_init": -65, "v_decay": .99, "t_init": -50, "min_thresh": -52, "t_bias": 0.05, "t_decay": .99999999, "v_reset": -65, "v_rest": -65}
-
-
+    params = {"eta": 0.0001, "mu": 0.01, "decay_pre": 0.95, "decay_post": 0.95}
     '''
     different connection schemes
     '''
@@ -43,7 +36,19 @@ def snn_test():
     Initialize populations
     '''
     Input = population.Image_Input(x_train[0])
-    L1 = population.Population(n_params,100, neuron_type=neuron.ICMNeuron)
+    L1 = population.Population(
+        num_neurons = 100,
+        v_init = -65,
+        v_decay = .99,
+        v_reset = -65,
+        v_rest = -65,
+        t_init = -52,
+        min_thresh = -52,
+        t_bias = 0.05,
+        t_decay = .9999999,
+        refrac = 5,
+        one_spike = True
+    )
 
     '''
     Initialize connections between populations
@@ -51,7 +56,6 @@ def snn_test():
     inh = -17.5
     C1 = Connection(Input, L1, 0.3 * all2all(784,100), params, rule = "PreAndPost", wmin = 0, wmax = 1)
     C2 = Connection(L1, L1, allBut1(100) * inh, params, rule = "static", wmin = inh, wmax = 0)
-
 
     '''
     (list of populations, list of connections, learning_rule)
@@ -68,7 +72,7 @@ def snn_test():
     40: number of time steps the network rests for inbetween images
     '''
 
-    for i in range(100):
+    for i in range(1000):
         print("Training", i)
         train.train(network, x_train[50 * i: 50 * (i+1)], 300, 300)
         # print("Labelling")

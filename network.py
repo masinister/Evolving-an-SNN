@@ -1,7 +1,6 @@
 from connection import Connection
 from population import Population
 from tqdm import tqdm
-from neuron import ICMNeuron
 import numpy as np
 import matplotlib.pyplot as plt
 from PIL import Image
@@ -21,16 +20,15 @@ class Network:
         w = []
         a = []
         for s in range(steps):
-            for p in self.populations:
-                p.update()
-            for c in self.connections:
-                c.input()
             for c in self.connections:
                 c.update()
+            for c in self.connections:
+                c.input()
+            for p in self.populations:
+                p.update()
             # w.append([x for x in self.connections[0].adj.flat[10000:10100]])
-            # v.append([x.voltage for x in self.populations[1].neurons])
-            # t.append([x.threshold for x in self.populations[1].neurons])
-            # # a.append([x.activation for x in self.populations[1].neurons])
+            # v.extend([self.populations[1].voltage])
+            # t.extend([self.populations[1].threshold])
             # a.extend([self.connections[1].synapse.pre_trace])
         sw = self.get_square_weights(self.connections[0].adj, 10, 28)
         img = Image.fromarray((sw * 255).astype(np.uint8))
@@ -58,16 +56,13 @@ class Network:
 
     def rest(self):
         for c in self.connections:
-            pre = np.size(c.synapse.pre_trace)
-            post = np.size(c.synapse.post_trace)
-            c.synapse.pre_trace = np.zeros(pre)
-            c.synapse.post_trace = np.zeros(post)
-        for p in self.populations:
-            if type(p.neurons[0]) == ICMNeuron:
-                for n in p.neurons:
-                    n.voltage = n.v_rest
-                    n.dt = 0
-                    n.refrac = 0
+            c.synapse.pre_trace.fill(0)
+            c.synapse.post_trace.fill(0)
+        for p in self.populations[1:]:
+            p.voltage *= 0
+            p.voltage += p.v_rest
+            p.dt.fill(0)
+            p.refrac = 0
 
     def enable_learning(self):
         for c in self.connections:

@@ -1,6 +1,6 @@
-import neuron
 import matplotlib.pyplot as plt
 import numpy as np
+import random
 
 class Population:
     '''
@@ -9,23 +9,50 @@ class Population:
     neuron_type : class of the neurons
     activations : list of which neurons fired at current time step
     '''
-    def __init__(self, n_params, num_neurons=0, neuron_type=neuron.ICMNeuron):
+    def __init__(self, **kwargs):
+        self.num_neurons = kwargs.get("num_neurons")
+        self.voltage = kwargs.get("v_init") * np.ones(self.num_neurons)
+        self.v_decay = kwargs.get("v_decay")
+        self.threshold = kwargs.get("t_init") * np.ones(self.num_neurons)
+        self.min_thresh = kwargs.get("min_thresh")
+        self.t_bias = kwargs.get("t_bias")
+        self.t_decay = kwargs.get("t_decay")
+        self.refrac = kwargs.get("refrac")
+        self.refrac_count = np.zeros(self.num_neurons)
+        self.v_reset = kwargs.get("v_reset")
+        self.v_rest = kwargs.get("v_rest")
+        self.one_spike = kwargs.get("one_spike")
+        self.dt = self.threshold - self.min_thresh
+        self.activation = np.zeros(self.num_neurons)
+        self.feed = np.zeros(self.num_neurons)
 
-        self.num_neurons = num_neurons
-        self.neurons = [neuron_type(n_params) for _ in range(num_neurons)]
-        self.activations = np.zeros(num_neurons)
 
     def input(self, feed):
-        # pass input feed of to each neuron
-        for i in range(self.num_neurons):
-            self.neurons[i].input(feed[i])
+        self.feed += feed
 
     def update(self):
-        '''
-        Update each neuron and record which neurons in the population fired
-        '''
-        for i in range(self.num_neurons):
-            self.activations[i] = self.neurons[i].update()
+        self.voltage = self.v_rest + self.v_decay * (self.voltage - self.v_rest)
+        r = self.refrac_count == 0
+        self.voltage[r] += self.feed[r]
+        self.activation.fill(0)
+        s = self.voltage >= self.threshold
+        if self.one_spike:
+            if s.any():
+                a = np.random.choice(np.nonzero(s)[0])
+                s.fill(0)
+                s[a] = 1
+        if (s*r).any():
+            self.voltage[s*r] = self.v_reset
+            self.activation[s*r] = 1
+            self.dt[s*r] += self.t_bias * s.astype(np.float).sum()
+            self.refrac_count[s*r] = self.refrac
+        if (~s).any():
+            self.dt[~s] *= self.t_decay
+        if (~r).any():
+            self.refrac_count[~r] -= 1
+        self.threshold = self.min_thresh + self.dt
+        self.feed.fill(0)
+
 
 
 class Image_Input(Population):
@@ -35,47 +62,18 @@ class Image_Input(Population):
     '''
     def __init__(self, image):
         self.num_neurons = len(image)*len(image[0])
-        self.neurons = []
-        self.neurons = list(map(neuron.PoissonNeuron, (image / 255.0 /4).flat))
-        self.activations = np.zeros(self.num_neurons)
+        self.activation = np.zeros(self.num_neurons)
+        self.rate = np.zeros(self.num_neurons)
+        self.set_input(image)
 
     def set_input(self, image):
         # change to another image
-        self.neurons = list(map(neuron.PoissonNeuron, (image / 255.0 /4).flat))
+        self.rate = (image / (255.0 * 4.0)).flat
 
     def set_blank(self):
-        for n in self.neurons:
-            n.rate = 0
-
-
-
-
-class Const_Input(Population):
-    '''
-    Population of input neurons. Each neuron feeds in a constant input proportional
-    to the intensity of the cooresponding pixel
-    '''
-    def __init__(self, image):
-        self.num_neurons = len(image)*len(image[0])
-        self.activations = np.zeros(self.num_neurons)
-        i = 0
-        for column in image:
-            for pixel in column:
-                self.activations[i] = pixel/255
-                i += 1
+        self.rate.fill(0)
 
     def update(self):
-        # Const neuron / population does not change
-        pass
-
-    def set_input(self, image):
-        # change to another image
-        i = 0
-        for column in image:
-            for pixel in column:
-                self.activations[i] = pixel/255
-                i+=1
-
-    def set_blank(self):
-        for i in range(self.num_neurons):
-            self.activations[i] = 0
+        self.activation.fill(0)
+        for i in range(len(self.activation)):
+            self.activation[i] = int(random.random() < self.rate[i])

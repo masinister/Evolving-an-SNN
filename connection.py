@@ -22,26 +22,24 @@ class Connection:
         self.rule = kwargs.get("rule")
         self.wmin = kwargs.get("wmin")
         self.wmax = kwargs.get("wmax")
-        self.synapse = Synapse(self.params, self.pre.activations, self.post.activations, self.rule)
+        self.synapse = Synapse(self.params, self.pre.activation, self.post.activation, self.rule)
 
     '''
     update synapse and adjacency matrix then transmit weighted sums of spikes along the connection
     '''
     def input(self):
-        feed = np.array(np.dot(self.pre.activations, self.adj))
-        feed = np.reshape(feed,(np.size(feed),))
+        feed = np.array(np.dot(self.pre.activation, self.adj))
         self.post.input(feed)
 
     def update(self):
-        self.synapse.update(self.pre.activations, self.post.activations)
-        self.adj += self.synapse.delta_w(self.adj, self.pre.activations, self.post.activations)
+        self.synapse.update(self.pre.activation, self.post.activation)
+        self.adj += self.synapse.delta_w(self.adj, self.pre.activation, self.post.activation)
 
     def set_params(self, params):
         self.params = params
         self.synapse.set_params(params)
 
     def normalize(self):
-        # self.adj *= 0.99
         self.adj = np.clip(self.adj,self.wmin,self.wmax)
         self.adj /= np.sum(self.adj, axis = 0) + 0.0001
         self.adj *= 78.4
