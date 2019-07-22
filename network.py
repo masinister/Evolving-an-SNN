@@ -1,7 +1,6 @@
 from connection import Connection
 from population import Population
 from tqdm import tqdm
-from neuron import ICMNeuron
 import numpy as np
 import matplotlib.pyplot as plt
 from PIL import Image
