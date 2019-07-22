@@ -26,11 +26,11 @@ class Network:
                 c.input()
             for c in self.connections:
                 c.update()
-            # w.append([x for x in self.connections[0].adj.flat[10000:10100]])
-            # v.extend([self.populations[1].voltage])
-            # t.extend([self.populations[1].threshold])
-            # # a.extend([self.populations[1].activation])
-            # a.extend([self.connections[1].synapse.pre_trace])
+            w.append([x for x in self.connections[0].adj.flat[10000:10100]])
+            v.extend([self.populations[1].voltage])
+            t.extend([self.populations[1].threshold])
+            # a.extend([self.populations[1].activation])
+            a.extend([self.connections[1].synapse.pre_trace])
         sw = self.get_square_weights(self.connections[0].adj, 10, 28)
         img = Image.fromarray((sw * 255).astype(np.uint8))
         img.save("img/img.png")
@@ -63,9 +63,9 @@ class Network:
             c.synapse.post_trace = np.zeros(post)
         for p in self.populations[1:]:
             p.voltage *= 0
-            p.threshold *= 0
-            p.voltage += p.v_reset
-            p.threshold += p.min_thresh
+            p.voltage += p.v_rest
+            p.dt.fill(0)
+            p.refrac = 0
 
     def enable_learning(self):
         for c in self.connections:

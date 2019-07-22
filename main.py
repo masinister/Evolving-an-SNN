@@ -45,7 +45,7 @@ def snn_test():
         t_init = -50,
         min_thresh = -52,
         t_bias = 0.05,
-        t_decay = .99999999,
+        t_decay = .9999999,
         refrac = 5
     )
 

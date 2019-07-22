@@ -29,7 +29,6 @@ class Connection:
     '''
     def input(self):
         feed = np.array(np.dot(self.pre.activation, self.adj))
-        feed = np.reshape(feed,(np.size(feed),))
         self.post.input(feed)
 
     def update(self):

@@ -31,7 +31,7 @@ class Population:
     def update(self):
         self.voltage = self.v_rest + self.v_decay * (self.voltage - self.v_rest)
         self.voltage += (self.refrac == 0) * self.feed
-        self.activation *= 0
+        self.activation.fill(0)
         if self.refrac == 0:
             mask = self.voltage >= self.threshold
             self.voltage[mask] = self.v_reset
@@ -42,9 +42,7 @@ class Population:
             self.dt *= self.t_decay
             self.refrac -= 1
         self.threshold = self.min_thresh + self.dt
-        self.feed *= 0
-        return self.activation
-
+        self.feed.fill(0)
 
 class Image_Input(Population):
     '''
@@ -62,7 +60,7 @@ class Image_Input(Population):
         self.rate = (image / (256.0 * 4.0)).flat
 
     def set_blank(self):
-        self.rate *= 0
+        self.rate.fill(0)
 
     def update(self):
         self.activation *= 0
