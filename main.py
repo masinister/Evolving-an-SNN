@@ -20,13 +20,7 @@ def snn_test():
     '''
     Learning paramters for PreAndPost rule
     '''
-    params = {"eta": 0.0001, "mu": 0.001, "decay_pre": 0.95, "decay_post": 0.95}
-    '''
-    Parameters for neuron activity
-    '''
-    n_params = {"v_init": -65, "v_decay": .99, "t_init": -50, "min_thresh": -52, "t_bias": 0.05, "t_decay": .99999999, "v_reset": -65, "v_rest": -65}
-
-
+    params = {"eta": 0.0001, "mu": 0.01, "decay_pre": 0.95, "decay_post": 0.95}
     '''
     different connection schemes
     '''
@@ -43,7 +37,18 @@ def snn_test():
     Initialize populations
     '''
     Input = population.Image_Input(x_train[0])
-    L1 = population.Population(n_params,100, neuron_type=neuron.ICMNeuron)
+    L1 = population.Population(
+        num_neurons = 100,
+        v_init = -65,
+        v_decay = .99,
+        t_init = -50,
+        min_thresh = -52,
+        t_bias = 0.05,
+        t_decay = .99999999,
+        v_reset = -65,
+        v_rest = -65,
+        refrac = 5
+    )
 
     '''
     Initialize connections between populations

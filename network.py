@@ -62,12 +62,11 @@ class Network:
             post = np.size(c.synapse.post_trace)
             c.synapse.pre_trace = np.zeros(pre)
             c.synapse.post_trace = np.zeros(post)
-        for p in self.populations:
-            if type(p.neurons[0]) == ICMNeuron:
-                for n in p.neurons:
-                    n.voltage = n.v_rest
-                    n.dt = 0
-                    n.refrac = 0
+        for p in self.populations[1:]:
+            p.voltage *= 0
+            p.threshold *= 0
+            p.voltage += p.v_reset
+            p.threshold += p.min_thresh
 
     def enable_learning(self):
         for c in self.connections:
