@@ -41,6 +41,8 @@ class Network:
         for s in range(steps):
             for c in self.connections:
                 c.update()
+            for c in self.connections:
+                c.input()
             i = 0
             for p in self.populations:
                 p.update()
