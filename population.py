@@ -31,6 +31,7 @@ class Population:
     def update(self):
         self.voltage = self.v_rest + self.v_decay * (self.voltage - self.v_rest)
         self.voltage += (self.refrac == 0) * self.feed
+        self.activation *= 0
         if self.refrac == 0:
             mask = self.voltage >= self.threshold
             self.voltage[mask] = self.v_reset
@@ -38,7 +39,6 @@ class Population:
             self.dt[mask] += self.t_bias
             self.refrac = 5
         else:
-            self.activation *= 0
             self.dt *= self.t_decay
             self.refrac -= 1
         self.threshold = self.min_thresh + self.dt
