@@ -72,9 +72,9 @@ def snn_test():
     40: number of time steps the network rests for inbetween images
     '''
 
-    for i in range(1000):
+    for i in range(100):
         print("Training", i)
-        train.train(network, x_train[10 * i: 10 * (i+1)], 250, 0)
+        train.train(network, x_train[50 * i: 50 * (i+1)], 250, 0)
         print("Labelling")
         train.label_neurons(network, x_train[0: 100], y_train[0: 100], 10, 100, 0)
         print("Testing")

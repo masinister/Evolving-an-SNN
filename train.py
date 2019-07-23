@@ -15,8 +15,6 @@ def train(network, train_data, learn_steps, rest_steps):
         network.populations[0].set_input(x)
         [w, t, v, a] = network.run(learn_steps)
         network.connections[0].normalize()
-        network.disable_learning()
-        # network.run(rest_steps)
         network.rest()
         # weight.extend(w)
         # thresh.extend(t)
@@ -62,12 +60,11 @@ def label_neurons(network, test_data, test_labels, num_labels, show_steps, rest_
     for x in tqdm(test_data):
         network.populations[0].set_input(x)
         rates = network.record(show_steps)
+        network.rest()
         j=0
         for r in firing_rates:
             r[:,test_labels[i]] += rates[j]
             j += 1
-        network.populations[0].set_blank()
-        network.run(rest_steps)
         label_count[test_labels[i]] += 1
         i += 1
 
@@ -102,8 +99,7 @@ def evaluate(network, test_data, test_labels, steps, rest_steps):
             correct += 1
             correct_count[test_labels[i]] += 1
         view_count[test_labels[i]] += 1
-        network.populations[0].set_blank()
-        network.run(rest_steps)
+        network.rest()
     for i in range(10):
         if view_count[i] != 0:
             correct_count[i] /= view_count[i]

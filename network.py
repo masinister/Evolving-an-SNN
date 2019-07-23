@@ -30,9 +30,12 @@ class Network:
             # v.extend([self.populations[1].voltage])
             # t.extend([self.populations[1].threshold])
             # a.extend([self.connections[1].synapse.pre_trace])
-        sw = self.get_square_weights(self.connections[0].adj, 10, 28)
-        img = Image.fromarray((sw * 255).astype(np.uint8))
-        img.save("img/img.png")
+        sw1 = self.get_square_weights(self.connections[0].adj, 8, 28)
+        # sw2 = self.get_square_weights(self.connections[2].adj, 10, 10)
+        img1 = Image.fromarray((sw1 * 255).astype(np.uint8))
+        # img2 = Image.fromarray((sw2 * 255).astype(np.uint8))
+        img1.save("img/C1.png")
+        # img2.save("img/C2.png")
         return w, t, v, a
 
     def record(self, steps):
@@ -51,9 +54,9 @@ class Network:
                 i += 1
 
         # Normalize each population's firing rate
-        for i in range(len(rates)):
-            rates[i] = (rates[i] == max(rates[i])).astype(float)
-            rates[i] /= (np.sum(rates[i]) + 0.0001)
+        # for i in range(len(rates)):
+        #     rates[i] = (rates[i] == max(rates[i])).astype(float)
+        #     rates[i] /= (np.sum(rates[i]) + 0.0001)
         return rates
 
     def rest(self):
@@ -61,8 +64,7 @@ class Network:
             c.synapse.pre_trace.fill(0)
             c.synapse.post_trace.fill(0)
         for p in self.populations[1:]:
-            p.voltage *= 0
-            p.voltage += p.v_rest
+            p.voltage.fill(p.v_rest)
             p.dt *= .99995
             p.refrac_count.fill(0)
 
