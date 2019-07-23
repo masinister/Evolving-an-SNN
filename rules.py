@@ -40,17 +40,8 @@ def PreAndPost(pre_tr, post_tr, adj, pre_activ, post_activ, params):
     is zero for the other.
     '''
     dw = np.sign(adj)
-    #  Entries are True iff post fired and pre did not fire
-    # dw(i,j) are nonzero iff pre or (pre and post) == pre is True
-    # this affects weights along the row of the adj matrix so we multiply on the right
-    # by pre_activ
-    dw1 = np.matmul(np.diag(pre_activ), dw)
-    dw1 = -params["eta"]*np.matmul(dw1, np.diag(post_tr))
-    # Entries are nonzero iff post and (not pre) is True
-    # diag( notPre ) * dw * diag( post_activ )
-    dw2 = np.matmul(dw, np.diag(post_activ))
-    dw2 = params["mu"]*np.matmul(np.diag(pre_tr), dw2)
-
+    dw1 = -params["eta"] * dw * pre_activ[:,None] * post_tr
+    dw2 = params["mu"] * dw * post_activ * pre_tr[:,None]
     return dw1 + dw2
 
 
