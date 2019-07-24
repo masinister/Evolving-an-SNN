@@ -29,7 +29,7 @@ class Individual():
         self.initialize_network(self.params)
 
     def evaluate(self):
-        train.train(self.network, self.x_train, 50, id = self.id)
+        train.train(self.network, self.x_train, 250, id = self.id)
         train.label_neurons(self.network, self.x_train[0:200], self.y_train[0:200], 10, 100)
         self.accuracy = train.evaluate(self.network, self.x_test, self.y_test, 100)
 
@@ -42,7 +42,7 @@ class Individual():
                     "decay_pre": params.get("decay_pre", 0.95),
                     "decay_post": params.get("decay_post", 0.95)}
         L1 = population.Population(
-            num_neurons = params.get("num_neurons", 100),
+            num_neurons = params.get("num_neurons", 16),
             v_init = params.get("v_init", -65),
             v_decay = params.get("v_decay", .99),
             v_reset = params.get("v_reset", -65),

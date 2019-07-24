@@ -103,6 +103,6 @@ def evaluate(network, test_data, test_labels, steps):
     for i in range(10):
         if view_count[i] != 0:
             correct_count[i] /= view_count[i]
-    # print("Got %.3f correct" % (correct/len(test_labels)))
-    # print("Accuracy per digit:\n", list(correct_count))
+    print("Got %.3f correct" % (correct/len(test_labels)))
+    print("Accuracy per digit:\n", list(correct_count))
     return correct/len(test_labels)

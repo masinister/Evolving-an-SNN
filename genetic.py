@@ -7,7 +7,7 @@ import sys
 class Optimizer():
 
     def __init__(self, num_threads):
-        self._trim = 4
+        self._trim = 1
         self._mu = 1.2
         self._num_threads = num_threads
         self._populations = []
@@ -33,7 +33,7 @@ class Optimizer():
         for i in sub_population[1:]:
             p1 = np.random.choice(sub_population).params
             p2 = np.random.choice(sub_population).params
-            new_params = [best[k] + self._mu * (p1[k] - p2[k]) for k in best_params.keys()]
+            new_params = [best_params[k] + self._mu * (p1[k] - p2[k]) for k in best_params.keys()]
             new_network = Individual(i.id, new_params)
             new_pop.append(new_network)
         return new_networks

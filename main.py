@@ -10,7 +10,7 @@ import numpy as np
 
 def genetic_test():
     generations = 1000
-    population = 8
+    population = 32
     optimizer = Optimizer(8)
     optimizer.run(generations, population)
 
@@ -85,5 +85,5 @@ def snn_test():
 if __name__ == '__main__':
     # import cProfile
     # cProfile.run('snn_test()')
-    # snn_test()
-    genetic_test()
+    snn_test()
+    # genetic_test()
