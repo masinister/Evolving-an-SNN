@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 
 def train(network, train_data, learn_steps, **kwargs):
     network.enable_learning()
-
     weight = []
     thresh = []
     volt = []
@@ -13,29 +12,28 @@ def train(network, train_data, learn_steps, **kwargs):
     for x in tqdm(train_data):
         network.enable_learning()
         network.populations[0].set_input(x)
-        [w, t, v, a] = network.run(learn_steps, id = kwargs.get("id", 0))
+        [w, t, v, a] = network.run(learn_steps,
+                                    id = kwargs.get("id", 0),
+                                    plot = kwargs.get("plot", False),
+                                    draw_weights = kwargs.get("draw_weights", False))
         network.connections[0].normalize()
         network.rest()
-        # weight.extend(w)
-        # thresh.extend(t)
-        # volt.extend(v)
-        # act.extend(a)
-    # fig, axs = plt.subplots(4,sharex=True,gridspec_kw={'hspace': .5})
-    # fig.suptitle("Info about 1st Layer (rest times omitted from plot)")
-    # axs[0].plot(weight)
-    # axs[0].set_title("100 Synap Weights From Input to L1")
-    # axs[1].plot(thresh)
-    # axs[1].set_title("L1 Thresholds")
-    # axs[2].plot(volt)
-    # axs[2].set_title("L1 Voltages")
-    # axs[3].plot(act)
-    # axs[3].set_title("L1 Activations")
-    # plt.show()
-    # weight = []
-    # thresh = []
-    # volt = []
-    # act = []
-
+        weight.extend(w)
+        thresh.extend(t)
+        volt.extend(v)
+        act.extend(a)
+    if kwargs.get("plot", False):
+        fig, axs = plt.subplots(4,sharex=True,gridspec_kw={'hspace': .5})
+        fig.suptitle("Info about 1st Layer (rest times omitted from plot)")
+        axs[0].plot(weight)
+        axs[0].set_title("100 Synap Weights From Input to L1")
+        axs[1].plot(thresh)
+        axs[1].set_title("L1 Thresholds")
+        axs[2].plot(volt)
+        axs[2].set_title("L1 Voltages")
+        axs[3].plot(act)
+        axs[3].set_title("L1 Activations")
+        plt.show()
 
 def label_neurons(network, test_data, test_labels, num_labels, show_steps):
     '''
@@ -81,10 +79,6 @@ def label_neurons(network, test_data, test_labels, num_labels, show_steps):
         pop /= (sum(pop) + 0.001)
 
     network.neuron_labels = firing_rates
-
-
-
-
 
 def evaluate(network, test_data, test_labels, steps):
     network.disable_learning()

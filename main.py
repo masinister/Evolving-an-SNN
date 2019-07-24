@@ -51,30 +51,18 @@ def snn_test():
     )
 
     '''
-    Initialize connections between populations
+    Initialize connections
     '''
     inh = -120
     C1 = Connection(Input, L1, 0.3 * all2all(Input.num_neurons, L1.num_neurons), params, rule = "PreAndPost", wmin = 0, wmax = 1)
     C2 = Connection(L1, L1, allBut1(L1.num_neurons) * inh, params, rule = "static", wmin = inh, wmax = 0)
 
-    '''
-    (list of populations, list of connections, learning_rule)
-    first population in list is assumed to be the input layer
-    '''
     network = Network([Input, L1, ], [C1, C2,])
     network.set_params(params)
 
-
-    '''
-    train/label/validate
-    10: number of labels
-    50: number of time steps an image is presented for
-    40: number of time steps the network rests for inbetween images
-    '''
-
     for i in range(100):
         print("Training", i)
-        train.train(network, x_train[50 * i: 50 * (i+1)], 250)
+        train.train(network, x_train[50 * i: 50 * (i+1)], 200, draw_weights = True)
         print("Labelling")
         train.label_neurons(network, x_train[0: 100], y_train[0: 100], 10, 100)
         print("Testing")

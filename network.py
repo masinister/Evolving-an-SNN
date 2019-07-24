@@ -26,13 +26,15 @@ class Network:
                 c.input()
             for p in self.populations:
                 p.update()
-            # w.append([x for x in self.connections[0].adj.flat[10000:10100]])
-            # v.extend([self.populations[1].voltage])
-            # t.extend([self.populations[1].threshold])
-            # a.extend([self.connections[1].synapse.pre_trace])
-        sw1 = self.get_square_weights(self.connections[0].adj, np.sqrt(self.connections[0].adj.shape[1]).astype(int), 28)
-        img1 = Image.fromarray((sw1 * 255).astype(np.uint8))
-        img1.save("img/C%d.png" %(kwargs.get("id", 0)))
+            if kwargs.get("plot", False):
+                w.append([x for x in self.connections[0].adj.flat[10000:10100]])
+                v.extend([self.populations[1].voltage])
+                t.extend([self.populations[1].threshold])
+                a.extend([self.connections[1].synapse.pre_trace])
+        if kwargs.get("draw_weights", False):
+            sw1 = self.get_square_weights(self.connections[0].adj, np.sqrt(self.connections[0].adj.shape[1]).astype(int), 28)
+            img1 = Image.fromarray((sw1 * 255).astype(np.uint8))
+            img1.save("img/C%d.png" %(kwargs.get("id", 0)))
         return w, t, v, a
 
     def record(self, steps):
@@ -49,7 +51,6 @@ class Network:
                 if i > 0:
                     rates[i-1] += p.activation
                 i += 1
-
         # Normalize each population's firing rate
         for i in range(len(rates)):
             rates[i] = (rates[i] == max(rates[i])).astype(float)
@@ -62,7 +63,6 @@ class Network:
             c.synapse.post_trace.fill(0)
         for p in self.populations[1:]:
             p.voltage.fill(p.v_rest)
-            p.dt *= .99995
             p.refrac_count.fill(0)
 
     def enable_learning(self):
@@ -86,19 +86,17 @@ class Network:
         rates = self.record(steps)
         dist = np.zeros(10)
         for i in range(len(rates)):
-            for j in range(len(rates[i])):
-                dist += rates[i][j] * self.neuron_labels[i][j]
+            dist += np.sum(rates[i][:,None] * self.neuron_labels[i], axis=0)
         dist /= (np.sum(dist) + 0.0001)
         return dist
 
-    def get_square_weights(self, weights, n_sqrt, side):
-        side = (side, side)
-        square_weights = np.zeros((side[0] * n_sqrt, side[1] * n_sqrt))
-        for i in range(n_sqrt):
-            for j in range(n_sqrt):
-                n = i * n_sqrt + j
-                x = i * side[0]
-                y = (j % n_sqrt) * side[1]
-                filter_ = weights[:, n].reshape((*side))
-                square_weights[x : x + side[0], y : y + side[1]] = filter_
+    def get_square_weights(self, weights, box_w, input_neurons):
+        input_neurons = (input_neurons, input_neurons)
+        square_weights = np.zeros((input_neurons[0] * box_w, input_neurons[1] * box_w))
+        for i in range(box_w):
+            for j in range(box_w):
+                n = i * box_w + j
+                x = i * input_neurons[0]
+                y = (j % box_w) * input_neurons[1]
+                square_weights[x : x + input_neurons[0], y : y + input_neurons[1]] = weights[:, n].reshape((*input_neurons))
         return square_weights
