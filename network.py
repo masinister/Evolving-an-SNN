@@ -14,7 +14,7 @@ class Network:
         self.connections = conn
         self.neuron_labels = []
 
-    def run(self, steps):
+    def run(self, steps, **kwargs):
         t = []
         v = []
         w = []
@@ -30,12 +30,9 @@ class Network:
             # v.extend([self.populations[1].voltage])
             # t.extend([self.populations[1].threshold])
             # a.extend([self.connections[1].synapse.pre_trace])
-        sw1 = self.get_square_weights(self.connections[0].adj, 8, 28)
-        # sw2 = self.get_square_weights(self.connections[2].adj, 10, 10)
+        sw1 = self.get_square_weights(self.connections[0].adj, np.sqrt(self.connections[0].adj.shape[1]).astype(int), 28)
         img1 = Image.fromarray((sw1 * 255).astype(np.uint8))
-        # img2 = Image.fromarray((sw2 * 255).astype(np.uint8))
-        img1.save("img/C1.png")
-        # img2.save("img/C2.png")
+        img1.save("img/C%d.png" %(kwargs.get("id", 0)))
         return w, t, v, a
 
     def record(self, steps):
@@ -54,9 +51,9 @@ class Network:
                 i += 1
 
         # Normalize each population's firing rate
-        # for i in range(len(rates)):
-        #     rates[i] = (rates[i] == max(rates[i])).astype(float)
-        #     rates[i] /= (np.sum(rates[i]) + 0.0001)
+        for i in range(len(rates)):
+            rates[i] = (rates[i] == max(rates[i])).astype(float)
+            rates[i] /= (np.sum(rates[i]) + 0.0001)
         return rates
 
     def rest(self):

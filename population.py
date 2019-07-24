@@ -45,7 +45,7 @@ class Population:
             self.voltage[s*r] = self.v_reset
             self.activation[s*r] = 1
             if self.learning:
-                self.dt[s*r] += self.t_bias * s.astype(np.float).sum(0) + 0.5
+                self.dt[s*r] += self.t_bias * s.astype(np.float).sum(0)
             self.refrac_count[s*r] = self.refrac
         if (~s).any() and self.learning:
             self.dt[~s] *= self.t_decay

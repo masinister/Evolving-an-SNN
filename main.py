@@ -10,7 +10,7 @@ import numpy as np
 
 def genetic_test():
     generations = 1000
-    population = 128
+    population = 8
     optimizer = Optimizer(8)
     optimizer.run(generations, population)
 
@@ -44,7 +44,7 @@ def snn_test():
         v_rest = -65,
         t_init = -50,
         min_thresh = -52,
-        t_bias = 0.05,
+        t_bias = 0.25,
         t_decay = .9999999,
         refrac = 5,
         one_spike = True
@@ -54,8 +54,8 @@ def snn_test():
     Initialize connections between populations
     '''
     inh = -120
-    C1 = Connection(Input, L1, 0.3 * all2all(784,100), params, rule = "PreAndPost", wmin = 0, wmax = 1)
-    C2 = Connection(L1, L1, allBut1(100) * inh, params, rule = "static", wmin = inh, wmax = 0)
+    C1 = Connection(Input, L1, 0.3 * all2all(Input.num_neurons, L1.num_neurons), params, rule = "PreAndPost", wmin = 0, wmax = 1)
+    C2 = Connection(L1, L1, allBut1(L1.num_neurons) * inh, params, rule = "static", wmin = inh, wmax = 0)
 
     '''
     (list of populations, list of connections, learning_rule)
@@ -74,15 +74,16 @@ def snn_test():
 
     for i in range(100):
         print("Training", i)
-        train.train(network, x_train[50 * i: 50 * (i+1)], 250, 0)
+        train.train(network, x_train[50 * i: 50 * (i+1)], 250)
         print("Labelling")
-        train.label_neurons(network, x_train[0: 100], y_train[0: 100], 10, 100, 0)
+        train.label_neurons(network, x_train[0: 100], y_train[0: 100], 10, 100)
         print("Testing")
-        train.evaluate(network, x_train[50000:50100], y_train[50000:50100], 100, 0)
+        train.evaluate(network, x_train[50000:50100], y_train[50000:50100], 100)
     print("Testing")
-    train.evaluate(network, x_train[50000:51000], y_train[50000:51000], 100, 40)
+    train.evaluate(network, x_train[50000:51000], y_train[50000:51000], 100)
 
 if __name__ == '__main__':
     # import cProfile
     # cProfile.run('snn_test()')
-    snn_test()
+    # snn_test()
+    genetic_test()

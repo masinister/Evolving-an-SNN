@@ -19,7 +19,7 @@ class Optimizer():
     def random_population(self, n):
         networks = []
         for i in range(n):
-            network = Individual()
+            network = Individual(i)
             network.randomize()
             networks.append(network)
         return list(networks)
@@ -30,11 +30,11 @@ class Optimizer():
     def evolve(self, sub_population):
         new_pop = [sub_population[0]]
         best_params = sub_population[0].params
-        for _ in networks[1:]:
+        for i in sub_population[1:]:
             p1 = np.random.choice(sub_population).params
             p2 = np.random.choice(sub_population).params
-            new_params = [best[i] + self._mu * (p1[i] - p2[i]) for i in range(len(best_params))]
-            new_network = Network(new_params)
+            new_params = [best[k] + self._mu * (p1[k] - p2[k]) for k in best_params.keys()]
+            new_network = Individual(i.id, new_params)
             new_pop.append(new_network)
         return new_networks
 
@@ -59,7 +59,7 @@ class Optimizer():
             #Finish threads
             for j in range(pop_size):
                 threads[j].join()
-                self._populations[j] = list(populations[j])
+                self._populations[j] = list(self._populations[j])
                 self._populations[j].sort(key = lambda n: n.accuracy, reverse=True)
                 result += '| %.4f |'%(self._populations[j][0].accuracy,)
                 self._populations[j] = self.next_gen(self._populations[j])
@@ -76,6 +76,8 @@ class Optimizer():
             sys.stdout.flush()
 
     def run(self, generations, pop_size):
+        print("Initializing networks")
         networks = self.random_population(pop_size)
         self._populations = np.array_split(networks, self._num_threads)
+        print("Training")
         self.pde(generations)

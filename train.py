@@ -2,7 +2,7 @@ import numpy as np
 from tqdm import tqdm
 import matplotlib.pyplot as plt
 
-def train(network, train_data, learn_steps, rest_steps):
+def train(network, train_data, learn_steps, **kwargs):
     network.enable_learning()
 
     weight = []
@@ -13,32 +13,31 @@ def train(network, train_data, learn_steps, rest_steps):
     for x in tqdm(train_data):
         network.enable_learning()
         network.populations[0].set_input(x)
-        [w, t, v, a] = network.run(learn_steps)
+        [w, t, v, a] = network.run(learn_steps, id = kwargs.get("id", 0))
         network.connections[0].normalize()
         network.rest()
         # weight.extend(w)
         # thresh.extend(t)
         # volt.extend(v)
         # act.extend(a)
-        #
-        # fig, axs = plt.subplots(4,sharex=True,gridspec_kw={'hspace': .5})
-        # fig.suptitle("Info about 1st Layer (rest times omitted from plot)")
-        # axs[0].plot(weight)
-        # axs[0].set_title("100 Synap Weights From Input to L1")
-        # axs[1].plot(thresh)
-        # axs[1].set_title("L1 Thresholds")
-        # axs[2].plot(volt)
-        # axs[2].set_title("L1 Voltages")
-        # axs[3].plot(act)
-        # axs[3].set_title("L1 Activations")
-        # plt.show()
-        # weight = []
-        # thresh = []
-        # volt = []
-        # act = []
+    # fig, axs = plt.subplots(4,sharex=True,gridspec_kw={'hspace': .5})
+    # fig.suptitle("Info about 1st Layer (rest times omitted from plot)")
+    # axs[0].plot(weight)
+    # axs[0].set_title("100 Synap Weights From Input to L1")
+    # axs[1].plot(thresh)
+    # axs[1].set_title("L1 Thresholds")
+    # axs[2].plot(volt)
+    # axs[2].set_title("L1 Voltages")
+    # axs[3].plot(act)
+    # axs[3].set_title("L1 Activations")
+    # plt.show()
+    # weight = []
+    # thresh = []
+    # volt = []
+    # act = []
 
 
-def label_neurons(network, test_data, test_labels, num_labels, show_steps, rest_steps):
+def label_neurons(network, test_data, test_labels, num_labels, show_steps):
     '''
     firing_rates is a list of 2D arrays (of possibly varying shape) such that
     firing_rates[i,j] is an array containing the 10 average firing rates
@@ -87,7 +86,7 @@ def label_neurons(network, test_data, test_labels, num_labels, show_steps, rest_
 
 
 
-def evaluate(network, test_data, test_labels, steps, rest_steps):
+def evaluate(network, test_data, test_labels, steps):
     network.disable_learning()
     correct = 0
     view_count = np.zeros(10)
@@ -98,10 +97,12 @@ def evaluate(network, test_data, test_labels, steps, rest_steps):
         if np.argmax(res) == test_labels[i]:
             correct += 1
             correct_count[test_labels[i]] += 1
+        # print(np.argmax(res), test_labels[i], np.around(res,2))
         view_count[test_labels[i]] += 1
         network.rest()
     for i in range(10):
         if view_count[i] != 0:
             correct_count[i] /= view_count[i]
-    print("Got %.3f correct" % (correct/len(test_labels)))
-    print("Accuracy per digit:\n", list(correct_count))
+    # print("Got %.3f correct" % (correct/len(test_labels)))
+    # print("Accuracy per digit:\n", list(correct_count))
+    return correct/len(test_labels)
