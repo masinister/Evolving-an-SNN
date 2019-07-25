@@ -9,10 +9,9 @@ def train(network, train_data, steps, **kwargs):
     act = []
 
     for x in tqdm(train_data):
-        network.enable_learning()
         network.populations[0].set_input(x)
         res = network.run(steps, **kwargs)
-        network.connections[0].normalize()
+        network.normalize()
         network.rest()
         if kwargs.get("plot", False):
             weight.extend(res.get("w", []))
@@ -78,5 +77,5 @@ def evaluate(network, test_data, test_labels, steps):
         network.rest()
     correct_count /= view_count + 0.0001
     print("Got %.3f correct" % (correct/len(test_labels)))
-    print("Accuracy per digit:\n", list(correct_count))
+    print("Accuracy per digit:\n", list(np.around(correct_count, 3)))
     return correct/len(test_labels)
