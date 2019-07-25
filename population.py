@@ -25,7 +25,7 @@ class Population:
         self.dt = self.threshold - self.min_thresh
         self.activation = np.zeros(self.num_neurons)
         self.feed = np.zeros(self.num_neurons)
-        self.learning = True
+        self.learning = kwargs.get("learning", True)
 
     def input(self, feed):
         self.feed += feed
