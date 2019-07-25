@@ -77,7 +77,10 @@ def evaluate(network, test_data, test_labels, steps):
         view_count[test_labels[i]] += 1
         network.rest()
     correct_count /= view_count + 0.0001
-    print("Got %.3f correct" % (correct/len(test_labels)))
+    print("Got " + color(np.around(correct / len(test_labels), 3)) + " correct")
     print("Accuracy per digit:")
     print(*[color(f) for f in list(np.around(correct_count, 3))], sep = ', ')
     return correct/len(test_labels)
+
+def train_and_score(network, test_data, test_labels, num_labels, steps):
+    pass
