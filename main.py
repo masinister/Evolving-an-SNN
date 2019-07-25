@@ -49,6 +49,19 @@ def snn_test():
         refrac = 5,
         one_spike = True
     )
+    L2 = population.Population(
+        num_neurons = 100,
+        v_init = -65,
+        v_decay = .99,
+        v_reset = -65,
+        v_rest = -65,
+        t_init = -50,
+        min_thresh = -52,
+        t_bias = 0.25,
+        t_decay = .9999999,
+        refrac = 5,
+        one_spike = True
+    )
 
     '''
     Initialize connections
@@ -56,17 +69,19 @@ def snn_test():
     inh = -120
     C1 = Connection(Input, L1, 0.3 * all2all(Input.num_neurons, L1.num_neurons), params, rule = "PreAndPost", wmin = 0, wmax = 1)
     C2 = Connection(L1, L1, allBut1(L1.num_neurons) * inh, params, rule = "static", wmin = inh, wmax = 0)
+    C3 = Connection(Input, L2, 0.3 * all2all(Input.num_neurons, L2.num_neurons), params, rule = "PreAndPost", wmin = 0, wmax = 1)
+    C4 = Connection(L2, L2, allBut1(L2.num_neurons) * inh, params, rule = "static", wmin = inh, wmax = 0)
 
-    network = Network([Input, L1, ], [C1, C2,])
+    network = Network([Input, L1, L2 ], [C1, C2, C3, C4])
     network.set_params(params)
 
     for i in range(100):
         print("Training", i)
-        train.train(network, x_train[50 * i: 50 * (i+1)], 200, draw_weights = True)
+        train.train(network, x_train[500 * i: 500 * (i+1)], 250, draw_weights = True)
         print("Labelling")
-        train.label_neurons(network, x_train[0: 100], y_train[0: 100], 10, 100)
+        train.label_neurons(network, x_train[0: 500], y_train[0: 500], 10, 200)
         print("Testing")
-        train.evaluate(network, x_train[50000:50100], y_train[50000:50100], 100)
+        train.evaluate(network, x_train[50000:50500], y_train[50000:50500], 200)
     print("Testing")
     train.evaluate(network, x_train[50000:51000], y_train[50000:51000], 100)
 

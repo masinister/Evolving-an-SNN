@@ -11,7 +11,7 @@ def train(network, train_data, steps, **kwargs):
     for x in tqdm(train_data):
         network.populations[0].set_input(x)
         res = network.run(steps, **kwargs)
-        network.connections[0].normalize()
+        network.normalize()
         network.rest()
         if kwargs.get("plot", False):
             weight.extend(res.get("w", []))

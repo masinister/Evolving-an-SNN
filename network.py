@@ -48,9 +48,13 @@ class Network:
                 prediction += np.sum(rates[i][:,None] * self.neuron_labels[i], axis=0)
             prediction /= (np.sum(prediction) + 0.0001)
         if kwargs.get("draw_weights", False):
-            sw1 = self.get_square_weights(self.connections[0].adj, np.sqrt(self.connections[0].adj.shape[1]).astype(int), 28)
-            img1 = Image.fromarray((sw1 * 255).astype(np.uint8))
-            img1.save("img/C%d.png" %(kwargs.get("id", 0)))
+            for i in range(len(self.connections)):
+                if self.connections[i].rule != "static":
+                    sw = self.get_square_weights(self.connections[i].adj,
+                                                  np.sqrt(self.connections[i].adj.shape[1]).astype(int),
+                                                  28)
+                    img = Image.fromarray((sw * 255).astype(np.uint8))
+                    img.save("img/C%d - %d.png" %(i, kwargs.get("id", 0)))
         return {"w":w, "t":t, "v":v, "a":a, "rates":rates, "prediction": prediction}
 
     def rest(self):
@@ -87,3 +91,8 @@ class Network:
                 y = (j % box_w) * input_neurons[1]
                 square_weights[x : x + input_neurons[0], y : y + input_neurons[1]] = weights[:, n].reshape((*input_neurons))
         return square_weights
+
+    def normalize(self):
+        for c in self.connections:
+            if c.rule != "static":
+                c.normalize()
