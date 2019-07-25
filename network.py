@@ -32,9 +32,15 @@ class Network:
                 t.extend([self.populations[1].threshold])
                 a.extend([self.connections[1].synapse.pre_trace])
         if kwargs.get("draw_weights", False):
-            sw1 = self.get_square_weights(self.connections[0].adj, np.sqrt(self.connections[0].adj.shape[1]).astype(int), 28)
+            sw1 = self.get_square_weights(self.connections[0].adj, 5, 28)
+            sw2 = self.get_square_weights(self.connections[2].adj, 5, 28)
+            sw3 = self.get_square_weights(self.connections[4].adj, 5, 28)
             img1 = Image.fromarray((sw1 * 255).astype(np.uint8))
-            img1.save("img/C%d.png" %(kwargs.get("id", 0)))
+            img2 = Image.fromarray((sw2 * 255).astype(np.uint8))
+            img3 = Image.fromarray((sw3 * 255).astype(np.uint8))
+            img1.save("img/C1.png")
+            img2.save("img/C2.png")
+            img3.save("img/C3.png")
         return w, t, v, a
 
     def record(self, steps):
