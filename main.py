@@ -7,7 +7,7 @@ from network import Network
 import train
 from tensorflow.keras.datasets import mnist
 import numpy as np
-
+from copy import deepcopy
 def genetic_test():
     generations = 1000
     population = 32
@@ -19,7 +19,7 @@ def snn_test():
     '''
     Learning paramters for PreAndPost rule
     '''
-    params = {"eta": 0.0005, "mu": 0.05, "decay_pre": 0.95, "decay_post": 0.95,}
+    params = {"eta": 0.0005, "mu": 0.05, "decay_pre": 0.95, "decay_post": 0.95}
     '''
     different connection schemes
     '''
@@ -32,68 +32,11 @@ def snn_test():
 
 
     (x_train, y_train), (x_test, y_test) = mnist.load_data()
-    data = []
-    num=20
-    order = [0,3,9,1,6,5,2,8,7]
-    for s in range(3):
-        i=0
-        count=0
-        x = []
-        while count < num:
-            if y_train[i] == order[s*3] or y_train[i] == order[s*3+1] or y_train[i] == order[s*3+2]:
-                x.append(x_train[i])
-                count+=1
-            i+=1
-        np.random.shuffle(x)
-        data.extend(x)
-    data = np.array(data)
-
-
     '''
     Initialize populations
     '''
-    nn = 25
     Input = population.Image_Input(x_train[0])
     L1 = population.Population(
-        num_neurons = nn,
-        v_init = -65,
-        v_decay = .99,
-        v_reset = -65,
-        v_rest = -65,
-        t_init = -50,
-        min_thresh = -52,
-        t_bias = 0.25,
-        t_decay = .9999999,
-        refrac = 5,
-        one_spike = True
-    )
-    L2 = population.Population(
-        num_neurons = nn,
-        v_init = -65,
-        v_decay = .99,
-        v_reset = -65,
-        v_rest = -65,
-        t_init = -50,
-        min_thresh = -52,
-        t_bias = 0.25,
-        t_decay = .9999999,
-        refrac = 5,
-        one_spike = True
-    )
-    L3 = population.Population(
-        num_neurons = nn,
-        v_init = -65,
-        v_decay = .99,
-        v_reset = -65,
-        v_rest = -65,
-        t_init = -50,
-        min_thresh = -52,
-        t_bias = 0.25,
-        t_decay = .9999999,
-        refrac = 5,
-        one_spike = True
-    )
-    L2 = population.Population(
         num_neurons = 100,
         v_init = -65,
         v_decay = .99,
@@ -106,17 +49,17 @@ def snn_test():
         refrac = 5,
         one_spike = True
     )
-
+    L2 = deepcopy(L1)
     '''
     Initialize connections
     '''
     inh = -120
     C1 = Connection(Input, L1, 0.3 * all2all(Input.num_neurons, L1.num_neurons), params, rule = "PreAndPost", wmin = 0, wmax = 1)
     C2 = Connection(L1, L1, allBut1(L1.num_neurons) * inh, params, rule = "static", wmin = inh, wmax = 0)
-    C3 = Connection(Input, L2, 0.3 * all2all(Input.num_neurons, L2.num_neurons), params, rule = "PreAndPost", wmin = 0, wmax = 1)
-    C4 = Connection(L2, L2, allBut1(L2.num_neurons) * inh, params, rule = "static", wmin = inh, wmax = 0)
+    C3 = Connection(Input, L2, 0.3 * all2all(Input.num_neurons, L1.num_neurons), params, rule = "PreAndPost", wmin = 0, wmax = 1)
+    C4 = Connection(L2, L2, allBut1(L1.num_neurons) * inh, params, rule = "static", wmin = inh, wmax = 0)
 
-    network = Network([Input, L1, L2 ], [C1, C2, C3, C4])
+    network = Network([Input, L1, L2], [C1, C2, C3, C4])
     network.set_params(params)
 
     for i in range(100):

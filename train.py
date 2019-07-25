@@ -1,6 +1,7 @@
 import numpy as np
 from tqdm import tqdm
 import matplotlib.pyplot as plt
+from color import color
 
 def train(network, train_data, steps, **kwargs):
     weight = []
@@ -77,5 +78,6 @@ def evaluate(network, test_data, test_labels, steps):
         network.rest()
     correct_count /= view_count + 0.0001
     print("Got %.3f correct" % (correct/len(test_labels)))
-    print("Accuracy per digit:\n", list(np.around(correct_count, 3)))
+    print("Accuracy per digit:")
+    print(*[color(f) for f in list(np.around(correct_count, 3))], sep = ', ')
     return correct/len(test_labels)
