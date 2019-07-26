@@ -42,4 +42,4 @@ class Connection:
     def normalize(self):
         self.adj = np.clip(self.adj,self.wmin,self.wmax)
         self.adj /= np.sum(self.adj, axis = 0) + 0.0001
-        self.adj *= self.pre.num_neurons / self.post.num_neurons * 10
+        self.adj *= 78.4
