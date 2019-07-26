@@ -8,6 +8,8 @@ import train
 from tensorflow.keras.datasets import mnist
 import numpy as np
 from copy import deepcopy
+from tqdm import tqdm
+
 def genetic_test():
     generations = 1000
     population = 32
@@ -58,9 +60,10 @@ def snn_test():
 
     network = Network([Input, L1,], [C1, C2,])
     network.set_params(params)
+    network.neuron_labels = [np.zeros((pop.num_neurons, 10)) for  pop in network.populations[1:]]
 
+    outer = tqdm(total = 100, desc = 'Epochs', position = 0)
     for i in range(100):
-        print("Training and Labeling and Scoring", i)
         train.all_at_once(network, x_train[500 * i: 500 * (i+1)], y_train[500 * i: 500 * (i+1)], 10, 250)
         # print("Training", i)
         # train.train(network, x_train[500 * i: 500 * (i+1)], 250, draw_weights=False)
@@ -68,6 +71,7 @@ def snn_test():
         # train.label_neurons(network, x_train[0: 500], y_train[0: 500], 10, 50)
         # print("Testing", i)
         # train.evaluate(network, x_train[50000:50500], y_train[50000:50500], 50)
+        outer.update(1)
     print("Testing")
     train.evaluate(network, x_train[50000:51000], y_train[50000:51000], 100)
 
