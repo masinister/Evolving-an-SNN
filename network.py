@@ -12,7 +12,7 @@ class Network:
         # List of populations/connections
         self.populations = pop
         self.connections = conn
-        self.neuron_labels = []
+        self.neuron_labels = np.array([])
 
     def run(self, steps, **kwargs):
         if kwargs.get("learning", True):
@@ -31,7 +31,7 @@ class Network:
                 c.input()
             for p in self.populations:
                 p.update()
-            if kwargs.get("record", False):
+            if kwargs.get("record", False) or kwargs.get("predict", False):
                 for i in range(len(rates)):
                     rates[i] += self.populations[i+1].activation
             if kwargs.get("plot", False):
@@ -39,7 +39,7 @@ class Network:
                 v.extend([self.populations[1].voltage])
                 t.extend([self.populations[1].threshold])
                 a.extend([self.connections[1].synapse.pre_trace])
-        if kwargs.get("record", False):
+        if kwargs.get("record", False) or kwargs.get("predict", False):
             for i in range(len(rates)):
                 rates[i] = (rates[i] == max(rates[i])).astype(float)
                 rates[i] /= (np.sum(rates[i]) + 0.0001)

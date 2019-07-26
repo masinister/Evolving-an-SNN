@@ -44,31 +44,30 @@ def snn_test():
         v_rest = -65,
         t_init = -50,
         min_thresh = -52,
-        t_bias = 0.25,
+        t_bias = 0.15,
         t_decay = .9999999,
         refrac = 5,
         one_spike = True
     )
-    L2 = deepcopy(L1)
     '''
     Initialize connections
     '''
     inh = -120
     C1 = Connection(Input, L1, 0.3 * all2all(Input.num_neurons, L1.num_neurons), params, rule = "PreAndPost", wmin = 0, wmax = 1)
     C2 = Connection(L1, L1, allBut1(L1.num_neurons) * inh, params, rule = "static", wmin = inh, wmax = 0)
-    C3 = Connection(Input, L2, 0.3 * all2all(Input.num_neurons, L1.num_neurons), params, rule = "PreAndPost", wmin = 0, wmax = 1)
-    C4 = Connection(L2, L2, allBut1(L1.num_neurons) * inh, params, rule = "static", wmin = inh, wmax = 0)
 
-    network = Network([Input, L1, L2], [C1, C2, C3, C4])
+    network = Network([Input, L1,], [C1, C2,])
     network.set_params(params)
 
     for i in range(100):
-        print("Training", i)
-        train.train(network, x_train[500 * i: 500 * (i+1)], 250, draw_weights = True)
-        print("Labelling")
-        train.label_neurons(network, x_train[0: 500], y_train[0: 500], 10, 200)
-        print("Testing")
-        train.evaluate(network, x_train[50000:50500], y_train[50000:50500], 200)
+        print("Training and Labeling and Scoring", i)
+        train.all_at_once(network, x_train[500 * i: 500 * (i+1)], y_train[500 * i: 500 * (i+1)], 10, 250)
+        # print("Training", i)
+        # train.train(network, x_train[500 * i: 500 * (i+1)], 250, draw_weights=False)
+        # print("Labelling", i)
+        # train.label_neurons(network, x_train[0: 500], y_train[0: 500], 10, 50)
+        # print("Testing", i)
+        # train.evaluate(network, x_train[50000:50500], y_train[50000:50500], 50)
     print("Testing")
     train.evaluate(network, x_train[50000:51000], y_train[50000:51000], 100)
 

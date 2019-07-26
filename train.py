@@ -32,7 +32,7 @@ def train(network, train_data, steps, **kwargs):
         axs[3].set_title("L1 Activations")
         plt.show()
 
-def label_neurons(network, test_data, test_labels, num_labels, steps):
+def label_neurons(network, test_data, test_labels, num_labels, steps, **kwargs):
     '''
     firing_rates is a list of 2D arrays (of possibly varying shape) such that
     firing_rates[i,j] is an array containing the 10 average firing rates
@@ -50,7 +50,8 @@ def label_neurons(network, test_data, test_labels, num_labels, steps):
         network.populations[0].set_input(test_data[i])
         rates = network.run(steps,
                             learning = False,
-                            record = True).get("rates")
+                            record = True,
+                            **kwargs).get("rates")
         network.rest()
         for j in range(len(pop_rates)):
             pop_rates[j][:,test_labels[i]] += rates[j]
@@ -60,7 +61,7 @@ def label_neurons(network, test_data, test_labels, num_labels, steps):
 
     network.neuron_labels = pop_rates
 
-def evaluate(network, test_data, test_labels, steps):
+def evaluate(network, test_data, test_labels, steps, **kwargs):
     correct = 0
     view_count = np.zeros(10)
     correct_count = np.zeros(10)
@@ -69,7 +70,8 @@ def evaluate(network, test_data, test_labels, steps):
         res = network.run(steps,
                           learning = False,
                           record = True,
-                          predict = True).get("prediction")
+                          predict = True,
+                          **kwargs).get("prediction")
         if np.argmax(res) == test_labels[i]:
             correct += 1
             correct_count[test_labels[i]] += 1
@@ -82,5 +84,32 @@ def evaluate(network, test_data, test_labels, steps):
     print(*[color(f) for f in list(np.around(correct_count, 3))], sep = ', ')
     return correct/len(test_labels)
 
-def train_and_score(network, test_data, test_labels, num_labels, steps):
-    pass
+def all_at_once(network, test_data, test_labels, num_labels, steps, **kwargs):
+    network.neuron_labels = [np.zeros((pop.num_neurons, num_labels)) for  pop in network.populations[1:]]
+    correct = 0
+    view_count = np.zeros(10)
+    correct_count = np.zeros(10)
+    for i in range(len(test_data)):
+        network.populations[0].set_input(test_data[i])
+        res = network.run(steps,
+                            learning = True,
+                            record = True,
+                            predict = True,
+                            **kwargs)
+        network.rest()
+        network.normalize()
+        rates = res.get("rates")
+        prediction = res.get("prediction")
+        for j in range(len(network.neuron_labels)):
+            network.neuron_labels[j][:,test_labels[i]] += rates[j]
+        if np.argmax(prediction) == test_labels[i]:
+            correct += 1
+            correct_count[test_labels[i]] += 1
+        view_count[test_labels[i]] += 1
+        for pop in network.neuron_labels:
+            pop /= (sum(pop) + 0.0001)
+        print("\u001b[2J")
+        print("Image %d/%d" %(i,len(test_data)))
+        print("Got " + color(np.around(correct / (i+0.0001), 3)) + " correct")
+        print("Accuracy per digit:")
+        print(*[color(f) for f in list(np.around(correct_count /  (view_count + 0.0001), 3))], sep = ', ')
