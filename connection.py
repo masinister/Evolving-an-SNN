@@ -22,6 +22,7 @@ class Connection:
         self.rule = kwargs.get("rule")
         self.wmin = kwargs.get("wmin")
         self.wmax = kwargs.get("wmax")
+        self.norm = kwargs.get("norm")
         self.synapse = Synapse(self.params, self.pre.activation, self.post.activation, self.rule)
 
     '''
@@ -42,4 +43,4 @@ class Connection:
     def normalize(self):
         self.adj = np.clip(self.adj,self.wmin,self.wmax)
         self.adj /= np.sum(self.adj, axis = 0) + 0.0001
-        self.adj *= 78.4
+        self.adj *= self.norm
