@@ -51,19 +51,6 @@ def snn_test():
         refrac = 5,
         one_spike = True
     )
-    L2 = population.Population(
-        num_neurons = 16,
-        v_init = -65,
-        v_decay = .99,
-        v_reset = -65,
-        v_rest = -65,
-        t_init = -50,
-        min_thresh = -52,
-        t_bias = 0.15,
-        t_decay = .9999999,
-        refrac = 5,
-        one_spike = True
-    )
     '''
     Initialize connections
     '''
@@ -90,7 +77,7 @@ def snn_test():
 
     outer = tqdm(total = 100, desc = 'Epochs', position = 0)
     for i in range(100):
-        train.all_at_once(network, x_train[500 * i: 500 * (i+1)], y_train[500 * i: 500 * (i+1)], 10, 250)
+        train.all_at_once(network, x_train[500 * i: 500 * (i+1)], y_train[500 * i: 500 * (i+1)], 10, 250, draw_weights = True)
         # print("Training", i)
         # train.train(network, x_train[500 * i: 500 * (i+1)], 250, draw_weights=False)
         # print("Labelling", i)
