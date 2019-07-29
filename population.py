@@ -4,10 +4,20 @@ import random
 
 class Population:
     '''
-    num_neurons : number of neurons in the population
-    neurons : list of neurons
-    neuron_type : class of the neurons
-    activations : list of which neurons fired at current time step
+    Population of neurons modeled after the neurons in (Diehl and Cook 2015)
+
+    v_decay: fraction of voltage that decays in a time step
+    t_bias: amount threshold increases when the neuron fires
+    t_decay: fraction of threshold that decays in a time step
+    dt: portion of threshold that decays
+    refrac: length of refractory period
+    refrac_count: records times since neurons last fired
+    v_reset: voltage that neurons are reset to after firing
+    min_volt: voltage that neurons decay down to
+    one_spike: Boolean to only allow one neuron to spike in a time step
+    activation: list of which neurons fired in a time step
+    feed: voltage inputs that are fed into the neurons
+    adapt_thresh: Boolean for whether threshold is adaptive (True => is adaptive)
     '''
     def __init__(self, **kwargs):
         self.num_neurons = kwargs.get("num_neurons")
@@ -20,37 +30,46 @@ class Population:
         self.refrac = kwargs.get("refrac")
         self.refrac_count = np.zeros(self.num_neurons)
         self.v_reset = kwargs.get("v_reset")
-        self.v_rest = kwargs.get("v_rest")
+        self.min_volt = kwargs.get("min_volt")
         self.one_spike = kwargs.get("one_spike")
         self.dt = self.threshold - self.min_thresh
         self.activation = np.zeros(self.num_neurons)
         self.feed = np.zeros(self.num_neurons)
-        self.learning = kwargs.get("learning", True)
+        self.adapt_thresh = kwargs.get("adapt_thresh", True)
 
     def input(self, feed):
         self.feed += feed
 
     def update(self):
-        self.voltage = self.v_rest + self.v_decay * (self.voltage - self.v_rest)
-        r = self.refrac_count == 0
-        self.voltage[r] += self.feed[r]
+        '''
+        Update the internals of the neurons in the population. That is record which neurons fire
+        and update their voltages, thresholds, etc
+        '''
+        self.voltage = self.min_volt + self.v_decay * (self.voltage - self.min_volt)
+        not_in_refractory = self.refrac_count == 0
+        self.voltage[not_in_refractory] += self.feed[not_in_refractory]
         self.activation.fill(0)
-        s = self.voltage >= self.threshold
+        spikes = self.voltage >= self.threshold
+        # if one_spike == True, randomly choose one of the spikes and zero out the others
         if self.one_spike:
-            if s.any():
-                a = np.random.choice(np.nonzero(s)[0])
-                s.fill(0)
-                s[a] = 1
-        if (s*r).any():
-            self.voltage[s*r] = self.v_reset
-            self.activation[s*r] = 1
-            if self.learning:
-                self.dt[s*r] += self.t_bias * s.astype(np.float).sum(0)
-            self.refrac_count[s*r] = self.refrac
-        if (~s).any() and self.learning:
-            self.dt[~s] *= self.t_decay
-        if (~r).any():
-            self.refrac_count[~r] -= 1
+            if spikes.any():
+                a = np.random.choice(np.nonzero(spikes)[0])
+                spikes.fill(0)
+                spikes[a] = 1
+        # if neurons have built up enough voltage to spike and are not in their refractory period,
+        # fire the neurons, reset their voltages, increment their threshold
+        if (spikes*not_in_refractory).any():
+            self.voltage[spikes*not_in_refractory] = self.v_reset
+            self.activation[spikes*not_in_refractory] = 1
+            if self.adapt_thresh:
+                self.dt[spikes*not_in_refractory] += self.t_bias * spikes.astype(np.float).sum(0)
+            self.refrac_count[spikes*not_in_refractory] = self.refrac
+        # decay the threshold of any neurons that do not fire
+        if (~spikes).any() and self.adapt_thresh:
+            self.dt[~spikes] *= self.t_decay
+        # decrement refractory counter
+        if (~not_in_refractory).any():
+            self.refrac_count[~not_in_refractory] -= 1
         self.threshold = self.min_thresh + self.dt
         self.feed.fill(0)
 

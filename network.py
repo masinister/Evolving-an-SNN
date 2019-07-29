@@ -62,7 +62,7 @@ class Network:
             c.synapse.pre_trace.fill(0)
             c.synapse.post_trace.fill(0)
         for p in self.populations[1:]:
-            p.voltage.fill(p.v_rest)
+            p.voltage.fill(p.min_volt)
             p.refrac_count.fill(0)
             # p.dt.fill(p.min_thresh)
 
