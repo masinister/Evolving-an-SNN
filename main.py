@@ -51,16 +51,42 @@ def snn_test():
         refrac = 5,
         one_spike = True
     )
+    L2 = population.Population(
+        num_neurons = 16,
+        v_init = -65,
+        v_decay = .99,
+        v_reset = -65,
+        v_rest = -65,
+        t_init = -50,
+        min_thresh = -52,
+        t_bias = 0.15,
+        t_decay = .9999999,
+        refrac = 5,
+        one_spike = True
+    )
     '''
     Initialize connections
     '''
     inh = -120
-    C1 = Connection(Input, L1, 0.3 * all2all(Input.num_neurons, L1.num_neurons), params, rule = "PreAndPost", wmin = 0, wmax = 1)
-    C2 = Connection(L1, L1, allBut1(L1.num_neurons) * inh, params, rule = "static", wmin = inh, wmax = 0)
+    C1 = Connection(Input,
+                    L1,
+                    0.3 * all2all(Input.num_neurons, L1.num_neurons),
+                    params,
+                    rule = "PreAndPost",
+                    wmin = 0,
+                    wmax = 1,
+                    norm = 78.4)
+
+    C2 = Connection(L1,
+                    L1,
+                    allBut1(L1.num_neurons) * inh,
+                    params,
+                    rule = "static",
+                    wmin = inh,
+                    wmax = 0)
 
     network = Network([Input, L1,], [C1, C2,])
     network.set_params(params)
-    network.neuron_labels = [np.zeros((pop.num_neurons, 10)) for  pop in network.populations[1:]]
 
     outer = tqdm(total = 100, desc = 'Epochs', position = 0)
     for i in range(100):

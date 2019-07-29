@@ -85,6 +85,7 @@ def evaluate(network, test_data, test_labels, steps, **kwargs):
     return correct/len(test_labels)
 
 def all_at_once(network, test_data, test_labels, num_labels, steps, **kwargs):
+    network.neuron_labels = [np.zeros((pop.num_neurons, 10)) for  pop in network.populations[1:]]
     correct = 0
     view_count = np.zeros(10)
     correct_count = np.zeros(10)
@@ -110,11 +111,6 @@ def all_at_once(network, test_data, test_labels, num_labels, steps, **kwargs):
         view_count[test_labels[i]] += 1
         for pop in network.neuron_labels:
             pop /= (sum(pop) + 0.0001)
-        acc.set_description_str("Accuracy: " + color(np.around(correct / (i+0.0001), 3)))
-        d_acc.set_description_str("Accuracy per digit: " + ', '.join([color(f) for f in list(np.around(correct_count /  (view_count + 0.0001), 3))]))
-        # print("Got " + color(np.around(correct / (i+0.0001), 3)) + " correct")
-        # print("Accuracy per digit:")
-        # print(*[color(f) for f in list(np.around(correct_count /  (view_count + 0.0001), 3))], sep = ', ')
+        acc.set_description_str("Accuracy: " + color(np.around(correct / (i+0.0001), 3)) + "    ")
+        d_acc.set_description_str("Accuracy per digit: " + ', '.join([color(f) for f in list(np.around(correct_count /  (view_count + 0.0001), 3))]) + "                ")
         bar.update(1)
-    acc.set_description_str("")
-    d_acc.set_description_str("")
