@@ -6,8 +6,15 @@ import matplotlib.pyplot as plt
 from PIL import Image
 
 class Network:
-    # Assumed that first population in pop list is the input population
-    # and the last population in pop list is the output population
+    '''
+    Network of populations and the connections between them
+
+    Assumed that first population in pop list is the input population
+
+    adapt_thresh: Boolean whether or not populations have adaptive thresholds
+    draw_weights: Boolean whether or not to plot grid of weights
+    plot: Boolean whether or not to plot weights/thresholds/voltages vs time
+    '''
     def __init__(self, pop, conn):
         # List of populations/connections
         self.populations = pop
@@ -15,9 +22,10 @@ class Network:
         self.neuron_labels = np.array([])
 
     def run(self, steps, **kwargs):
-        if kwargs.get("learning", True):
-            self.enable_learning()
-        else: self.disable_learning()
+        if kwargs.get("adapt_thresh", True):
+            self.enable_adapt_thresh()
+        else: self.disable_adapt_thresh()
+        # lists to record thresholds/voltage/weights etc
         t = []
         v = []
         w = []
@@ -31,9 +39,11 @@ class Network:
                 c.input()
             for p in self.populations:
                 p.update()
+            # if labelling or predicting record firing activity
             if kwargs.get("record", False) or kwargs.get("predict", False):
                 for i in range(len(rates)):
                     rates[i] += self.populations[i+1].activation
+
             if kwargs.get("plot", False):
                 w.append([x for x in self.connections[0].adj.flat[10000:10100]])
                 v.extend([self.populations[1].voltage])
@@ -47,6 +57,7 @@ class Network:
             for i in range(len(rates)):
                 prediction += np.sum(rates[i][:,None] * self.neuron_labels[i], axis=0)
             prediction /= (np.sum(prediction) + 0.0001)
+        # if you want to visualize weights in a grid
         if kwargs.get("draw_weights", False):
             for i in range(len(self.connections)):
                 if self.connections[i].rule != "static":
@@ -57,32 +68,38 @@ class Network:
                     img.save("img/C%d - %d.png" %(i, kwargs.get("id", 0)))
         return {"w":w, "t":t, "v":v, "a":a, "rates":rates, "prediction": prediction}
 
+
     def rest(self):
+        '''
+        reset internals of neurons (except thresholds) and synapses to 0
+        '''
         for c in self.connections:
             c.synapse.pre_trace.fill(0)
             c.synapse.post_trace.fill(0)
         for p in self.populations[1:]:
             p.voltage.fill(p.min_volt)
             p.refrac_count.fill(0)
-            # p.dt.fill(p.min_thresh)
 
-    def enable_learning(self):
+    def enable_adapt_thresh(self):
         for c in self.connections:
             c.synapse.rule = c.rule
         for p in self.populations:
-            p.learning = True
+            p.adapt_thresh = True
 
-    def disable_learning(self):
+    def disable_adapt_thresh(self):
         for c in self.connections:
             c.synapse.rule = "static"
         for p in self.populations:
-            p.learning = False
+            p.adapt_thresh = False
 
     def set_params(self, params):
         for c in self.connections:
             c.set_params(params)
 
     def get_square_weights(self, weights, box_w, input_neurons):
+        '''
+        organize weight matrix into a grid for visualization
+        '''
         input_neurons = (input_neurons, input_neurons)
         square_weights = np.zeros((input_neurons[0] * box_w, input_neurons[1] * box_w))
         for i in range(box_w):
