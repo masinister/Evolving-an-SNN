@@ -64,6 +64,7 @@ class Network:
         for p in self.populations[1:]:
             p.voltage.fill(p.v_rest)
             p.refrac_count.fill(0)
+            # p.dt.fill(p.min_thresh)
 
     def enable_learning(self):
         for c in self.connections:

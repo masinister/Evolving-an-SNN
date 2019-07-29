@@ -3,6 +3,10 @@ from tqdm import tqdm
 import matplotlib.pyplot as plt
 from color import color
 
+from tensorflow.keras.models import load_model
+from PIL import Image
+
+
 def train(network, train_data, steps, **kwargs):
     weight = []
     thresh = []
@@ -31,6 +35,46 @@ def train(network, train_data, steps, **kwargs):
         axs[3].plot(act)
         axs[3].set_title("L1 Activations")
         plt.show()
+
+
+
+def dream(network, steps, **kwargs):
+    '''
+    memory cells are smaller populations of neurons that are meant to store previously seen
+    data in the form of the synaptic weights. Dreaming presents this data back to the network
+    '''
+    num_con = len(network.connections)
+    num_pop = len(network.populations)
+    inp_size = int(np.sqrt(network.populations[0].num_neurons))
+    if (kwargs.get("autoencode", False)):
+        autoencoder = load_model('Model/autoencoder')
+    # assumes populations[1] is a memory cell and that all mem cells have same number of neruons
+    ind = list(range(network.populations[1].num_neurons))
+    # shuffle the order of what memories to present
+    np.random.shuffle(ind)
+    # turn off learning for memory cells, assumes that connections[0:num_con-2] are connections to the memory cells
+    for conn in network.connections[0:num_con-2]:
+        conn.rule = "static"
+        conn.synapse.rule = "static"
+    # present memories for "reps" number of times
+    for r in range(kwargs.get("reps", 1)):
+        for i in ind:
+            # loop through the connections from input to mem cells, assumes every other connection is from input to a memory cell
+            for mem in network.connections[0:num_con-2:2]:
+                # set input to the weights of a neuron from a memory cell, assumes memory cell is fully connected to input
+                memory = mem.adj[:,i]/np.max(mem.adj[:,i])
+                if (kwargs.get("autoencode", False)):
+                    memory = np.reshape(memory, (1,28,28,1))
+                    memory = np.reshape(autoencoder.predict(memory), (inp_size,inp_size))
+                img = Image.fromarray((memory*255).astype(np.uint8))
+                img.save("img/memory.png")
+                network.populations[0].set_input(memory)
+                network.run(steps, **kwargs)
+                network.normalize()
+                network.rest()
+
+
+
 
 def label_neurons(network, test_data, test_labels, num_labels, steps):
     '''
