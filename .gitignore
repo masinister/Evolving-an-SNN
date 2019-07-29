@@ -2,3 +2,4 @@ __pycache__/
 img/
 debug.log
 Model/
+*.png
