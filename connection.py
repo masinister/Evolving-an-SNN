@@ -1,16 +1,20 @@
 from population import Population
 from synapse import Synapse
 import numpy as np
-'''
-Connection encapsulates the interaction
-between two populations of neurons.
-'''
+
+
 class Connection:
     '''
+    Connection encapsulates the interaction
+    between two populations of neurons.
+
     pre: presynaptic population
     post: postsynaptic population
     adj: weighted adjacency matrix (adj[i][j] is the weight of the connection from pre[i] to post[j])
          (i.e. rows are presynap neurons and columns are postsynap neurons)
+    wmin: minimum weight value in adj
+    wmax: maximum weight value in adj
+    norm: normalize weights such that the average value of weights is (norm/pre.num_neurons)
     rule: method for updating the weight matrix (e.g. STDP learning rule)
     params: hyperparameters for synapse and learning rule
     '''
@@ -25,14 +29,17 @@ class Connection:
         self.norm = kwargs.get("norm")
         self.synapse = Synapse(self.params, self.pre.activation, self.post.activation, self.rule)
 
-    '''
-    update synapse and adjacency matrix then transmit weighted sums of spikes along the connection
-    '''
     def input(self):
+        '''
+        Pass input from pre to post
+        '''
         feed = np.array(np.dot(self.pre.activation, self.adj))
         self.post.input(feed)
 
     def update(self):
+        '''
+        Update Weights
+        '''
         self.synapse.update(self.pre.activation, self.post.activation)
         self.adj += self.synapse.delta_w(self.adj, self.pre.activation, self.post.activation)
 
