@@ -33,7 +33,7 @@ class Connection:
         '''
         Pass input from pre to post
         '''
-        feed = np.array(np.dot(self.pre.activation, self.adj))
+        feed = np.sum(self.adj * self.pre.activation[:,None], axis=0)
         self.post.input(feed)
 
     def update(self):
