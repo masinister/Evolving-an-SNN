@@ -11,7 +11,7 @@ class Network:
 
     Assumed that first population in pop list is the input population
 
-    adapt_thresh: Boolean whether or not populations have adaptive thresholds
+    learning: Boolean whether or not the network is learning
     draw_weights: Boolean whether or not to plot grid of weights
     plot: Boolean whether or not to plot weights/thresholds/voltages vs time
     '''
@@ -22,9 +22,9 @@ class Network:
         self.neuron_labels = np.array([])
 
     def run(self, steps, **kwargs):
-        if kwargs.get("adapt_thresh", True):
-            self.enable_adapt_thresh()
-        else: self.disable_adapt_thresh()
+        if kwargs.get("learning", True):
+            self.enable_learning()
+        else: self.disable_learning()
         # lists to record thresholds/voltage/weights etc
         t = []
         v = []
@@ -80,13 +80,13 @@ class Network:
             p.voltage.fill(p.min_volt)
             p.refrac_count.fill(0)
 
-    def enable_adapt_thresh(self):
+    def enable_learning(self):
         for c in self.connections:
             c.synapse.rule = c.rule
         for p in self.populations:
             p.adapt_thresh = True
 
-    def disable_adapt_thresh(self):
+    def disable_learning(self):
         for c in self.connections:
             c.synapse.rule = "static"
         for p in self.populations:
