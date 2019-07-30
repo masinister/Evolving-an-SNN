@@ -129,7 +129,8 @@ def evaluate(network, test_data, test_labels, steps, **kwargs):
     return correct/len(test_labels)
 
 def all_at_once(network, test_data, test_labels, num_labels, steps, **kwargs):
-    network.neuron_labels = [np.zeros((pop.num_neurons, 10)) for  pop in network.populations[1:]]
+    if not network.neuron_labels:
+        network.neuron_labels = [np.zeros((pop.num_neurons, 10)) for  pop in network.populations[1:]]
     correct = 0
     view_count = np.zeros(10)
     correct_count = np.zeros(10)
