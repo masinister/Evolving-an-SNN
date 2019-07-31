@@ -77,6 +77,8 @@ class Network:
             p.voltage.fill(p.min_volt)
             p.refrac_count.fill(0)
             p.trace.fill(0)
+            p.activation.fill(0)
+            p.feed.fill(0)
 
     def enable_learning(self):
         for c in self.connections:

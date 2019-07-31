@@ -46,7 +46,7 @@ def snn_test():
         min_volt = -65,
         t_init = -52,
         min_thresh = -52,
-        t_bias = 0.25,
+        t_bias = 0.05,
         t_decay = .9999999,
         refrac = 5,
         trace_decay = .95,
@@ -79,7 +79,7 @@ def snn_test():
     for i in range(100):
         # train.all_at_once(network, x_train[500 * i: 500 * (i+1)], y_train[500 * i: 500 * (i+1)], 10, 250, draw_weights = True)
         print("Training", i)
-        train.train(network, x_train[100 * i: 100 * (i+1)], 250, draw_weights=True)
+        train.train(network, x_train[100 * i: 100 * (i+1)], 300, draw_weights=True)
         print("Labelling", i)
         train.label_neurons(network, x_train[0: 500], y_train[0: 500], 10, 50)
         print("Testing", i)

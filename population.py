@@ -97,5 +97,5 @@ class Image_Input(Population):
     def update(self):
         for i in range(len(self.activation)):
             self.activation[i] = int(random.random() < self.rate[i])
-        self.trace *= self.trace_decay
+        self.trace[self.activation == 0] *= self.trace_decay
         self.trace += self.activation
