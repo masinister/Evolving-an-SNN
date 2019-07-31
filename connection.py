@@ -1,5 +1,5 @@
 from population import Population
-from synapse import Synapse
+import rules
 import numpy as np
 
 
@@ -23,11 +23,11 @@ class Connection:
         self.post = post
         self.adj = adj
         self.params = params
-        self.rule = kwargs.get("rule")
-        self.wmin = kwargs.get("wmin")
-        self.wmax = kwargs.get("wmax")
-        self.norm = kwargs.get("norm")
-        self.synapse = Synapse(self.params, self.pre.activation, self.post.activation, self.rule)
+        self.rule = kwargs.get("rule", "static")
+        self.wmin = kwargs.get("wmin", 0)
+        self.wmax = kwargs.get("wmax", 1)
+        self.norm = kwargs.get("norm", 78.4)
+        self.learning = kwargs.get("learning", True)
 
     def input(self):
         '''
@@ -40,12 +40,8 @@ class Connection:
         '''
         Update Weights
         '''
-        self.synapse.update(self.pre.activation, self.post.activation)
-        self.adj += self.synapse.delta_w(self.adj, self.pre.activation, self.post.activation)
-
-    def set_params(self, params):
-        self.params = params
-        self.synapse.set_params(params)
+        if self.learning:
+            self.adj += rules.get(self.rule)(self.pre.trace, self.post.trace, self.adj, self.pre.activation, self.post.activation, self.params)
 
     def normalize(self):
         self.adj = np.clip(self.adj,self.wmin,self.wmax)

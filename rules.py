@@ -39,7 +39,7 @@ def PreAndPost(pre_tr, post_tr, adj, pre_activ, post_activ, params):
     Note there is no overlap between dw1 and dw2, so a nonzero entry for one rule
     is zero for the other.
     '''
-    dw = np.sign(adj)
+    dw = np.ones(adj.shape)
     dw1 = -params["eta"] * dw * pre_activ[:,None] * post_tr
     dw2 = params["mu"] * dw * post_activ * pre_tr[:,None]
     return dw1 + dw2
