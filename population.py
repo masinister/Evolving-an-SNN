@@ -69,7 +69,7 @@ class Population:
                 spikes.fill(0)
                 spikes[a] = 1
         self.activation = spikes * not_in_refractory
-        self.trace *= self.trace_decay
+        self.trace[~spikes] *= self.trace_decay
         self.trace += self.activation
 
 

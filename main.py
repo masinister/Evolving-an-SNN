@@ -41,12 +41,12 @@ def snn_test():
     L1 = population.Population(
         num_neurons = 100,
         v_init = -65,
-        v_decay = .90,
+        v_decay = .99,
         v_reset = -60,
         min_volt = -65,
         t_init = -52,
         min_thresh = -52,
-        t_bias = 0.05,
+        t_bias = 0.25,
         t_decay = .9999999,
         refrac = 5,
         trace_decay = .95,
@@ -55,7 +55,7 @@ def snn_test():
     '''
     Initialize connections
     '''
-    inh = -17.5
+    inh = -120
     C1 = Connection(Input,
                     L1,
                     0.3 * all2all(Input.num_neurons, L1.num_neurons),
@@ -75,16 +75,16 @@ def snn_test():
 
     network = Network([Input, L1,], [C1, C2,])
 
-    outer = tqdm(total = 100, desc = 'Epochs', position = 0)
+    # outer = tqdm(total = 100, desc = 'Epochs', position = 0)
     for i in range(100):
-        train.all_at_once(network, x_train[500 * i: 500 * (i+1)], y_train[500 * i: 500 * (i+1)], 10, 250, draw_weights = True)
-        # print("Training", i)
-        # train.train(network, x_train[500 * i: 500 * (i+1)], 250, draw_weights=False)
-        # print("Labelling", i)
-        # train.label_neurons(network, x_train[0: 500], y_train[0: 500], 10, 50)
-        # print("Testing", i)
-        # train.evaluate(network, x_train[50000:50500], y_train[50000:50500], 50)
-        outer.update(1)
+        # train.all_at_once(network, x_train[500 * i: 500 * (i+1)], y_train[500 * i: 500 * (i+1)], 10, 250, draw_weights = True)
+        print("Training", i)
+        train.train(network, x_train[100 * i: 100 * (i+1)], 250, draw_weights=True)
+        print("Labelling", i)
+        train.label_neurons(network, x_train[0: 500], y_train[0: 500], 10, 50)
+        print("Testing", i)
+        train.evaluate(network, x_train[50000:50500], y_train[50000:50500], 50)
+        # outer.update(1)
     print("Testing")
     train.evaluate(network, x_train[50000:51000], y_train[50000:51000], 100)
 
