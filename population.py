@@ -36,6 +36,8 @@ class Population:
         self.activation = np.zeros(self.num_neurons)
         self.feed = np.zeros(self.num_neurons)
         self.adapt_thresh = kwargs.get("adapt_thresh", True)
+        self.trace = np.zeros(self.num_neurons)
+        self.trace_decay = kwargs.get("trace_decay", .95)
 
     def input(self, feed):
         self.feed += feed
@@ -46,32 +48,29 @@ class Population:
         and update their voltages, thresholds, etc
         '''
         self.voltage = self.min_volt + self.v_decay * (self.voltage - self.min_volt)
+        # decay the threshold of any neurons that do not fire
+        if self.adapt_thresh:
+            self.dt *= self.t_decay
         not_in_refractory = self.refrac_count == 0
-        self.voltage[not_in_refractory] += self.feed[not_in_refractory]
-        self.activation.fill(0)
+        self.voltage += self.feed * not_in_refractory
+        self.feed.fill(0)
+        # decrement refractory counter
+        self.refrac_count -= ~not_in_refractory
+        self.threshold = self.min_thresh + self.dt
         spikes = self.voltage >= self.threshold
+        self.refrac_count[spikes] = self.refrac
+        self.voltage[spikes] = self.v_reset
+        if self.adapt_thresh:
+            self.dt += self.t_bias * spikes
         # if one_spike == True, randomly choose one of the spikes and zero out the others
         if self.one_spike:
             if spikes.any():
                 a = np.random.choice(np.nonzero(spikes)[0])
                 spikes.fill(0)
                 spikes[a] = 1
-        # if neurons have built up enough voltage to spike and are not in their refractory period,
-        # fire the neurons, reset their voltages, increment their threshold
-        if (spikes*not_in_refractory).any():
-            self.voltage[spikes*not_in_refractory] = self.v_reset
-            self.activation[spikes*not_in_refractory] = 1
-            if self.adapt_thresh:
-                self.dt[spikes*not_in_refractory] += self.t_bias * spikes.astype(np.float).sum(0)
-            self.refrac_count[spikes*not_in_refractory] = self.refrac
-        # decay the threshold of any neurons that do not fire
-        if (~spikes).any() and self.adapt_thresh:
-            self.dt[~spikes] *= self.t_decay
-        # decrement refractory counter
-        if (~not_in_refractory).any():
-            self.refrac_count[~not_in_refractory] -= 1
-        self.threshold = self.min_thresh + self.dt
-        self.feed.fill(0)
+        self.activation = spikes * not_in_refractory
+        self.trace *= self.trace_decay
+        self.trace += self.activation
 
 
 
@@ -80,20 +79,23 @@ class Image_Input(Population):
     Population of input neurons. Each neuron fires randomly with probability
     proportional to pixel intensity.
     '''
-    def __init__(self, image):
+    def __init__(self, image, **kwargs):
         self.num_neurons = len(image)*len(image[0])
         self.activation = np.zeros(self.num_neurons)
         self.rate = np.zeros(self.num_neurons)
+        self.trace = np.zeros(self.num_neurons)
+        self.trace_decay = kwargs.get("trace_decay", 0.95)
         self.set_input(image)
 
     def set_input(self, image):
         # change to another image
-        self.rate = np.array(list((image / (255.0 * 4.0)).flat))
+        self.rate = np.array(list((image / (255.0 * 10.0)).flat))
 
     def set_blank(self):
         self.rate.fill(0)
 
     def update(self):
-        self.activation.fill(0)
         for i in range(len(self.activation)):
             self.activation[i] = int(random.random() < self.rate[i])
+        self.trace *= self.trace_decay
+        self.trace += self.activation

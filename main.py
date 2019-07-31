@@ -2,7 +2,6 @@ from genetic import Optimizer
 import schemes
 from connection import Connection
 import population
-from synapse import Synapse
 from network import Network
 import train
 from tensorflow.keras.datasets import mnist
@@ -21,7 +20,7 @@ def snn_test():
     '''
     Learning paramters for PreAndPost rule
     '''
-    params = {"eta": 0.0005, "mu": 0.05, "decay_pre": 0.95, "decay_post": 0.95,}
+    params = {"eta": 0.0005, "mu": 0.05}
     '''
     different connection schemes
     '''
@@ -32,74 +31,31 @@ def snn_test():
     one2one = schemes.get("one2one")
     local = schemes.get("local")
 
-
     (x_train, y_train), (x_test, y_test) = mnist.load_data()
-    data = []
-    batch=300
-    order = [0,3,9,1,6,5,2,8,7]
-    for s in range(3):
-        i=0
-        count=0
-        x = []
-        while count < batch:
-            if y_train[i] == order[s*3] or y_train[i] == order[s*3+1] or y_train[i] == order[s*3+2]:
-                x.append(x_train[i])
-                count+=1
-            i+=1
-        np.random.shuffle(x)
-        data.extend(x)
-    data = np.array(data)
-
 
     '''
     Initialize populations
     '''
-    cell_num = 16
-    nn = 100
+
     Input = population.Image_Input(x_train[0])
     L1 = population.Population(
-        num_neurons = cell_num,
+        num_neurons = 100,
         v_init = -65,
-        v_decay = .99,
-        v_reset = -65,
+        v_decay = .90,
+        v_reset = -60,
         min_volt = -65,
-        t_init = -50,
+        t_init = -52,
         min_thresh = -52,
-        t_bias = 0.25,
+        t_bias = 0.05,
         t_decay = .9999999,
         refrac = 5,
-        one_spike = True
-    )
-    L2 = population.Population(
-        num_neurons = cell_num,
-        v_init = -65,
-        v_decay = .99,
-        v_reset = -65,
-        min_volt = -65,
-        t_init = -50,
-        min_thresh = -52,
-        t_bias = 0.25,
-        t_decay = .9999999,
-        refrac = 5,
-        one_spike = True
-    )
-    L3 = population.Population(
-        num_neurons = cell_num,
-        v_init = -65,
-        v_decay = .99,
-        v_reset = -65,
-        min_volt = -65,
-        t_init = -50,
-        min_thresh = -52,
-        t_bias = 0.15,
-        t_decay = .9999999,
-        refrac = 5,
+        trace_decay = .95,
         one_spike = True
     )
     '''
     Initialize connections
     '''
-    inh = -120
+    inh = -17.5
     C1 = Connection(Input,
                     L1,
                     0.3 * all2all(Input.num_neurons, L1.num_neurons),
@@ -118,7 +74,6 @@ def snn_test():
                     wmax = 0)
 
     network = Network([Input, L1,], [C1, C2,])
-    network.set_params(params)
 
     outer = tqdm(total = 100, desc = 'Epochs', position = 0)
     for i in range(100):

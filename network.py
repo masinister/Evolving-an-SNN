@@ -33,12 +33,12 @@ class Network:
         rates = [np.zeros(pop.num_neurons) for pop in self.populations[1:]]
         prediction = np.zeros(10)
         for s in range(steps):
-            for c in self.connections:
-                c.update()
-            for c in self.connections:
-                c.input()
             for p in self.populations:
                 p.update()
+            for c in self.connections:
+                c.input()
+            for c in self.connections:
+                c.update()
             # if labelling or predicting record firing activity
             if kwargs.get("record", False) or kwargs.get("predict", False):
                 for i in range(len(rates)):
@@ -48,7 +48,7 @@ class Network:
                 w.append([x for x in self.connections[0].adj.flat[10000:10100]])
                 v.extend([self.populations[1].voltage])
                 t.extend([self.populations[1].threshold])
-                a.extend([self.connections[1].synapse.pre_trace])
+                a.extend([self.populations[1].trace])
         if kwargs.get("record", False) or kwargs.get("predict", False):
             for i in range(len(rates)):
                 rates[i] = (rates[i] == max(rates[i])).astype(float)
@@ -71,30 +71,24 @@ class Network:
 
     def rest(self):
         '''
-        reset internals of neurons (except thresholds) and synapses to 0
+        reset internals of neurons (except thresholds) to 0
         '''
-        for c in self.connections:
-            c.synapse.pre_trace.fill(0)
-            c.synapse.post_trace.fill(0)
         for p in self.populations[1:]:
             p.voltage.fill(p.min_volt)
             p.refrac_count.fill(0)
+            p.trace.fill(0)
 
     def enable_learning(self):
         for c in self.connections:
-            c.synapse.rule = c.rule
+            c.learning = True
         for p in self.populations:
             p.adapt_thresh = True
 
     def disable_learning(self):
         for c in self.connections:
-            c.synapse.rule = "static"
+            c.learning = False
         for p in self.populations:
             p.adapt_thresh = False
-
-    def set_params(self, params):
-        for c in self.connections:
-            c.set_params(params)
 
     def get_square_weights(self, weights, box_w, input_neurons):
         '''
