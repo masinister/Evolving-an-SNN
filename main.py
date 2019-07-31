@@ -42,7 +42,7 @@ def snn_test():
         num_neurons = 100,
         v_init = -65,
         v_decay = .90,
-        v_reset = -65,
+        v_reset = -60,
         min_volt = -65,
         t_init = -52,
         min_thresh = -52,
