@@ -119,3 +119,7 @@ class Network:
         for c in self.connections:
             if c.rule != "static":
                 c.normalize()
+
+    def set_weights(self, weights):
+        for i in range(len(weights)):
+            self.connections[i].adj = weights[i]

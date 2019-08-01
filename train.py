@@ -2,7 +2,7 @@ import numpy as np
 from tqdm import tqdm
 import matplotlib.pyplot as plt
 from color import color
-
+import pickle
 from tensorflow.keras.models import load_model
 from PIL import Image
 
@@ -35,7 +35,8 @@ def train(network, train_data, steps, **kwargs):
         axs[3].plot(act)
         axs[3].set_title("L1 Activations")
         plt.show()
-
+    if kwargs.get("save_weights", False):
+        pickle.dump([c.adj for c in network.connections], open("weights.pickle", "wb"))
 
 
 def dream(network, steps, **kwargs):
@@ -159,3 +160,5 @@ def all_at_once(network, test_data, test_labels, num_labels, steps, **kwargs):
         acc.set_description_str("Accuracy: " + color(np.around(correct / (i+0.0001), 3)) + "    ")
         d_acc.set_description_str("Accuracy per digit: " + ', '.join([color(f) for f in list(np.around(correct_count /  (view_count + 0.0001), 3))]) + "                ")
         bar.update(1)
+    if kwargs.get("save_weights", False):
+        pickle.dump([c.adj for c in network.connections], open("weights", "wb"))
