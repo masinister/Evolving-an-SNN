@@ -1,6 +1,6 @@
 import population
 from network import Network
-from correlation import correlation_coeff
+from correlation import correlation
 from tensorflow.keras.datasets import mnist
 import numpy as np
 from tqdm import tqdm
@@ -28,7 +28,7 @@ import gudhi
 #
 # for i in tqdm(range(783)):
 #     for j in range(i+1,784):
-#         corr[i,j] = correlation_coeff(spikes[i,:], spikes[j,:])
+#         corr[i,j] = correlation(spikes[i,:], spikes[j,:])
 #
 # corr_out = open('corr.pickle','wb')
 # pickle.dump(corr,corr_out)
@@ -39,13 +39,16 @@ corr = pickle.load(corr_in)
 
 for i in tqdm(range(783)):
     for j in range(i+1,784):
-        corr[i,j] = 1/corr[i,j] if corr[i,j]!=0 else 0
+        corr[i,j] = 1/(corr[i,j]+.01)
 
 corr = corr + np.transpose(corr)
-rips_complex = gudhi.RipsComplex(distance_matrix=corr,max_edge_length=np.max(corr))
+
+rips_complex = gudhi.RipsComplex(distance_matrix=corr)
 simplex_tree = rips_complex.create_simplex_tree(max_dimension=2)
 diag_Rips = simplex_tree.persistence()
-gudhi.plot_persistence_diagram(diag_Rips)
+plt = gudhi.plot_persistence_barcode(diag_Rips)
+plt.show()
 
-# plt.imshow(corr)
+# plt.imshow(corr,cmap="gist_ncar")
+# plt.colorbar()
 # plt.show()

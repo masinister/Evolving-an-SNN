@@ -6,7 +6,7 @@ def shift(spikes, k):
     shifted[0:num-k] = spikes[k:]
     return shifted
 
-def correlation_coeff(spike1,spike2):
+def correlation(spike1,spike2):
     assert len(spike1) == len(spike2), "Spike trains different length"
     num = len(spike1)
     scale = (np.sum(spike1)*np.sum(spike2))
