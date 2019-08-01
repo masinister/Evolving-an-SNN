@@ -69,7 +69,7 @@ class Population:
                 spikes.fill(0)
                 spikes[a] = 1
         self.activation = spikes * not_in_refractory
-        self.trace *= self.trace_decay
+        self.trace[~spikes] *= self.trace_decay
         self.trace += self.activation
 
 
@@ -97,5 +97,5 @@ class Image_Input(Population):
     def update(self):
         for i in range(len(self.activation)):
             self.activation[i] = int(random.random() < self.rate[i])
-        self.trace *= self.trace_decay
+        self.trace[self.activation == 0] *= self.trace_decay
         self.trace += self.activation

@@ -42,12 +42,12 @@ class Network:
         rates = [np.zeros(pop.num_neurons) for pop in self.populations[1:]]
         prediction = np.zeros(10)
         for s in range(steps):
-            for p in self.populations:
-                p.update()
             for c in self.connections:
                 c.input()
             for c in self.connections:
                 c.update()
+            for p in self.populations:
+                p.update()
             # if labelling or predicting record firing activity
             if kwargs.get("record", False) or kwargs.get("predict", False):
                 for i in range(len(rates)):
@@ -86,6 +86,8 @@ class Network:
             p.voltage.fill(p.min_volt)
             p.refrac_count.fill(0)
             p.trace.fill(0)
+            p.activation.fill(0)
+            p.feed.fill(0)
 
     def enable_learning(self):
         for c in self.connections:
