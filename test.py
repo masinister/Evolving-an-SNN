@@ -39,7 +39,7 @@ corr = pickle.load(corr_in)
 
 for i in tqdm(range(783)):
     for j in range(i+1,784):
-        corr[i,j] = 1/corr[i,j] if corr[i,j]!=0 else 100
+        corr[i,j] = 1/(corr[i,j]+.01)
 
 corr = corr + np.transpose(corr)
 
