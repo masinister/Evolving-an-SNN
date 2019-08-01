@@ -56,7 +56,7 @@ class Population:
         self.feed.fill(0)
         # decrement refractory counter
         self.refrac_count -= ~not_in_refractory
-        self.threshold = self.min_thresh + self.dt
+        self.threshold = self.min_thresh + self.dt * self.adapt_thresh
         spikes = self.voltage >= self.threshold
         self.refrac_count[spikes] = self.refrac
         self.voltage[spikes] = self.v_reset
@@ -89,7 +89,7 @@ class Image_Input(Population):
 
     def set_input(self, image):
         # change to another image
-        self.rate = np.array(list((image / (255.0*4)).flat))
+        self.rate = np.array(list((image / (255.0*10)).flat))
 
     def set_blank(self):
         self.rate.fill(0)
