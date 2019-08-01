@@ -1,6 +1,6 @@
 import population
 from network import Network
-from correlation import correlation_coeff
+from correlation import correlation
 from tensorflow.keras.datasets import mnist
 import numpy as np
 from tqdm import tqdm
