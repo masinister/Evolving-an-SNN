@@ -89,7 +89,7 @@ class Image_Input(Population):
 
     def set_input(self, image):
         # change to another image
-        self.rate = np.array(list((image / (255.0 * 10.0)).flat))
+        self.rate = np.array(list((image / (255.0*4)).flat))
 
     def set_blank(self):
         self.rate.fill(0)
