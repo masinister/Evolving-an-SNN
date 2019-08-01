@@ -84,7 +84,7 @@ def snn_test():
         # print("Training", i)
         # train.train(network, x_train[500 * i: 500 * (i+1)], 250, save_weights = True)
         print("Labelling", i)
-        train.label_neurons(network, x_train[0: 100], y_train[0: 100], 10, 300, draw_weights = False)
+        train.label_neurons(network, x_train[0: 100], y_train[0: 100], 10, 300)
         print("Testing", i)
         train.evaluate(network, x_train[50000:50100], y_train[50000:50100], 300)
         # outer.update(1)
