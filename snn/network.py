@@ -27,7 +27,7 @@ class Network:
         else: self.disable_learning()
 
         if kwargs.get("record_spikes", False):
-            pop_index = kwargs.get("pop_index", 0)
+            pop_index = kwargs.get("pop_index")
             spikes = np.zeros((self.populations[pop_index].num_neurons,steps))
         else:
             spikes = []
