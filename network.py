@@ -21,19 +21,19 @@ class Network:
         self.connections = conn
         self.neuron_labels = np.array([])
 
-    def record_spikes(self, steps):
-        spikes = np.zeros((self.populations[0].num_neurons,steps))
-        for s in range(steps):
-            for p in self.populations:
-                p.update()
-            spikes[:,s] = self.populations[0].activation
-        return spikes
-
-
     def run(self, steps, **kwargs):
         if kwargs.get("learning", True):
             self.enable_learning()
         else: self.disable_learning()
+
+        if kwargs.get("record_spikes", False):
+            pop_index = kwargs.get("pop_index", 0)
+            spikes = np.zeros((self.populations[pop_index].num_neurons,steps))
+        else:
+            print("No index was given for what population to record")
+            spikes = []
+
+
         # lists to record thresholds/voltage/weights etc
         t = []
         v = []
@@ -48,6 +48,10 @@ class Network:
                 c.update()
             for p in self.populations:
                 p.update()
+
+            if kwargs.get("record_spikes", False):
+                spikes[:,s] = self.populations[pop_index].activation
+
             # if labelling or predicting record firing activity
             if kwargs.get("record", False) or kwargs.get("predict", False):
                 for i in range(len(rates)):
@@ -75,7 +79,7 @@ class Network:
                                                   np.sqrt(self.connections[i].adj.shape[0]).astype(int))
                     img = Image.fromarray((sw * 255).astype(np.uint8))
                     img.save("img/C%d - %d.png" %(i, kwargs.get("id", 0)))
-        return {"w":w, "t":t, "v":v, "a":a, "rates":rates, "prediction": prediction}
+        return {"w":w, "t":t, "v":v, "a":a, "rates":rates, "prediction": prediction, "spikes": spikes}
 
 
     def rest(self):
