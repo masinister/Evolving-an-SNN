@@ -23,9 +23,10 @@ allBut1 = schemes.get("allBut1")
 all2all = schemes.get("all2all")
 
 ''' Initialize populations '''
-Input = Image_Input(x_train[0])
+num_neurons = 100
+Input = Image_Input()
 L1 = Population(
-    num_neurons = 100,
+    num_neurons = num_neurons,
     v_init = -65,
     v_decay = .99,
     v_reset = -60,
@@ -68,11 +69,14 @@ network.set_weights(weights)
 
 ''' Record spiking activity of Layer 1 while showing it a bunch of images '''
 print("Recording Spikes")
-spikes = network.run(50, learning=False, record_spikes=True, pop_index=1).get("spikes")
-for i in tqdm(range(1,20)):
+num_images = 20
+time_step = 50
+spikes = []
+for i in tqdm(range(num_images)):
     network.populations[0].set_input(x_train[i])
-    spikes = np.append(spikes, network.run(50, learning=False, record_spikes=True, pop_index=1).get("spikes"), axis = 1)
+    spikes.append(network.run(time_step, learning=False, record_spikes=True, pop_index=1).get("spikes"))
     network.rest()
+spikes = np.reshape(spikes, (num_neurons, time_step*num_images))
 
 
 ''' Calculate correlation matrix from spiking activity '''
