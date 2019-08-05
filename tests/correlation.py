@@ -1,3 +1,5 @@
+import sys, os
+sys.path.insert(1, os.path.join(sys.path[0], '..'))
 import population
 from network import Network
 from correlation import correlation
