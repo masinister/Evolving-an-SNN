@@ -5,10 +5,7 @@ from snn.network import Network
 from snn import train
 from tensorflow.keras.datasets import mnist
 import numpy as np
-from copy import deepcopy
 from tqdm import tqdm
-import pickle
-
 
 print("Initializing Network")
 '''
@@ -28,24 +25,12 @@ local = schemes.get("local")
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 
 '''
-Initialize populations
+Initialize default populations
 '''
 
 Input = population.Image_Input()
-L1 = population.Population(
-    num_neurons = 100,
-    v_init = -65,
-    v_decay = .99,
-    v_reset = -60,
-    min_volt = -65,
-    t_init = -52,
-    min_thresh = -52,
-    t_bias = 0.25,
-    t_decay = .9999999,
-    refrac = 5,
-    trace_decay = .95,
-    one_spike = True
-)
+L1 = population.Population()
+
 '''
 Initialize connections
 '''
@@ -56,8 +41,7 @@ C1 = Connection(Input,
                 params,
                 rule = "PreAndPost",
                 wmin = 0,
-                wmax = 1,
-                norm = 78.4)
+                wmax = 1)
 
 C2 = Connection(L1,
                 L1,

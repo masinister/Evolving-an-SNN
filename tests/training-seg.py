@@ -31,7 +31,7 @@ local = schemes.get("local")
 Initialize populations
 '''
 
-Input = population.Image_Input(x_train[0])
+Input = population.Image_Input()
 L1 = population.Population(
     num_neurons = 150,
     v_init = -65,

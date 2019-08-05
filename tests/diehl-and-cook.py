@@ -40,7 +40,7 @@ L1 = population.Population(
     min_volt = -65,
     t_init = -52,
     min_thresh = -52,
-    t_bias = 0.25,
+    t_bias = 0.05,
     t_decay = .9999999,
     refrac = 5,
     trace_decay = .95,
@@ -49,6 +49,9 @@ L1 = population.Population(
 '''
 Initialize connections
 '''
+for x in x_train:
+    x *= 2
+
 inh = -120
 C1 = Connection(Input,
                 L1,

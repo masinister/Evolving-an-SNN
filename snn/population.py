@@ -20,18 +20,18 @@ class Population:
     adapt_thresh: Boolean for whether threshold is adaptive (True => is adaptive)
     '''
     def __init__(self, **kwargs):
-        self.num_neurons = kwargs.get("num_neurons")
-        self.voltage = kwargs.get("v_init") * np.ones(self.num_neurons)
-        self.v_decay = kwargs.get("v_decay")
-        self.threshold = kwargs.get("t_init") * np.ones(self.num_neurons)
-        self.min_thresh = kwargs.get("min_thresh")
-        self.t_bias = kwargs.get("t_bias")
-        self.t_decay = kwargs.get("t_decay")
-        self.refrac = kwargs.get("refrac")
+        self.num_neurons = kwargs.get("num_neurons", 100)
+        self.voltage = kwargs.get("v_init", -65) * np.ones(self.num_neurons)
+        self.v_decay = kwargs.get("v_decay", .99)
+        self.threshold = kwargs.get("t_init", -52) * np.ones(self.num_neurons)
+        self.min_thresh = kwargs.get("min_thresh", self.threshold)
+        self.t_bias = kwargs.get("t_bias", 0.25)
+        self.t_decay = kwargs.get("t_decay", 0.999999)
+        self.refrac = kwargs.get("refrac", 5)
         self.refrac_count = np.zeros(self.num_neurons)
-        self.v_reset = kwargs.get("v_reset")
-        self.min_volt = kwargs.get("min_volt")
-        self.one_spike = kwargs.get("one_spike")
+        self.v_reset = kwargs.get("v_reset", -60)
+        self.min_volt = kwargs.get("min_volt", self.voltage)
+        self.one_spike = kwargs.get("one_spike", False)
         self.dt = self.threshold - self.min_thresh
         self.activation = np.zeros(self.num_neurons)
         self.feed = np.zeros(self.num_neurons)
@@ -79,13 +79,12 @@ class Image_Input(Population):
     Population of input neurons. Each neuron fires randomly with probability
     proportional to pixel intensity.
     '''
-    def __init__(self, image, **kwargs):
-        self.num_neurons = len(image)*len(image[0])
+    def __init__(self, width = 28, height = 28, **kwargs):
+        self.num_neurons = width * height
         self.activation = np.zeros(self.num_neurons)
         self.rate = np.zeros(self.num_neurons)
         self.trace = np.zeros(self.num_neurons)
         self.trace_decay = kwargs.get("trace_decay", 0.95)
-        self.set_input(image)
 
     def set_input(self, image):
         # change to another image
