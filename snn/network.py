@@ -30,10 +30,7 @@ class Network:
             pop_index = kwargs.get("pop_index", 0)
             spikes = np.zeros((self.populations[pop_index].num_neurons,steps))
         else:
-            print("No index was given for what population to record")
             spikes = []
-
-
         # lists to record thresholds/voltage/weights etc
         t = []
         v = []

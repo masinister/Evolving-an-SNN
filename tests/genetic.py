@@ -1,6 +1,4 @@
-import sys, os
-sys.path.insert(1, os.path.join(sys.path[0], '..'))
-from genetic import Optimizer
+from snn.genetic import Optimizer
 
 def genetic_test():
     generations = 1000

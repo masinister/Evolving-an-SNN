@@ -1,8 +1,6 @@
-import sys, os
-sys.path.insert(1, os.path.join(sys.path[0], '..'))
-import population
-from network import Network
-from correlation import correlation
+from snn import population
+from snn.network import Network
+from utils.correlation import correlation
 from tensorflow.keras.datasets import mnist
 import numpy as np
 from tqdm import tqdm
