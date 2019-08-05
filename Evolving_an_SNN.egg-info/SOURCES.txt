@@ -1,0 +1,16 @@
+README.md
+setup.py
+Evolving_an_SNN.egg-info/PKG-INFO
+Evolving_an_SNN.egg-info/SOURCES.txt
+Evolving_an_SNN.egg-info/dependency_links.txt
+Evolving_an_SNN.egg-info/top_level.txt
+snn/__init__.py
+snn/connection.py
+snn/network.py
+snn/population.py
+snn/rules.py
+snn/schemes.py
+snn/train.py
+utils/__init__.py
+utils/color.py
+utils/correlation.py

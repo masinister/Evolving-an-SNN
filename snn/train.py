@@ -1,7 +1,7 @@
 import numpy as np
 from tqdm import tqdm
 import matplotlib.pyplot as plt
-from color import color
+from utils.color import color
 import pickle
 from tensorflow.keras.models import load_model
 from PIL import Image

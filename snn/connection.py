@@ -1,5 +1,5 @@
-from population import Population
-import rules
+from .population import Population
+from . import rules
 import numpy as np
 
 

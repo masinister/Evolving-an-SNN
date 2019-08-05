@@ -1,10 +1,8 @@
-import sys, os
-sys.path.insert(1, os.path.join(sys.path[0], '..'))
-import schemes
-from connection import Connection
-import population
-from network import Network
-import train
+from snn import schemes
+from snn.connection import Connection
+from snn import population
+from snn.network import Network
+from snn import train
 from tensorflow.keras.datasets import mnist
 import numpy as np
 from copy import deepcopy

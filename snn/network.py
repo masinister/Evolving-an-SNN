@@ -1,5 +1,5 @@
-from connection import Connection
-from population import Population
+from .connection import Connection
+from .population import Population
 from tqdm import tqdm
 import numpy as np
 import matplotlib.pyplot as plt
