@@ -1,3 +1,5 @@
+# use "pip install -e ." to run setup
+
 from setuptools import setup, find_packages
 
 setup(name='Evolving-an-SNN',
