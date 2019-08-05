@@ -33,7 +33,7 @@ Initialize populations
 
 Input = population.Image_Input(x_train[0])
 L1 = population.Population(
-    num_neurons = 150,
+    num_neurons = 100,
     v_init = -65,
     v_decay = .99,
     v_reset = -60,
@@ -71,5 +71,5 @@ network = Network([Input, L1,], [C1, C2,])
 
 outer = tqdm(total = 100, desc = 'Epochs', position = 0)
 for i in range(100):
-    train.all_at_once(network, x_train[500 * i: 500 * (i+1)], y_train[500 * i: 500 * (i+1)], 10, 250, draw_weights = True)
+    train.all_at_once(network, x_train[1000 * i: 1000 * (i+1)], y_train[1000 * i: 1000 * (i+1)], 10, 300, draw_weights = False)
     outer.update(1)
