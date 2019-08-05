@@ -47,8 +47,6 @@ def dream(network, steps, **kwargs):
     num_con = len(network.connections)
     num_pop = len(network.populations)
     inp_size = int(np.sqrt(network.populations[0].num_neurons))
-    if (kwargs.get("autoencode", False)):
-        autoencoder = load_model('Model/autoencoder')
     # assumes populations[1] is a memory cell and that all mem cells have same number of neruons
     ind = list(range(network.populations[1].num_neurons))
     # shuffle the order of what memories to present
@@ -64,11 +62,8 @@ def dream(network, steps, **kwargs):
             for mem in network.connections[0:num_con-2:2]:
                 # set input to the weights of a neuron from a memory cell, assumes memory cell is fully connected to input
                 memory = mem.adj[:,i]/np.max(mem.adj[:,i])
-                if (kwargs.get("autoencode", False)):
-                    memory = np.reshape(memory, (1,28,28,1))
-                    memory = np.reshape(autoencoder.predict(memory), (inp_size,inp_size))
-                img = Image.fromarray((memory*255).astype(np.uint8))
-                img.save("img/memory.png")
+                # img = Image.fromarray((memory*255).astype(np.uint8))
+                # img.save("img/memory.png")
                 network.populations[0].set_input(memory)
                 network.run(steps, **kwargs)
                 network.normalize()
