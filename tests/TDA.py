@@ -23,7 +23,7 @@ allBut1 = schemes.get("allBut1")
 all2all = schemes.get("all2all")
 
 ''' Initialize populations '''
-Input = Image_Input(x_train[0])
+Input = Image_Input()
 L1 = Population(
     num_neurons = 100,
     v_init = -65,

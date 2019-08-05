@@ -79,13 +79,12 @@ class Image_Input(Population):
     Population of input neurons. Each neuron fires randomly with probability
     proportional to pixel intensity.
     '''
-    def __init__(self, image, **kwargs):
-        self.num_neurons = len(image)*len(image[0])
+    def __init__(self, width = 28, height = 28, **kwargs):
+        self.num_neurons = width * height
         self.activation = np.zeros(self.num_neurons)
         self.rate = np.zeros(self.num_neurons)
         self.trace = np.zeros(self.num_neurons)
         self.trace_decay = kwargs.get("trace_decay", 0.95)
-        self.set_input(image)
 
     def set_input(self, image):
         # change to another image
