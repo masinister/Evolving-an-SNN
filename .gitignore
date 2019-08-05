@@ -3,3 +3,4 @@ img/
 debug.log
 *.png
 *.pickle
+*.egg-info
