@@ -21,12 +21,12 @@ class Network:
         self.connections = conn
         self.neuron_labels = np.array([])
 
-    def record_spikes(self, steps):
-        spikes = np.zeros((self.populations[0].num_neurons,steps))
+    def record_spikes(self, pop_index, steps):
+        spikes = np.zeros((self.populations[pop_index].num_neurons,steps))
         for s in range(steps):
             for p in self.populations:
                 p.update()
-            spikes[:,s] = self.populations[0].activation
+            spikes[:,s] = self.populations[pop_index].activation
         return spikes
 
 
