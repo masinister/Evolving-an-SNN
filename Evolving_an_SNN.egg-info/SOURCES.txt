@@ -3,7 +3,11 @@ setup.py
 Evolving_an_SNN.egg-info/PKG-INFO
 Evolving_an_SNN.egg-info/SOURCES.txt
 Evolving_an_SNN.egg-info/dependency_links.txt
+Evolving_an_SNN.egg-info/requires.txt
 Evolving_an_SNN.egg-info/top_level.txt
+genetic/__init__.py
+genetic/genetic.py
+genetic/individual.py
 snn/__init__.py
 snn/connection.py
 snn/network.py
