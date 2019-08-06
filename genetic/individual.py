@@ -1,14 +1,14 @@
 import numpy as np
-from network import Network
-import train
+from snn.network import Network
+from snn import train
 from tensorflow.keras.datasets import mnist
-import schemes
-import population
-from connection import Connection
+from snn import schemes
+from snn import population
+from snn.connection import Connection
 
 class Individual():
 
-    def __init__(self, id, params = {"eta": 0.0005, "mu": 0.05, "decay_pre": 0.95, "decay_post": 0.95, "t_bias": 0.25, "t_decay": 0.9999999, "v_decay": 0.99}):
+    def __init__(self, id, params = {"eta": 0.0005, "mu": 0.05, "trace_decay": 0.95, "t_bias": 0.25, "t_decay": 0.9999999, "v_decay": 0.99}):
         self.id = id
         self.accuracy = 0.0
         self.params = params
@@ -36,21 +36,20 @@ class Individual():
     def initialize_network(self, params):
         allBut1 = schemes.get("allBut1")
         all2all = schemes.get("all2all")
-        Input = population.Image_Input(self.x_train[0])
+        Input = population.Image_Input(28,28)
         c_params = {"eta": params.get("eta", 0.0005),
-                    "mu": params.get("mu", 0.05),
-                    "decay_pre": params.get("decay_pre", 0.95),
-                    "decay_post": params.get("decay_post", 0.95)}
+                    "mu": params.get("mu", 0.05),}
         L1 = population.Population(
             num_neurons = params.get("num_neurons", 16),
             v_init = params.get("v_init", -65),
             v_decay = params.get("v_decay", .99),
             v_reset = params.get("v_reset", -65),
-            v_rest = params.get("v_rest", -65),
-            t_init = params.get("t_init", -50),
+            min_volt = params.get("v_rest", -65),
+            t_init = params.get("min_volt", -50),
             min_thresh = params.get("min_thresh", -52),
             t_bias = params.get("t_bias", 0.25),
             t_decay = params.get("t_decay", .9999999),
+            trace_decay = params.get("trace_decay", 0.95),
             refrac = params.get("refrac", 5),
             one_spike = params.get("one_spike", True)
         )
@@ -58,4 +57,3 @@ class Individual():
         C1 = Connection(Input, L1, 0.3 * all2all(Input.num_neurons, L1.num_neurons), params, rule = "PreAndPost", wmin = 0, wmax = 1)
         C2 = Connection(L1, L1, allBut1(L1.num_neurons) * inh, params, rule = "static", wmin = inh, wmax = 0)
         self.network = Network([Input, L1, ], [C1, C2,])
-        self.network.set_params(c_params)

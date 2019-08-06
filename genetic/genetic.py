@@ -1,6 +1,6 @@
-from individual import Individual
+from genetic.individual import Individual
 import numpy as np
-import threading
+import multiprocessing
 import time
 import sys
 
@@ -51,7 +51,7 @@ class Optimizer():
 
             #Start threads
             for sub_population in self._populations:
-                t = threading.Thread(target = self.evaluate_all, args = (sub_population,))
+                t = multiprocessing.Process(target = self.evaluate_all, args = (sub_population,))
                 threads.append(t)
                 t.start()
                 time.sleep(1)
