@@ -94,7 +94,7 @@ def label_neurons(network, test_data, test_labels, num_labels, steps, **kwargs):
         network.populations[0].set_input(test_data[i])
         res = network.run(steps,
                             learning = False,
-                            record = True,
+                            count_spikes = True,
                             **kwargs)
         rates = res.get("rates")
         network.rest()
@@ -135,7 +135,7 @@ def evaluate(network, test_data, test_labels, steps, **kwargs):
         network.populations[0].set_input(test_data[i])
         res = network.run(steps,
                           learning = False,
-                          record = True,
+                          count_spikes = True,
                           predict = True,
                           **kwargs)
         prediction = res.get("prediction")
@@ -181,7 +181,7 @@ def all_at_once(network, test_data, test_labels, num_labels, steps, **kwargs):
         network.populations[0].set_input(test_data[i])
         res = network.run(steps,
                             learning = True,
-                            record = True,
+                            count_spikes = True,
                             predict = True,
                             **kwargs)
         network.rest()

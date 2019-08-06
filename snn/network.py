@@ -50,7 +50,7 @@ class Network:
                 spikes[:,s] = self.populations[pop_index].activation
 
             # if labelling or predicting record firing activity
-            if kwargs.get("record", False) or kwargs.get("predict", False):
+            if kwargs.get("count_spikes", False) or kwargs.get("predict", False):
                 for i in range(len(rates)):
                     rates[i] += self.populations[i+1].activation
 
@@ -59,7 +59,7 @@ class Network:
                 v.extend([self.populations[1].voltage])
                 t.extend([self.populations[1].threshold])
                 a.extend([self.populations[1].trace])
-        if kwargs.get("record", False) or kwargs.get("predict", False):
+        if kwargs.get("count_spikes", False) or kwargs.get("predict", False):
             for i in range(len(rates)):
                 rates[i] = (rates[i] == max(rates[i])).astype(float)
                 rates[i] /= (np.sum(rates[i]) + 0.0001)
