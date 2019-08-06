@@ -197,7 +197,7 @@ def all_at_once(network, test_data, test_labels, num_labels, steps, **kwargs):
         for pop in network.neuron_labels:
             pop /= (sum(pop) + 0.0001)
         acc.set_description_str("Accuracy: " + color(np.around(correct / (i+1), 3)) + "    ")
-        d_acc.set_description_str("Accuracy per digit: " + ', '.join([color(f) for f in list(np.around(correct_count /  (view_count + 0.0001), 3))]) + "                ")
+        d_acc.set_description_str("Accuracy per digit: " + ', '.join([color(f) for f in list(np.around(correct_count /  (view_count + 0.0001), 3))]) + "                       ")
         bar.update(1)
     if kwargs.get("save_weights", False):
         pickle.dump([c.adj for c in network.connections], open("weights.pickle", "wb"))
