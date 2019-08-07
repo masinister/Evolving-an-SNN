@@ -74,7 +74,7 @@ class Network:
                     sw = self.get_square_weights(self.connections[i].adj,
                                                   np.sqrt(self.connections[i].adj.shape[1]).astype(int),
                                                   np.sqrt(self.connections[i].adj.shape[0]).astype(int))
-                    img = Image.fromarray((sw * 255).astype(np.uint8))
+                    img = Image.fromarray((sw * 255 / (self.connections[i].wmax - self.connections[i].wmin)).astype(np.uint8))
                     img.save("img/C%d - %d.png" %(i, kwargs.get("id", 0)))
         return {"w":w, "t":t, "v":v, "a":a, "rates":rates, "prediction": prediction, "spikes": spikes}
 
