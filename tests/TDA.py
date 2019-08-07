@@ -69,7 +69,7 @@ network.set_weights(weights)
 
 ''' Record spiking activity of Layer 1 while showing it a bunch of images '''
 print("Recording Spikes")
-num_images = 20
+num_images = 1
 time_step = 50
 spikes = []
 for i in tqdm(range(num_images)):

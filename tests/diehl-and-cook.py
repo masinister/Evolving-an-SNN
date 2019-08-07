@@ -9,6 +9,9 @@ from copy import deepcopy
 from tqdm import tqdm
 import pickle
 
+'''
+Recurrent Diehl and Cook network
+'''
 
 print("Initializing Network")
 '''

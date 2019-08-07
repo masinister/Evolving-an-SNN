@@ -9,6 +9,10 @@ from copy import deepcopy
 from tqdm import tqdm
 import pickle
 
+'''
+2-layer Diehl and Cook network
+'''
+
 
 print("Initializing Network")
 '''

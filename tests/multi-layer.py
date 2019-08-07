@@ -28,8 +28,9 @@ local = schemes.get("local")
 Initialize default populations
 '''
 
-Input = population.Image_Input()
-L1 = population.Population()
+Input = population.Image_Input(28,28)
+L1 = population.Population(num_neurons = 100)
+L2 = population.Population(num_neurons = 10)
 
 '''
 Initialize connections
@@ -51,7 +52,23 @@ C2 = Connection(L1,
                 wmin = inh,
                 wmax = 0)
 
-network = Network([Input, L1,], [C1, C2,])
+C3 = Connection(L1,
+                L2,
+                0.3 * all2all(L1.num_neurons, L2.num_neurons),
+                params,
+                rule = "PreAndPost",
+                wmin = 0,
+                wmax = 1)
+
+C4 = Connection(L2,
+                L2,
+                allBut1(L2.num_neurons) * inh,
+                params,
+                rule = "static",
+                wmin = inh,
+                wmax = 0)
+
+network = Network([Input, L1, L2], [C1, C2, C3, C4])
 
 outer = tqdm(total = 100, desc = 'Epochs', position = 0)
 for i in range(100):
