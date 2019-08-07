@@ -30,7 +30,11 @@ Initialize default populations
 
 Input = population.Image_Input(28,28)
 L1 = population.Population(num_neurons = 100)
-L2 = population.Population(num_neurons = 10)
+L2 = population.Population(num_neurons = 10,
+                           v_decay = 1,
+                           refrac = 2,
+                           adapt_thresh = False,
+                           one_spike = True)
 
 '''
 Initialize connections
@@ -58,7 +62,8 @@ C3 = Connection(L1,
                 params,
                 rule = "PreAndPost",
                 wmin = 0,
-                wmax = 1)
+                wmax = 16,
+                norm = 120)
 
 C4 = Connection(L2,
                 L2,
@@ -72,5 +77,5 @@ network = Network([Input, L1, L2], [C1, C2, C3, C4])
 
 outer = tqdm(total = 100, desc = 'Epochs', position = 0)
 for i in range(100):
-    train.all_at_once(network, x_train[1000 * i: 1000 * (i+1)], y_train[1000 * i: 1000 * (i+1)], 10, 300, draw_weights = False)
+    train.all_at_once(network, x_train[1000 * i: 1000 * (i+1)], y_train[1000 * i: 1000 * (i+1)], 10, 300, draw_weights = True)
     outer.update(1)
