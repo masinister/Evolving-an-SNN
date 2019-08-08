@@ -30,11 +30,7 @@ Initialize default populations
 
 Input = population.Image_Input(28,28)
 L1 = population.Population(num_neurons = 100)
-L2 = population.Population(num_neurons = 10,
-                           v_decay = 1,
-                           refrac = 2,
-                           adapt_thresh = False,
-                           one_spike = True)
+L2 = population.Population(num_neurons = 100)
 
 '''
 Initialize connections
@@ -62,8 +58,9 @@ C3 = Connection(L1,
                 params,
                 rule = "PreAndPost",
                 wmin = 0,
-                wmax = 16,
-                norm = 120)
+                wmax = 10,
+                norm = 50,
+                one_spike = True)
 
 C4 = Connection(L2,
                 L2,
