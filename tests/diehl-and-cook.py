@@ -54,7 +54,7 @@ L1 = population.Population(
 Initialize connections
 '''
 for x in x_train:
-    x *= 2
+    x = x.astype(float) * 2
 
 inh = -120
 C1 = Connection(Input,
@@ -76,9 +76,9 @@ C2 = Connection(L1,
 
 network = Network([Input, L1,], [C1, C2,])
 
-plotter = Plotter(["trace"])
+# plotter = Plotter(["trace"])
 
 outer = tqdm(total = 100, desc = 'Epochs', position = 0)
 for i in range(100):
-    train.all_at_once(network, x_train[1000 * i: 1000 * (i+1)], y_train[1000 * i: 1000 * (i+1)], 10, 300, draw_weights = False, plot = plotter)
+    train.all_at_once(network, x_train[1000 * i: 1000 * (i+1)], y_train[1000 * i: 1000 * (i+1)], 10, 100, draw_weights = False, plot = False)
     outer.update(1)

@@ -8,7 +8,7 @@ import numpy as np
 from copy import deepcopy
 from tqdm import tqdm
 import pickle
-
+from utils.plot import Plotter
 '''
 2-layer Diehl and Cook network
 '''
@@ -30,6 +30,9 @@ one2one = schemes.get("one2one")
 local = schemes.get("local")
 
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
+
+for x in x_train:
+    x = x.astype(float) * 2
 
 '''
 Initialize populations
@@ -65,8 +68,8 @@ L2 = population.Population(
 Initialize connections
 '''
 
-inh = -17.5 * 2.718
-exc = 22.5 * 2.718
+inh = -17.5
+exc = 22.5
 C1 = Connection(Input,
                 L1,
                 0.3 * all2all(Input.num_neurons, L1.num_neurons),
@@ -94,7 +97,8 @@ C3 = Connection(L2,
 
 network = Network([Input, L1, L2], [C1, C2, C3])
 
+plotter = Plotter(["voltage", "trace", "activation"])
 outer = tqdm(total = 100, desc = 'Epochs', position = 0)
 for i in range(100):
-    train.all_at_once(network, x_train[1000 * i: 1000 * (i+1)], y_train[1000 * i: 1000 * (i+1)], 10, 300, draw_weights = True)
+    train.all_at_once(network, x_train[1000 * i: 1000 * (i+1)], y_train[1000 * i: 1000 * (i+1)], 10, 300, draw_weights = True, plot = plotter)
     outer.update(1)
