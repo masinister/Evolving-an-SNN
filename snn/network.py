@@ -76,15 +76,7 @@ class Network:
                     img = Image.fromarray((sw * 255 / (self.connections[i].wmax - self.connections[i].wmin)).astype(np.uint8))
                     img.save("img/C%d - %d.png" %(i, kwargs.get("id", 0)))
         if kwargs.get("plot", False):
-            fig, axs = plt.subplots(3,sharex=True,gridspec_kw={'hspace': .5})
-            fig.suptitle("Info about 1st Layer")
-            axs[0].plot(t)
-            axs[0].set_title("L1 Thresholds")
-            axs[1].plot(v)
-            axs[1].set_title("L1 Voltages")
-            axs[2].plot(a)
-            axs[2].set_title("L1 Traces")
-            plt.show()
+            kwargs.get("plot").plot({"threshold":t, "voltage":v, "trace":a})
         return {"rates":rates, "prediction": prediction, "spikes": spikes}
 
 

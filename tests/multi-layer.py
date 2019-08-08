@@ -6,6 +6,7 @@ from snn import train
 from tensorflow.keras.datasets import mnist
 import numpy as np
 from tqdm import tqdm
+from utils.plot import Plotter
 
 print("Initializing Network")
 '''
@@ -72,7 +73,9 @@ C4 = Connection(L2,
 
 network = Network([Input, L1, L2], [C1, C2, C3, C4])
 
+plotter = Plotter(["threshold", "voltage", "trace"])
+
 outer = tqdm(total = 100, desc = 'Epochs', position = 0)
 for i in range(100):
-    train.all_at_once(network, x_train[1000 * i: 1000 * (i+1)], y_train[1000 * i: 1000 * (i+1)], 10, 300, draw_weights = True)
+    train.all_at_once(network, x_train[1000 * i: 1000 * (i+1)], y_train[1000 * i: 1000 * (i+1)], 10, 300, plot = plotter)
     outer.update(1)

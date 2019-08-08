@@ -1,2 +1,3 @@
 from . import (color,
-                correlation)
+                correlation,
+                plot)
