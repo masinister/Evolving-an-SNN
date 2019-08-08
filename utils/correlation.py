@@ -6,17 +6,18 @@ def shift(spikes, k):
     shifted[0:num-k] = spikes[k:]
     return shifted
 
-def correlation(spike1,spike2):
-    assert len(spike1) == len(spike2), "Spike trains different length"
-    num = len(spike1)
-    scale = (np.sum(spike1)*np.sum(spike2))
+def correlation(spike1, spike2, window):
+    assert len(spike1) == len(spike2), "Spike trains have different length"
+    num = len(spike1) # number of time steps in spike trains
+    assert window <= num, "Window too large, will cause out of range index"
+    scale = np.sum(spike1)*np.sum(spike2)*window
     if scale != 0:
-        scale = 1/scale
-    # tau_max = T = number time steps image is shown for
-    ccg12 = np.zeros(num+1)
-    ccg21 = np.zeros(num+1)
+        scale = 1/scale * num
 
-    for k in range(num+1):
+    ccg12 = np.zeros(window+1)
+    ccg21 = np.zeros(window+1)
+
+    for k in range(window+1):
         ccg12[k] = np.dot( spike1, shift(spike2,k) )
         ccg21[k] = np.dot( spike2, shift(spike1,k) )
 

@@ -85,7 +85,7 @@ corr = np.zeros((len(spikes), len(spikes)))
 print("Calculating correlation matrix")
 for i in tqdm(range(len(spikes)-1)):
     for j in range(i+1,len(spikes)):
-        corr[i,j] = correlation(spikes[i,:], spikes[j,:])
+        corr[i,j] = correlation(spikes[i,:], spikes[j,:], len(spikes[j,:])-50)
         corr[i,j] = 1/(corr[i,j]+.01)
 
 corr = corr + np.transpose(corr)
