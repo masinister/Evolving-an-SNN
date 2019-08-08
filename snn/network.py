@@ -32,9 +32,9 @@ class Network:
         else:
             spikes = []
         # lists to record thresholds/voltage/traces etc
-        t = []
-        v = []
-        a = []
+        data = {}
+        if kwargs.get("plot", False):
+            data = {field:[] for field in kwargs.get("plot").fields}
         rates = [np.zeros(pop.num_neurons) for pop in self.populations[1:]]
         prediction = np.zeros(10)
 
@@ -55,9 +55,8 @@ class Network:
                     rates[i] += self.populations[i+1].activation
 
             if kwargs.get("plot", False):
-                v.extend([self.populations[1].voltage])
-                t.extend([self.populations[1].threshold])
-                a.extend([self.populations[1].trace])
+                for field in data.keys():
+                    data[field].extend([getattr(self.populations[1], field)])
         if kwargs.get("count_spikes", False) or kwargs.get("predict", False):
             for i in range(len(rates)):
                 rates[i] = (rates[i] == max(rates[i])).astype(float)
@@ -76,7 +75,7 @@ class Network:
                     img = Image.fromarray((sw * 255 / (self.connections[i].wmax - self.connections[i].wmin)).astype(np.uint8))
                     img.save("img/C%d - %d.png" %(i, kwargs.get("id", 0)))
         if kwargs.get("plot", False):
-            kwargs.get("plot").plot({"threshold":t, "voltage":v, "trace":a})
+            kwargs.get("plot").plot(data)
         return {"rates":rates, "prediction": prediction, "spikes": spikes}
 
 
