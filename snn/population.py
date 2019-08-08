@@ -36,7 +36,7 @@ class Population:
         self.activation = np.zeros(self.num_neurons)
         self.feed = np.zeros(self.num_neurons)
         self.adapt_thresh = kwargs.get("adapt_thresh", True)
-        self.trace = np.zeros(self.num_neurons)
+        self.trace = np.zeros(self.num_neurons).astype(float)
         self.trace_decay = kwargs.get("trace_decay", .95)
 
     def input(self, feed):
@@ -69,8 +69,8 @@ class Population:
                 spikes.fill(0)
                 spikes[a] = 1
         self.activation = spikes * not_in_refractory
-        self.trace[~spikes] *= self.trace_decay
-        self.trace += self.activation
+        self.trace *= self.trace_decay
+        self.trace = self.trace + self.activation.astype(float)
 
 
 
