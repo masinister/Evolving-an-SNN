@@ -31,13 +31,13 @@ class Network:
             spikes = np.zeros((self.populations[pop_index].num_neurons,steps))
         else:
             spikes = []
-        # lists to record thresholds/voltage/weights etc
+        # lists to record thresholds/voltage/traces etc
         t = []
         v = []
-        w = []
         a = []
         rates = [np.zeros(pop.num_neurons) for pop in self.populations[1:]]
         prediction = np.zeros(10)
+
         for s in range(steps):
             for c in self.connections:
                 c.input()
@@ -55,7 +55,6 @@ class Network:
                     rates[i] += self.populations[i+1].activation
 
             if kwargs.get("plot", False):
-                w.append([x for x in self.connections[0].adj.flat[10000:10100]])
                 v.extend([self.populations[1].voltage])
                 t.extend([self.populations[1].threshold])
                 a.extend([self.populations[1].trace])
@@ -76,7 +75,17 @@ class Network:
                                                   np.sqrt(self.connections[i].adj.shape[0]).astype(int))
                     img = Image.fromarray((sw * 255 / (self.connections[i].wmax - self.connections[i].wmin)).astype(np.uint8))
                     img.save("img/C%d - %d.png" %(i, kwargs.get("id", 0)))
-        return {"w":w, "t":t, "v":v, "a":a, "rates":rates, "prediction": prediction, "spikes": spikes}
+        if kwargs.get("plot", False):
+            fig, axs = plt.subplots(3,sharex=True,gridspec_kw={'hspace': .5})
+            fig.suptitle("Info about 1st Layer")
+            axs[0].plot(t)
+            axs[0].set_title("L1 Thresholds")
+            axs[1].plot(v)
+            axs[1].set_title("L1 Voltages")
+            axs[2].plot(a)
+            axs[2].set_title("L1 Traces")
+            plt.show()
+        return {"rates":rates, "prediction": prediction, "spikes": spikes}
 
 
     def rest(self):
