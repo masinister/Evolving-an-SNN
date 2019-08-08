@@ -3,6 +3,7 @@ from snn.connection import Connection
 from snn import population
 from snn.network import Network
 from snn import train
+from utils.plot import Plotter
 from tensorflow.keras.datasets import mnist
 import numpy as np
 from copy import deepcopy
@@ -75,7 +76,9 @@ C2 = Connection(L1,
 
 network = Network([Input, L1,], [C1, C2,])
 
+plotter = Plotter(["trace"])
+
 outer = tqdm(total = 100, desc = 'Epochs', position = 0)
 for i in range(100):
-    train.all_at_once(network, x_train[1000 * i: 1000 * (i+1)], y_train[1000 * i: 1000 * (i+1)], 10, 300, draw_weights = False)
+    train.all_at_once(network, x_train[1000 * i: 1000 * (i+1)], y_train[1000 * i: 1000 * (i+1)], 10, 300, draw_weights = False, plot = plotter)
     outer.update(1)

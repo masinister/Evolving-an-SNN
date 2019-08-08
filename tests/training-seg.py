@@ -8,6 +8,7 @@ import numpy as np
 from copy import deepcopy
 from tqdm import tqdm
 import pickle
+from utils.plot import Plotter
 
 
 print("Initializing Network")
@@ -69,11 +70,13 @@ C2 = Connection(L1,
 
 network = Network([Input, L1,], [C1, C2,])
 
+plotter = Plotter(["trace"])
+
 # outer = tqdm(total = 100, desc = 'Epochs', position = 0)
 for i in range(100):
     # train.all_at_once(network, x_train[500 * i: 500 * (i+1)], y_train[500 * i: 500 * (i+1)], 10, 250, draw_weights = True)
     print("Training", i)
-    train.train(network, x_train[500 * i: 500 * (i+1)], 250, save_weights = True)
+    train.train(network, x_train[500 * i: 500 * (i+1)], 250, save_weights = True, plot = plotter)
     print("Labelling", i)
     train.label_neurons(network, x_train[0: 100], y_train[0: 100], 10, 300)
     print("Testing", i)
