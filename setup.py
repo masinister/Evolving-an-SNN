@@ -10,5 +10,4 @@ setup(name='Evolving-an-SNN',
                           "Pillow>=5.4.1",
                           "matplotlib>=3.0.3",
                           "networkx>=2.2c",
-                          "gudhi>=2.3.0",
                           "tensorflow>=1.13.1"])
