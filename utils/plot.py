@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+from collections import Iterable
 
 class Plotter:
 
@@ -6,7 +7,7 @@ class Plotter:
         fig, axs = plt.subplots(len(fields),gridspec_kw={'hspace': .5})
         self.fields = fields
         self.fig = fig
-        self.axs = axs
+        self.axs = [axs] if not isinstance(axs, Iterable) else axs
         plt.ion()
         plt.show()
 

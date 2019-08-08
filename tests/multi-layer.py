@@ -73,7 +73,7 @@ C4 = Connection(L2,
 
 network = Network([Input, L1, L2], [C1, C2, C3, C4])
 
-plotter = Plotter(["threshold", "voltage", "trace"])
+plotter = Plotter(["trace", "activation"])
 
 outer = tqdm(total = 100, desc = 'Epochs', position = 0)
 for i in range(100):
