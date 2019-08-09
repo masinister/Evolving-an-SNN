@@ -28,6 +28,10 @@ class Connection:
         self.wmax = kwargs.get("wmax", 1)
         self.norm = kwargs.get("norm", 78.4)
         self.learning = kwargs.get("learning", True)
+        self.batch_size = kwargs.get("batch_size", 10)
+        self.pre_acc = 0
+        self.post_acc = 0
+        self.t = 0
 
     def input(self):
         '''
@@ -40,8 +44,14 @@ class Connection:
         '''
         Update Weights
         '''
-        if self.learning:
-            self.adj += rules.get(self.rule)(self.pre.trace, self.post.trace, self.adj, self.pre.activation, self.post.activation, self.params)
+        self.pre_acc = self.pre_acc + self.pre.activation
+        self.post_acc = self.post_acc + self.post.activation
+        self.t = (self.t + 1) % self.batch_size
+        if self.t == 0:
+            if self.learning:
+                self.adj += rules.get(self.rule)(self.pre.trace, self.post.trace, self.adj, self.pre_acc, self.post_acc, self.params)
+            self.pre_acc.fill(0)
+            self.post_acc.fill(0)
 
     def normalize(self):
         self.adj = np.clip(self.adj,self.wmin,self.wmax)
